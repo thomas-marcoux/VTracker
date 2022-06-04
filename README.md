@@ -1,6 +1,8 @@
-# VTracker
+# VTracker - CODE DEMO
 
-See the latest changes [here](CHANGELOG.md).
+The project will not run - settings have been excluded to protect sensitive IPs and secret keys.
+
+See the changelog [here](CHANGELOG.md).
 
 ## Project Overview
 
