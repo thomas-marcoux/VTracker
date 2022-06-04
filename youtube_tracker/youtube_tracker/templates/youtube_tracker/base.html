@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html style="min-width: 960px;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="author" content="HAYDEX">
+    <meta name="description" content="Tracking video data.">
+    <title>VTracker</title>
+
+    <!-- Favicons START -->
+    <link rel="apple-touch-icon" sizes="180x180"
+          href="{% static 'youtube_tracker/images/favicon/youtubetracker-apple-touch-favicon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="{% static 'youtube_tracker/images/favicon/youtubetracker-favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="{% static 'youtube_tracker/images/favicon/youtubetracker-favicon-16x16.png' %}">
+    <!-- https://mobiforge.com/design-development/adding-favicons-in-a-multi-browser-multi-platform-world -->
+    <!-- Favicons END -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+            integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="{% static 'youtube_tracker/libs/scripts/jquery-3.2.1.min.js' %}"></script>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Stylesheets START -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/loader.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/app.css' %}">
+    <!-- Stylesheets END -->
+</head>
+
+<style>
+    input::-webkit-calendar-picker-indicator {
+        display: none;
+    }
+
+    .material-icons {
+        vertical-align: middle;
+    }
+
+    .material-icons.md-18 {
+        font-size: 18px;
+    }
+
+    .material-icons.md-24 {
+        font-size: 24px;
+    }
+
+    .material-icons.md-36 {
+        font-size: 36px;
+    }
+
+    .material-icons.md-48 {
+        font-size: 48px;
+    }
+
+
+</style>
+
+<script>
+    var cookieExpireTime = new Date();
+    cookieExpireTime.setTime(cookieExpireTime.getTime() + (60 * 60 * 24 * 1000 * 90));
+
+    // function initializeSidebar() {
+    //     $("#menu").on("click", function() {
+    //         $(".sidebar").toggleClass("sidebarVisible");
+    //     });
+    // }
+
+    $(document).ready(function () {
+        // initializeSidebar();
+    });
+
+</script>
+
+<body>
+    <!-- Header START : Add the icons from Vtrackers -->
+    {% include "youtube_tracker/baseHeader.html" %}
+    <!-- Header END -->
+
+    <!-- Sidebar START -->
+    <!-- <div class="sidebar">
+        <ul>
+            <li><a href="#" data-toggle="modal" data-target="#userModal"></a></li>
+            <li><a href="#" data-toggle="modal" data-target="#userModal"></a></li>
+            <li><a href="#" data-toggle="modal" data-target="#userModal"></a></li>
+            <li><a href="#" data-toggle="modal" data-target="#userModal">Enter API key</a></li>
+            <li><a id="logout" href="{% url 'logout' %}">
+                Logout <i class="material-icons">exit_to_app</i>
+            </a></li>
+        </ul>
+    </div> -->
+    <!-- Sidebar END -->
+
+    {% block body %}
+    {% endblock %}
+
+</body>
+</html>

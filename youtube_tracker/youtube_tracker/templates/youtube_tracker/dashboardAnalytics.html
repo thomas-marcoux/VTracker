@@ -1,0 +1,208 @@
+{% extends "youtube_tracker/analyticsBase.html" %}
+{% load static %}
+{% block body %}
+
+<title>Analytics Dashboard - VTracker</title>
+
+<!-- Stylesheets -->
+<link rel="stylesheet" href="{% static 'youtube_tracker/css/dashboard.css' %}"/>
+<link rel="stylesheet" href="{% static 'youtube_tracker/libs/styles/tabulator_midnight.css' %}" />
+
+<script>
+    let JSONContextData = '{{ JSONContextData | escapejs }}';
+</script>
+
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/lineChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/treeMap.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/dashboard.js' %}"></script>
+
+<!-- Content -->
+<section id="statistics"></section>
+<section id="visualizations">
+
+    <figure id="postingFrequencyDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Posting Frequency<span class="deeperAnalysis"> · <a href="{% url 'postingFrequencyAnalytics' trackerData.tracker_id %}?public={{trackerData.is_public}}">Deeper Analysis</a></span></h3>
+            <button id="information" title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <div id="spinner"></div>
+            <div id="postingFrequencyFigure"></div>
+        </div>
+    </figure>
+    
+    <!--Top KeyWord Diagrm-->
+    <figure id="topKeywordsDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Top Keywords<span class="deeperAnalysis"> · <a href="{% url 'contentAnalysis' trackerData.tracker_id %}?public={{trackerData.is_public}}">Deeper Analysis</a></span></h3>
+            <button id="information" title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <div id="spinner"></div>
+            <div id="topKeywordsFigure"></div>
+        </div>
+    </figure>
+    <!--Top KeyWord Diagram End-->
+    <figure id="socialMediaDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Social Media</h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper"></div>
+    </figure>
+
+    <figure id="dailyVideoViewsDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Daily Video Views<span class="deeperAnalysis"> · <a href="{% url 'contentEngagement' trackerData.tracker_id %}?public={{trackerData.is_public}}">Deeper Analysis</a></span></h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <div id="spinner"></div>
+            <div id="dailyVideoViewsFigure"></div>
+        </div>
+    </figure>
+
+    <figure id="relatedVideosDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Related Videos<span class="deeperAnalysis"> · <a href="{% url 'networkAnalysis' trackerData.tracker_id %}?public={{trackerData.is_public}}"> Deeper Analysis</a></span></h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+
+        <!-- Content -->
+        <div id="contentWrapper"></div>
+    </figure>
+    <!--Location-->
+    <figure id="locationDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Location</h3>
+            <!-- <span class="deeperAnalysis"> · <a href="#">Deeper Analysis</a></span></h3> -->
+            <button id="information" title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <!-- Temporary Placeholder Image -->
+            <img src="{% static 'youtube_tracker/images/tempImages/location.png' %}"  >
+            <div id="spinner"></div>
+        </div>
+    </figure>
+    <!--Language-->
+    <figure id="languageDiagram" class="figure">
+            <!-- Title -->
+            <div id="titleWrapper">
+                <h3 id="diagramTitle">Language</h3>
+                <!-- <span class="deeperAnalysis"> · <a href="#">Deeper Analysis</a></span></h3> -->
+                <button id="information" title="More information about the current diagram will be provided here in this section."></button>
+            </div>
+            <!-- Figure -->
+            <div id="figureWrapper">
+                <img src="{% static 'youtube_tracker/images/tempImages/language.png' %}"  >
+                <div id="spinner"></div>
+                </div>
+    </figure>
+    <!-- Sentiment Diagram  -->
+    <figure id="sentimentDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Sentiment
+            <span class="deeperAnalysis"> ·<a href="{% url 'sentimentAnalysis' trackerData.tracker_id %}?public={{trackerData.is_public}}">Deeper Analysis</a></span></h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <img src="{% static 'youtube_tracker/images/tempImages/sentiment.png' %}"  >
+        </div>
+    </figure>
+    <!-- TopicDistributionDiagram-->
+    <figure id="topicDistributionDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Topic Distribution
+            <span class="deeperAnalysis"> ·<a href="{% url 'topicAnalysis' trackerData.tracker_id %}?public={{trackerData.is_public}}">Deeper Analysis</a></span></h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <img src="{% static 'youtube_tracker/images/tempImages/figure2.png' %}"  >
+            <div id="spinner"></div>
+        </div>
+    </figure>
+
+     <!-- Video Distribution Diagram  -->
+     <figure id="videoDistributionDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Video Distribution  </h3>
+            <!-- <span class="deeperAnalysis"> · <a href="#">Deeper Analysis</a></span></h3> --> 
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <img src="{% static 'youtube_tracker/images/tempImages/videos.png' %}"  >
+        </div>
+    </figure>
+    <!-- TopicDistributionDiagram-->
+    <figure id="vloggerDistributionDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Vlogger Distribution</h3>
+            <!-- <span class="deeperAnalysis"> · <a href="#">Deeper Analysis</a></span></h3> -->
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <img src="{% static 'youtube_tracker/images/tempImages/figure3.png' %}"  >
+            <div id="spinner"></div>
+       </div>
+    </figure>
+
+    <!--Clusters-->
+
+    <figure id="clusterDiagram" class="figure">
+    <!-- Title -->
+        <div id="titleWrapper">
+        <h3 id="diagramTitle">Clusters
+        <span class="deeperAnalysis"> ·<a href="{% url 'clusterAnalysis' trackerData.tracker_id %}?public={{trackerData.is_public}}">Deeper Analysis</a></span></h3>
+        <button id="information"
+            title="More information about the current diagram will be provided here in this section."></button>
+    </div>
+    <!-- Figure -->
+    <div id="figureWrapper">
+        <img id = "tempfiles"  src="{% static 'youtube_tracker/images/tempImages/cluster.png' %}"  />
+    </div>
+   </figure>
+
+    <!-- topicDistributionDiagram-->
+    <figure id="narrativeDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Narratives<span class="deeperAnalysis"> · <a href="{% url 'narrativeAnalysis' trackerData.tracker_id %}?public={{trackerData.is_public}}">Deeper Analysis</a></span></h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <img id = "tempfiles" src="{% static 'youtube_tracker/images/tempImages/narrative.png' %}"  >
+            <div id="spinner"></div>
+    </figure>
+
+</section>
+
+
+{% endblock %}

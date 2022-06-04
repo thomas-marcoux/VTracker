@@ -1,0 +1,133 @@
+{% extends "youtube_tracker/base.html" %}
+{% load static %}
+{% load tz %}
+{% block body %}
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/tracker.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/trackerMenu.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/trackerModal.css' %}">
+
+    <!-- Tracker Scripts -->
+    <script type="text/javascript" src="{% static 'youtube_tracker/behavior/trackerFunctions.js' %}"></script>
+    <script type="text/javascript" src="{% static 'youtube_tracker/behavior/trackerDetails.js' %}"></script>
+    <script src="{% static 'youtube_tracker/libs/scripts/numeral.min.js' %}"></script>
+
+    <!-- Content -->
+    <main id="content">
+        <div id="head" trackerId="{{ trackerDetails.tracker_id }}">
+            <div id="title">{{ trackerDetails.tracker_name }}</div>
+            <div id="tools">
+                <button id="analytics" onclick="location.href='{% url 'dashboardAnalytics' trackerDetails.tracker_id  %}?public={{ trackerDetails.is_public }}';"><div id="icon"></div></button>
+                <!-- <button id="edit"><div id="icon"></div></button> -->
+                <!-- <button id="refresh"><div id="icon"></div></button> -->
+                {% if not trackerDetails.is_public or user.is_staff %}
+                <button id="delete" trackerName="{{ trackerDetails.tracker_name }}" onclick="deleteTracker()"><div id="icon"></div></button>
+                {% endif %}
+            </div>
+        </div>
+        <div id="dates">
+            <div id="created">Created | {{ trackerDetails.created_at }}</div>
+        </div>
+        {% if trackerDetails.tracker_description %}
+            <div id="description">{{ trackerDetails.tracker_description }}</div>
+        {% endif %}
+        <div id="statistics">
+            <div id="videos" class="metric">
+                <div id="count">
+                    {% with trackerDetails.videos_count|stringformat:"s" as videosCount %}
+                        {% with videoStat=""|add:videosCount %}
+                            {{ videoStat }}
+                        {% endwith %}
+                    {% endwith %}
+                </div>
+                <div id="label">Videos</div>
+            </div>
+            <div id="channels" class="metric">
+                <div id="count">
+                    {% with trackerDetails.channels_count|stringformat:"s" as channelsCount %}
+                        {% with channelStat=""|add:channelsCount %}
+                            {{ channelStat }}
+                        {% endwith %}
+                    {% endwith %}
+                </div>
+                <div id="label">Channels</div>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <form id="search">
+            <label for="searchBox">Search...</label>
+            <input id="searchBox" type="text" placeholder="Search Videos" autocomplete="off">
+        </form>
+        
+        <div id="videosChannels">
+
+            <ul id="list">
+                {% comment %}
+
+                {% for channel in trackerDetails.tracker_channels %}
+                <li id="{{ channel.channel_id }}">
+                    <img id="photo" src="{{ channel.thumbnails_medium_url }}">
+                    <div id="wrapper">
+                        <h2 id="title"><a href="https://youtube.com/channel/{{ channel.channel_id }}">{{ channel.channel_title }}</a></h2>
+                        
+                        <span id="separator">·</span>
+                        {% localtime on %}
+                        <p id="date">{{ channel.joined_date|date }}</p>
+                        {% endlocaltime %}
+                        <button id="trackStatusButton" title="Click to see list of trackers.">0 TRACKS</button>
+                        <button id="delete" 
+                            onclick="deleteContentFromTracker('{{ trackerDetails.tracker_id }}', 'channel', '{{ channel.channel_id }}')"></button>
+                    </div>
+                </li>
+                {% endfor %}
+
+                {% endcomment %}
+                <div id="arrows">
+                    <div id="backArrow" class="arrow"></div>
+                    <div id="forwardArrow" class="arrow"></div>
+                </div>
+                <div id="loading"></div>
+            </ul>
+
+            <div id="pagination">
+            </div>
+
+        </div>
+
+    </main>
+
+        <!-- Modals -->
+    <section id="modals">
+        <div id="window">
+            <button id="close"></button>
+        </div>
+        {% include 'youtube_tracker/modal_content.html' %}
+    </section>
+
+    <!-- Track Menu -->
+    <div id="trackMenu" class='dummy hidden'>
+        <div id="menu">
+            <input id="searchBox" type="text" placeholder="Search Trackers">
+            <ul id="trackers">
+                {% for i in trackerList %}
+                    <li trackerId="{{ i.tracker_id }}"><span>{{ i.tracker_name|truncatechars:15 }}</span><button id="checkMark"></button></li>
+                {% endfor %}
+            </ul>
+            <!-- <p id="status">Click the + button below to create a new tracker.</p> -->
+            <form id="createTrackerForm"> <!-- I spent hours just to figureout what is the issue with buttons inside this form, then I have realized that a from does a submit after clicking any button inside of it :( -->
+                <div id="createTrackerFormWrapper">
+                    <input id="trackerName" type="text" placeholder="Name" autocomplete="off" class="input" maxlength="64">
+                    <textarea id="trackerDescription" placeholder="Description" autocomplete="off" class="input" maxlength="255"></textarea>
+                    <p id="errorMessage" style="color:red;"></p>
+                </div>
+                
+                <button id="addTracker" title="Create a new tracker"></button>
+                <button id="createTracker" title="Create tracker">CREATE</button>
+            </form>
+        </div>
+        <div id="arrow"></div>
+    </div>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/trackerModal.js' %}"></script>
+{% endblock %}

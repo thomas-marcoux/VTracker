@@ -1,0 +1,222 @@
+
+/** Global settings START **/
+* {
+ margin: 0;
+ padding: 0;
+ -webkit-box-sizing: border-box;
+ -moz-box-sizing: border-box;
+ box-sizing: border-box;
+}
+
+body {
+	background-color:white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 100%;
+  color: rgb(70, 70, 70);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/** Global settings END **/
+
+/** Login Form **/
+#login-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #F3F4F5;
+    border-radius: 15px;
+    padding: 30px;
+  }
+
+h1{
+    font-weight: 400;
+    font-size: 1.75rem;
+    text-align:center;
+    margin: 15px 0px 0px 0px;
+}
+p{
+  margin: 15px;
+  font-size: .9rem;
+  text-align:center;
+}
+hr{
+  margin: 30px 0px;
+  border: 0;
+  height: 0;
+  border-top: 1px solid rgba(70, 70, 70, 0.2);
+  text-align: center;
+}
+hr.or:after {
+  content: "or";
+  display: inline-block;
+  position: relative;
+  top: -1.25rem;
+  font-size: 1rem;
+  padding: 0.5rem 0.5rem;
+  color:rgba(70, 70, 70, 0.5);
+  background: #F3F4F5;
+}
+a {
+  text-decoration: none;
+  font-weight: bold;
+  color: rgba(70, 70, 70, .8);
+}
+a:hover {
+  color: rgba(70, 70, 70, 1);
+}
+
+
+  .login-form .group .check{
+    margin-left: 15px;
+  }
+
+  .login-form .group{
+    margin-bottom:15px;
+  }
+  .login-form .group .label,
+  .login-form .group .input,
+  .login-form .submit-button,
+  .google-button{
+    color:#2F2D2C;
+    display:block;
+    font-weight: 300;
+    width:100%;
+    
+  }
+
+  .login-form .group .input
+  {
+    border:none;
+    padding:15px 20px;
+    border-radius:15px;
+    background:rgb(255,255,255);
+    box-shadow: 1px 1px 0px 1px rgba(0,0,0,0.05)
+  }
+  .login-form .group input[data-type="password"]{
+    text-security:circle;
+    -webkit-text-security:circle;
+  }
+  .login-form .group .label{
+    color:#2F2D2C;
+    font-size:1rem;
+    padding-left:15px;
+    margin-bottom:5px;
+  }
+
+  .login-form .submit-button:hover{
+    color:rgb(255,255,255);
+  }
+  .login-form .group .check + label{
+    color:rgba(70, 70, 70, .7);
+  }
+  .login-form .group .check:checked + label{
+    color: rgba(70, 70, 70, .9);
+  }
+
+  #eye {
+    border: 0;
+    background:rgb(255,255,255);
+    width: 30px;
+    height: 20px;
+    float: right;
+    position: relative;
+    right: 15px;
+    top: -32px;
+    z-index: 5;
+    cursor: pointer;
+    background-image: url('../images/show-password-icon.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  #eye.hide-pass {
+    background-image: url('../images/hide-password-icon.svg');
+  }
+
+.forgot-pass{
+    padding-top:10px;
+    display: block;
+    text-align: right;
+    font-size: .75em;
+  }
+
+  .google-button{
+    background: white;
+    color: rgb(70, 70, 70);
+  }
+  .login-form .submit-button{
+    background-color: rgb(70, 70, 70);
+    color: rgb(182, 182, 182);
+    font-size: 1rem;
+  } 
+  .google-button, .login-form .submit-button{
+    height: 40px;
+    border-width: 0;
+    border-radius: 20px;
+    white-space: nowrap;
+    box-shadow: 1px 1px 0px 1px rgba(0,0,0,0.05);
+    transition-property: background-color, box-shadow;
+    transition-duration: 150ms;
+    transition-timing-function: ease-in-out;
+    padding: 0;
+    cursor: hand;
+    cursor: pointer;
+  }
+ 
+    .google-button:focus,
+    .google-button:hover,
+    .login-form .submit-button:focus,
+    .login-form .submit-button:hover
+   {
+      box-shadow: 1px 4px 5px 1px rgba(0,0,0,0.1);
+  }
+    
+    .google-button:active
+     {
+      background-color: #e5e5e5;
+      box-shadow: none;
+      transition-duration: 10ms;
+    }
+      
+  .google-button-icon{
+    display: inline-block;
+    vertical-align: middle;
+    margin: 8px 0 8px 24px;
+    width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+  }
+  
+  .button-text{
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 24px;
+    font-size: 1rem;
+    font-weight: medium;
+  }
+
+ .requiredField{
+    display: none;
+  }
+
+  @media screen and (max-width: 600px) {
+    #login-content {
+    min-width: 260px;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0px;
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+    padding-top:40px;
+    }
+    .google-button-icon{
+      margin: 8px -10px 8px 24px;
+     }
+     h1{
+       font-size:2rem;
+     }
+
+
+  }

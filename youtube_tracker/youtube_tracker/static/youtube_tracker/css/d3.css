@@ -1,0 +1,163 @@
+
+/* New d3 bar chart */
+.d3-axis-strong path, .d3-axis-strong line {
+    stroke: #ccc;
+}
+
+.d3-axis path {
+    fill: none;
+    stroke: #999999;
+    shape-rendering: crispEdges;
+}
+
+.d3-tip {
+    position: absolute;
+    padding: 9px 18px;
+    border-radius: 3px;
+    background-color: #333;
+    color: #fff;
+    margin-bottom: -3px;
+    font-size: 12px;
+    z-index: 1070;
+}
+
+.d3-axis path {
+    fill: none;
+    stroke: #999999;
+    shape-rendering: crispEdges;
+}
+
+.d3-axis line {
+    stroke: #eeeeee;
+    shape-rendering: crispEdges;
+}
+
+.d3-axis .tick,
+.d3-axis .tick text {
+    font-size: 11px;
+    fill: #333333;
+}
+
+.d3-axis-solid path,
+.d3-axis-solid line {
+    stroke: #ccc;
+}
+
+.d3-axis-solid .tick {
+    fill: #999999;
+}
+
+.d3-axis-solid .tick text {
+    fill: #999999;
+}
+
+.d3-axis-strong path, .d3-axis-strong line {
+    stroke: #ccc;
+}
+
+.d3-axis-strong .tick {
+    fill: #333333;
+}
+
+.d3-axis-strong .tick text {
+    fill: #333333;
+}
+
+.d3-axis-transparent path {
+    stroke: none;
+}
+
+.d3-axis-transparent line {
+    stroke: #e5e5e5;
+}
+
+.d3-axis-transparent .tick {
+    fill: #999999;
+}
+
+.d3-axis-transparent .tick text {
+    fill: #999999;
+}
+
+.d3-tip {
+    position: absolute;
+    padding: 9px 18px;
+    border-radius: 3px;
+    background-color: #333;
+    color: #fff;
+    margin-bottom: -3px;
+    font-size: 12px;
+    z-index: 1070;
+}
+
+.venntooltip {
+    position: absolute;
+    text-align: center;
+    min-width: 60px;
+    white-space: nowrap;
+    background-color: #333;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 3px;
+    display: none;
+}
+
+.d3-line {
+    fill: none;
+}
+
+.d3-line-thin {
+    stroke-width: 1px;
+}
+
+.d3-line-medium {
+    stroke-width: 1.5px;
+}
+
+.d3-line-strong {
+    stroke-width: 2px;
+}
+
+.d3-line-circle {
+    fill: none;
+    cursor: pointer;
+}
+
+.d3-line-circle-thin {
+    stroke-width: 1px;
+}
+
+.d3-line-circle-medium {
+    stroke-width: 1.5px;
+}
+
+.d3-line-circle-strong {
+    stroke-width: 2px;
+}
+
+.d3-grid .tick line {
+    stroke-width: 1px;
+    stroke: #e5e5e5;
+    shape-rendering: crispEdges;
+}
+
+.d3-grid .tick text {
+    fill: #333333;
+    stroke: none;
+}
+
+.d3-grid-dashed .tick {
+    stroke-dasharray: 4, 2;
+    stroke-width: 1px;
+    stroke: #e5e5e5;
+    shape-rendering: crispEdges;
+}
+
+.d3-grid-dashed path {
+    stroke-width: 0;
+}
+
+.d3-crosshair-overlay {
+    fill: none;
+    pointer-events: all;
+}

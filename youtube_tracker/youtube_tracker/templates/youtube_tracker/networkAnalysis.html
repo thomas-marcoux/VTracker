@@ -1,0 +1,59 @@
+{% extends "youtube_tracker/analyticsBase.html" %}
+{% load humanize %}
+{% load static %}
+{% block body %}
+<title>Network Analysis - VTracker</title>
+<!-- Stylesheets -->
+<link rel="stylesheet" href="{% static 'youtube_tracker/css/networkAnalysis.css' %}"/>
+<script>
+    let JSONContextData = '{{ JSONContextData | escapejs }}';
+</script>
+<script  type="text/javascript" src="{% static 'youtube_tracker/behavior/networkAnalysis.js' %}"></script>
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/networkGraph.js' %}"></script>
+<section id="visualizations">
+
+     <figure id="networkGraph" class="figure">
+          <!-- Figure -->
+             <!-- Related Videos Details  -->
+
+     <div id="figureWrapper" class="component">
+        <script type="text/javascript" src="{% static '/youtube_tracker/reactapp/dist/vosviewer-online/vosviewer-online.6308ce9304a1622da1e9.bundle.js' %}"></script>
+    </div>
+       
+        <div id="statistics" class="component">
+            <ul id="statisticsWrapper">
+                <li>
+                    <h3>Views</h3>
+                    <p>34</p>
+                </li>
+                <li>
+                    <h3>Likes/Dislikes</h3>
+                    <p>80%</p>
+                </li>
+                <li>
+                    <h3>Comments</h3>
+                    <p>34</p>
+                </li>
+                <li>
+                    <h3>Location</h3>
+                    <p>US</p>
+                </li>
+            </ul>
+        </div>
+    </figure>
+      <!-- Related Videos Details END -->
+    <figure id="videosDiagram" class="figure">
+        <h3 id="diagramTitle">Related Videos</h3>
+        <form id="search">
+        <label for="searchBox">Search...</label>
+        <input id="searchBox" type="text" placeholder="Search Videos" autocomplete="off">
+        </form>
+    </figure>
+        <div id="pagination">
+            <li class="selected">1</li>
+            <li>2</li>
+            <li>3</li>
+        </div>
+</section>
+{% endblock %}

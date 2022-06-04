@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: charts/baseChart.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: charts/baseChart.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview Defines the BaseChart class.
+ * @author Thomas Marcoux
+ * @copyright COSMOS 2021
+ * @see BaseChart
+ */
+
+/**
+ * The color of text on charts.
+ * @constant {string}
+ * @default
+ */
+const TEXT_COLOR = "#FFFFFF";
+/**
+ * The main color theme of the charts.
+ * @constant {string}
+ * @default
+ */
+const CHART_COLOR = "#FF0000";
+
+/**
+ * The default height of the charts.
+ * @constant {integer}
+ * @default
+ */
+ const FIGURE_HEIGHT = 350;
+
+/**
+ * @abstract
+ * @classdesc Defines basic ApexCharts figure behavior.
+ */
+class BaseChart {
+  /**
+   * @param {string} url The url to use to collect data.
+   * @param {Object} queryParams The parameters to send to the data fetching query.
+   * @param {Element} wrapper The figure's parent wrapper.
+   * @param {string} tooltipText Prefix to display on tooltip.
+   */
+  constructor(url, queryParams, wrapper = null, tooltipText = null) {
+    this.chart;
+    this.wrapper = wrapper;
+    this.url = "/" + url;
+    this.queryParams = queryParams;
+    this.tooltipText = tooltipText;
+    this.chart_params = {
+      hideBorders: false, //Hides chart strokes, for charts with no dates.
+      disableLabels: false, //Hide labels on top of charts.
+      singleSerie: false, //Hides duplicate tooltips for charts showing data for only a single series.
+    };
+  }
+
+  /**
+   * Initializes options and renders an empty chart.
+   */
+  render() {
+    let options = this.getBaseOptions();
+    this.chart = new ApexCharts(this.wrapper, options);
+    this.chart.render();
+  }
+
+  /**
+   * Fetch data and update chart.
+   */
+  update() {
+    this.updateData().then(() => {
+      this.chart.updateSeries(this.series);
+    });
+  }
+
+  /**
+   * Fetch data and assign to object's value parameter(s).
+   * @returns {Promise} Promise resolved once data is fetched.
+   */
+  updateData() {
+    return new Promise((resolve) => {
+      fetchData(this.queryParams, this.url).then((response) => {
+       // console.log("The data fetched is", this.url, response);
+        this.setData(response.series);
+        resolve(response);
+      });
+    });
+  }
+
+  /**
+   * Return the full options of the loaded graph. This is especially useful if multiple graphs share one wrapper and morph into one another.
+   * @returns {Object} Options dictionary.
+   */
+  getOptions() {
+    return _.merge(this.getBaseOptions(), { series: this.series });
+  }
+
+  /**
+   * Format data to be displayed in the chart.
+   * @param {Object} data response data.
+   */
+  setData(data) {
+    this.series = data;
+  }
+
+  /**
+   * Get default options of the empty graph.
+   * @return {Object} default options.
+   */
+  getBaseOptions() {
+    let options = {
+      series: [
+        {
+          data: [],
+        },
+      ],
+      chart: {
+        height: FIGURE_HEIGHT,
+        foreColor: TEXT_COLOR,
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          colors: [TEXT_COLOR],
+        },
+      },
+      grid: {
+        show: false,
+      },
+      colors: [CHART_COLOR],
+      fill: {
+        opacity: 1,
+      },
+      noData: {
+        text: "Loading...",
+      },
+      tooltip: {
+        intersect: false,
+        marker: false,
+        shared: false,
+        theme: "dark",
+        x: {
+          show: true,
+        },
+        y: {
+          formatter: function (val) {
+            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          },
+        },
+      },
+      xaxis: {
+        categories: [],
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: true,
+        },
+        tooltip: {
+          enabled: false,
+        },
+      },
+      yaxis: {
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: true,
+        },
+        labels: {
+          formatter: abbreviateNumber,
+        },
+      },
+    };
+
+    if (this.chart_params.hideBorders) {
+      options.stroke = {
+        show: false,
+        width: 2,
+        colors: ["transparent"],
+      };
+    }
+
+    if (this.chart_params.hideXAxis) {
+      options.xaxis.axisTicks.show = false;
+    }
+
+    if (this.chart_params.hideYAxis) {
+      options.yaxis.axisTicks.show = false;
+    }
+
+    if (this.chart_params.disableLabels) {
+      options.dataLabels.enabled = false;
+    }
+
+    if (this.chart_params.singleSerie) {
+      options.tooltip.x.show = false;
+    }
+
+    return options;
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BarChart.html">BarChart</a></li><li><a href="BaseAnalytics.html">BaseAnalytics</a></li><li><a href="BaseChart.html">BaseChart</a></li><li><a href="channelObserver.ChannelObserver.html">channelObserver.ChannelObserver</a></li><li><a href="contentAnalysis.Categories.html">contentAnalysis.Categories</a></li><li><a href="contentAnalysis.ContentAnalysis.html">contentAnalysis.ContentAnalysis</a></li><li><a href="contentAnalysis.Emotions.html">contentAnalysis.Emotions</a></li><li><a href="contentAnalysis.Keywords.html">contentAnalysis.Keywords</a></li><li><a href="contentAnalysis.Language.html">contentAnalysis.Language</a></li><li><a href="contentAnalysis.Opinions.html">contentAnalysis.Opinions</a></li><li><a href="contentAnalysis.SharedChart.html">contentAnalysis.SharedChart</a></li><li><a href="contentAnalysis.VideoComments.html">contentAnalysis.VideoComments</a></li><li><a href="contentAnalysis.VideoDetails.html">contentAnalysis.VideoDetails</a></li><li><a href="contentEngagement.CommentStats.html">contentEngagement.CommentStats</a></li><li><a href="contentEngagement.ContentEngagement.html">contentEngagement.ContentEngagement</a></li><li><a href="contentEngagement.Dislikes.html">contentEngagement.Dislikes</a></li><li><a href="contentEngagement.Likes.html">contentEngagement.Likes</a></li><li><a href="contentEngagement.Suscribers.html">contentEngagement.Suscribers</a></li><li><a href="contentEngagement.VideoDetails.html">contentEngagement.VideoDetails</a></li><li><a href="contentEngagement.VideoPlayerTable.html">contentEngagement.VideoPlayerTable</a></li><li><a href="contentEngagement.Views.html">contentEngagement.Views</a></li><li><a href="dashboardAnalytics.DailyVideoViews.html">dashboardAnalytics.DailyVideoViews</a></li><li><a href="dashboardAnalytics.Dashboard.html">dashboardAnalytics.Dashboard</a></li><li><a href="dashboardAnalytics.PostingFrequency.html">dashboardAnalytics.PostingFrequency</a></li><li><a href="dashboardAnalytics.RelatedVideos.html">dashboardAnalytics.RelatedVideos</a></li><li><a href="dashboardAnalytics.SocialMediaFootprint.html">dashboardAnalytics.SocialMediaFootprint</a></li><li><a href="dashboardAnalytics.StatisticsRibbon.html">dashboardAnalytics.StatisticsRibbon</a></li><li><a href="dashboardAnalytics.TopKeywords.html">dashboardAnalytics.TopKeywords</a></li><li><a href="DataTable.html">DataTable</a></li><li><a href="DataTableVideoComments.html">DataTableVideoComments</a></li><li><a href="DataTableVideoPlayer.html">DataTableVideoPlayer</a></li><li><a href="DatePicker.html">DatePicker</a></li><li><a href="LineChart.html">LineChart</a></li><li><a href="NetworkAnalysis.html">NetworkAnalysis</a></li><li><a href="NetworkAnalysis.RelatedVideosGraph.html">NetworkAnalysis.RelatedVideosGraph</a></li><li><a href="NetworkGraph.html">NetworkGraph</a></li><li><a href="PieChart.html">PieChart</a></li><li><a href="postingFrequency.Categories.html">postingFrequency.Categories</a></li><li><a href="postingFrequency.ChannelDetails.html">postingFrequency.ChannelDetails</a></li><li><a href="postingFrequency.ChannelLocation.html">postingFrequency.ChannelLocation</a></li><li><a href="postingFrequency.ChannelMap.html">postingFrequency.ChannelMap</a></li><li><a href="postingFrequency.PostingFrequency.html">postingFrequency.PostingFrequency</a></li><li><a href="postingFrequency.PostingFrequencyChart.html">postingFrequency.PostingFrequencyChart</a></li><li><a href="postingFrequency.StatisticsRibbon.html">postingFrequency.StatisticsRibbon</a></li><li><a href="postingFrequency.SubCategories.html">postingFrequency.SubCategories</a></li><li><a href="sentimentAnalysis.SentimentAnalysis.html">sentimentAnalysis.SentimentAnalysis</a></li><li><a href="TreeMap.html">TreeMap</a></li><li><a href="WorldMap.html">WorldMap</a></li></ul><h3>Global</h3><ul><li><a href="global.html#abbreviateNumber">abbreviateNumber</a></li><li><a href="global.html#CHART_COLOR">CHART_COLOR</a></li><li><a href="global.html#createTrackerDashboardButton">createTrackerDashboardButton</a></li><li><a href="global.html#fetchData">fetchData</a></li><li><a href="global.html#FIGURE_HEIGHT">FIGURE_HEIGHT</a></li><li><a href="global.html#Implementlogicwhenachannelisclicked">Implement logic when a channel is clicked</a></li><li><a href="global.html#insertRender">insertRender</a></li><li><a href="global.html#TEXT_COLOR">TEXT_COLOR</a></li><li><a href="global.html#toggleTrackerButton">toggleTrackerButton</a></li><li><a href="global.html#updateRender">updateRender</a></li><li><a href="global.html#updateSideButton">updateSideButton</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

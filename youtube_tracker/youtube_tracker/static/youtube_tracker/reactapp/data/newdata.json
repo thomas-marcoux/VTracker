@@ -1,0 +1,72 @@
+{
+    "network": {
+        "items": [
+            {
+                "id": 1,
+                "label": "ChemInform",
+                "x": 1.2911,
+                "y": 0.3238,
+                "cluster": 4,
+                "weights": {
+                    "No. of pubs": 487522,
+                    "No. of cits": 907
+                }
+            },
+            {
+                "id": 2,
+                "label": "PLoS ONE",
+                "x": 0.023,
+                "y": 0.4739,
+                "cluster": 2,
+                "weights": {
+                    "No. of pubs": 185281,
+                    "No. of cits": 1105346
+                }
+            },
+            {
+                "id": 3,
+                "label": "Physical Review B",
+                "x": 1.6677,
+                "y": -0.0869,
+                "cluster": 4,
+                "weights": {
+                    "No. of pubs": 166709,
+                    "No. of cits": 2577030
+                }
+            },
+            {
+                "id": 4,
+                "label": "Science",
+                "x": 0.3327,
+                "y": 0.3542,
+                "cluster": 6,
+                "weights": {
+                    "No. of pubs": 139038,
+                    "No. of cits": 2798616
+                }
+            },
+            {
+                "id": 5,
+                "label": "Chemischer Informationsdienst",
+                "x": 1.287,
+                "y": 0.3247,
+                "cluster": 4,
+                "weights": {
+                    "No. of pubs": 134384,
+                    "No. of cits": 11
+                }
+            },
+            {
+                "id": 6,
+                "label": "Nature",
+                "x": 0.294,
+                "y": 0.4454,
+                "cluster": 6,
+                "weights": {
+                    "No. of pubs": 133919,
+                    "No. of cits": 3108713
+                }
+            }
+        ]
+    }
+}

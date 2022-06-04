@@ -1,0 +1,645 @@
+/*
+
+
+    " Reimplement the wheel to either learn, or make it better. "
+
+    http://www.hayder.io/
+    https://www.youtube.com/watch?v=QOlTGA3RE8I
+    
+    Product Name: YouTubeTracker,
+    Description: Tracking YouTube"s data.
+    Beneficiary: COSMOS
+    
+    Copyright © 1992 - 2021 HAYDER, All Rights Reserved.
+    
+    
+    
+*/
+
+
+@import "/static/youtube_tracker/css/templates/analytics-template.css";
+
+/**** Narrative Tree ****/
+
+
+/** General ***/
+ 
+div#narrative-tree {
+
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    min-width: 1105px;
+    padding: 50px;
+    margin: 0px auto;
+}
+
+div#narrative-tree div.column {
+
+    border-left: 2px solid var(--blueish);
+    padding-left: 10px;
+    width: 25%;
+    display: inline-flex;
+    flex-direction: column;
+    position: relative;
+
+}
+
+div#narrative-tree div.column.active {
+
+    border-left-color: #368CF0
+
+}
+
+div#narrative-tree div.column .items-list {
+
+    display: none;
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+}
+
+div#narrative-tree div.column .items-list.displayed {
+
+    display: block;
+    color: white;
+
+}
+
+div#narrative-tree div.column .items-list > li {
+
+    width: 90%;
+
+}
+
+div#narrative-tree div.column div.head {
+
+    display: block;
+
+}
+
+div#narrative-tree div.column div.head div.title {
+
+    display: inline-block;
+    font-size: 26px;
+    font-weight: bold;
+
+}
+
+div#narrative-tree div.column div.head div#sort-items {
+
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 5px;
+
+}
+
+div#narrative-tree div.column div.head div#sort-items div#sort-wrapper {
+
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+
+}
+
+div#narrative-tree div.column div.head div#sort-items div#sort-wrapper:hover {
+
+    opacity: 1;
+
+}
+
+div#narrative-tree div.column div.head div#sort-items p {
+
+    display: inline-block;
+
+}
+
+div#narrative-tree div.column div.head div#sort-items p#sort-type {
+
+    font-weight: 800;
+
+}
+
+div#narrative-tree div.column div.head div#sort-items button.sort-button {
+
+    width: 10px;
+    height: 7px;
+    background-image: var(--interface);
+    background-position: -490px -1045px;
+
+}
+
+div#narrative-tree div.column div.head div.counter {
+
+    display: inline-block;
+    vertical-align: text-bottom;
+    color: var(--whitish);
+    background-color: var(--blueishDark);
+    font-size: 13px;
+    font-weight: bold;
+    padding: 5px 5px;
+    border-radius: var(--radius5);
+
+}
+
+div#narrative-tree div.column div.head {
+
+    margin-bottom: 25px;
+
+}
+
+div#narrative-tree div.column ul.items-list > li {
+
+    position: relative;
+    background-color: #999;
+    color: var(--blueishDark);
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 4px;
+
+}
+
+div#narrative-tree div.column ul.items-list > li.selected {
+
+    background-color: var(--blue2);
+    color: var(--whitish);
+
+}
+
+div#narrative-tree div.column ul.items-list > li:not(.selected):hover {
+
+    background-color: var(--blue2Light);
+
+}
+
+div#narrative-tree div.column ul.items-list > li.selected div.connector {
+
+    position: absolute;
+    background-color: #00B19C;
+    width: 100%;
+    height: 2px;
+    left: 14%;
+    top: 50%;
+    z-index: -10;
+
+}
+
+div#narrative-tree div.column ul.items-list > li button.ungroup-button {
+
+    display: none;
+
+}
+
+div#narrative-tree div.column ul.items-list > li button.ungroup-button:hover {
+
+    opacity: 0.5;
+
+}
+
+
+/** Entities Column **/
+
+div#entities-controls {
+
+    display: none;
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translate(-50%);
+
+}
+
+div#entities-controls.displayed {
+
+    display: block
+
+}
+
+div#entities-controls button#group-button div#group-count  {
+
+    position: absolute;
+    padding: 5px 8px;
+    background-color: var(--reddish);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    top: 0px;
+    right: -10px;
+    border-radius: var(--radius1000);
+
+}
+
+div#entities-controls button  {
+
+    position: relative;
+    background-color: var(--whitish);
+    width: 50px;
+    height: 50px;
+    border: 2px solid var(--blueishLighter);
+    margin-right: 10px;
+    vertical-align: top;
+    border-radius: var(--radius1000);
+    background-image: var(--interface);
+    background-position: -102px -818px;
+
+}
+
+div#entities-controls button#cancel-button  {
+
+    background-position-x: -162px;
+
+}
+
+div#entities-controls button:hover  {
+
+    background-color: var(--blueishLightest2);
+
+}
+div#narrative-tree div#entities-column  {
+
+    border-left: 2px solid #00B19C;
+}
+
+div#narrative-tree div#entities-column form {
+
+    margin-bottom: 10px;
+
+}
+div#narrative-tree div#entities-column input#keywordSearch {
+
+  background-color: var(--whitishTransparent3);;
+
+}
+
+div#narrative-tree div#entities-column form input {
+
+    border-radius: var(--radius25);
+    border: 2px solid var(--blueishLighter);
+    padding: 8px 10px;
+    font-size: 16px;
+    width: 90%;
+    /* outline: 0px; */
+    color: var(--blueishDark);
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li {
+
+    background-color: #999;
+    font-size: 14px;
+    border-radius: 24px;
+    padding: 0px;
+    margin-left: 26px;
+    width: 82%;
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li.group {
+
+    border: 2px dashed var(--blueishLighter);
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li.selected.group {
+
+    border: 2px solid var(--blue2);
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li.selected {
+
+    background-color: #00B19C;
+    color: var(--whitish);
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li div#choice {
+
+    position: absolute;
+    left: -25px;
+    top: 50%;
+    transform: translate(0%, -50%);
+    border-radius: 24px;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--greyish);
+    cursor: pointer;
+    z-index: 1000;
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li div#choice:hover {
+
+    border-color: var(--blue2);
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li div#choice.chosen {
+
+    background-color: #00B19C;
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li ul.subitems-list {
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    border-radius: 22px;
+    padding: 6px;
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li ul.subitems-list li {
+
+    background-color: var(--blueishLightest2);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--blueishDark);
+    border-radius: 20px;
+    padding: 10px;
+    display: inline-block;
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li.selected ul.subitems-list li {
+
+    background-color: var(--whitishLight);
+    color: var(--whitish);
+    font-size: 14px;
+    border-radius: 20px;
+    display: inline-block;
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li:not(.selected) ul.subitems-list:hover {
+
+    background-color: var(--blue2Light);
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li:not(.selected) ul.subitems-list:hover li {
+
+    background-color: var(--whitishLight);
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li.group button.ungroup-button  {
+
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: var(--interface);
+    background-position: -314px -961px;
+    position: absolute;
+    top: 0px;
+    right: -25px;
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li.group ul.subitems-list li button.remove-button {
+
+    width: 12px;
+    height: 10px;
+    background-image: var(--interface);
+    background-position: -582px -963px;
+    margin-left: 7px;
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li.selected.group ul.subitems-list li button.remove-button {
+
+    background-position: -641px -963px;
+
+}
+
+div#narrative-tree div#entities-column ul.items-list > li.group ul.subitems-list li button.remove-button:hover {
+
+    opacity: 0.5;
+
+}
+
+
+/** Narratives Column **/
+
+@keyframes blink { 
+   50% { background-color: var(--greenish2Lighter) } 
+}
+div#narrative-tree div#narratives-column  {
+
+    border-left: 2px solid var(--reddish)
+}
+
+div#narrative-tree div#narratives-column.column ul.items-list > li:not(.selected):hover {
+
+    background-color: var(--greenish2Lighter2);
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li div.connector {
+
+    background-color: var(--greenish2);
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li.focused {
+
+    animation: blink .2s step-end 3;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li p {
+
+    font-size: 16px;
+    /* outline: 0px; */
+    transition: font-size 0.15s ease-out;
+    border-radius:var(--radius5);
+    background-color:var()
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li.selected {
+
+    background-color: var(--blueish)
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li.selected p {
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    transition: font-size 0.15s ease-in;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li.selected.editing {
+
+    cursor: default;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li.selected.editing p {
+
+    border-bottom: 2px solid var(--whitishLight);
+    cursor: text;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li div#narratives-controls {
+
+    display: none;
+    width: 100%;
+    text-align: right;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li div#narratives-controls button:hover {
+
+    opacity: 0.5;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li.selected div#narratives-controls {
+
+    display: block;
+    margin-top: 15px;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li div#narratives-controls button {
+
+    width: 20px;
+    height: 20px;
+    background-image: var(--interface);
+    background-position: -420px -960px;
+    margin-left: 10px;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li div#narratives-controls button#narratives-confirm-button {
+
+    background-position: -464px -960px;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li div#narratives-controls button#narratives-cancel-button {
+
+    background-position: -509px -960px;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li.selected:not(.editing) div#narratives-controls button#narratives-confirm-button {
+
+    display: none;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li.selected:not(.editing) div#narratives-controls button#narratives-cancel-button {
+
+    display: none;
+
+}
+
+div#narrative-tree div#narratives-column ul.items-list > li.selected.editing div#narratives-controls button#narratives-edit-button {
+
+    display: none;
+
+}
+
+/** Posts Column **/
+div#narrative-tree div#posts-column {
+
+    border-left: 2px solid #00B19C;
+}
+
+
+div#narrative-tree div#posts-column.column ul.items-list > li:not(.entities-columnlected):hover {
+
+    background-color: var(--blueish);
+
+}
+
+div#narrative-tree div#posts-column.column.active {
+
+    border-left-color: var(--blueish);
+
+}
+
+div#narrative-tree div#posts-column ul.items-list > li.selected {
+
+    background-color: var(--blueish);
+
+}
+
+div#narrative-tree div#posts-column ul.items-list > li div.connector {
+
+    background-color: var(--blueish);
+
+}
+
+
+/** Preview Column **/
+
+div#narrative-tree div#preview-column.column.active {
+
+    border-left-color: var(--purplish);
+
+}
+
+div#narrative-tree div#preview-column div.head div.counter {
+
+    visibility: hidden;
+
+}
+
+
+/** Submenu **/
+
+ul#submenu {
+
+    display: none;
+    position: absolute;
+    background-color: var(--blueishDark);
+    padding: 10px 10px;
+    color: var(--whitish);
+    border-radius: var(--radius13);
+    z-index: 50000;
+
+}
+
+ul#submenu.displayed {
+
+    display: block;
+
+}
+
+ul#submenu li {
+
+    background-color: transparent;
+    padding: 5px 10px;
+    margin-bottom: 2px;
+    color: var(--whitish);
+    border-radius: 10px;
+    cursor: pointer;
+
+}
+
+ul#submenu li:nth-child(even) {
+
+    background-color: var(--blueishDarker);
+
+}
+
+ul#submenu li:hover {
+
+    background-color: var(--whitishLight);
+    color: var(--whitish);
+
+}
+
+
+

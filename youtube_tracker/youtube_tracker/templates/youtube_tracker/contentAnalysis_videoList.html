@@ -1,0 +1,24 @@
+<table id="videoDescriptionLanguageTable">
+    <colgroup>
+        <col class="title" />
+        <col class="language" />
+    </colgroup>
+    <thead>
+        <tr class="headRow">
+            <th>
+                <div class="tableHeadWrapper active">Title <button>></button></div>
+            </th>
+            <th>
+                <div class="tableHeadWrapper">Language <button>></button></div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for video_id, video in contextData.items %}
+        <tr video_id="{{ video_id }}">
+            <td>{{ video.video_title }}</td>
+            <td>{{ video.language }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,109 @@
+{% load tz %}
+
+{% for item in items %}
+
+  {% with item.metaData as data %}
+
+  {% if item.video_id %}
+    <li id="card" class="video" contentId="{{ item.video_id }}">
+        <ul id="statistics">
+            {% if data.viewCount %}
+            <li id="views" title="Views">
+                <div id="icon"></div>
+                <p id="counter">{{ data.viewCount }}</p>
+            </li>
+            {% endif %}
+            {% if data.likeCount %}
+            <li id="likes" title="Likes">
+                <div id="icon"></div>
+                <p id="counter">{{ data.likeCount }}</p>
+            </li>
+            {% endif %}
+            {% if data.dislikeCount %}
+            <li id="dislikes" title="Dislikes">
+                <div id="icon"></div>
+                <p id="counter">{{ data.dislikeCount }}</p>
+            </li>
+            {% endif %}
+            {% if data.commentCount %}
+            <li id="comments" title="Comments">
+                <div id="icon"></div>
+                <p id="counter">{{ data.commentCount }}</p>
+            </li>
+            {% endif %}
+        </ul>
+        <div id="thumbnail">
+            <img id="photo" id="photo" src="{{ item.thumbnails_medium_url }}">
+            <button id="checkMark"></button>
+            <div id="shadow"></div>
+            <button id="favor"></button>
+            {% if data.duration %}
+                <div id="duration">{{ data.duration }}</div>
+            {% endif %}
+        </div>
+        <div id="detailsWrapper">
+            <div id="details">
+                <div id="wrapper">
+                    {% if item.channel_title %}
+                    <h4 id="channel">
+                        <a href="">
+                            {{ item.channel_title }}
+                        </a>
+                    </h4>
+                    <span id="separator">·</span>
+                    {% endif %}
+                    {% localtime on %}
+                    <h4 id="date">{{ item.publishedAt|date:"M d Y h:i A" }}</h4>
+                    {% endlocaltime %}
+                </div>
+                <p id="title" title="{{ item.video_title }}">
+                    <span>{{ item.video_title }}</span>
+                </p>
+            </div>
+            <div id="wrapper">
+                <button id="trackStatusButton" title="Click to see list of trackers.">0 TRACKS</button>
+            </div>
+        </div>
+    </li>
+
+  {% elif item.channel_id %}
+    <li id="card" class="channel" contentId="{{ item.channel_id }}">
+        <ul id="statistics">
+            <li id="views" title="Views">
+                <div id="icon"></div>
+                <p id="counter">{{ data.statistics.viewCount }}</p>
+            </li>
+            <li id="subscribers" title="Subscribers">
+                <div id="icon"></div>
+                <p id="counter">{{ data.statistics.subscriberCount }}</p>
+            </li>
+            <li id="videos" title="Videos">
+                <div id="icon"></div>
+                <p id="counter">{{ data.statistics.videoCount }}</p>
+            </li>
+        </ul>
+        <div id="thumbnail">
+            <img id="photo" src="{{ data.snippet.thumbnails.medium.url }}">
+            <button id="checkMark"></button>
+            <div id="shadow"></div>
+            <button id="favor"></button>
+        </div>
+        <div id="detailsWrapper">
+        <div id="details">
+            {% localtime on %}
+            <h4 id="created">{{ item.publishedAt|date:"F d Y" }}</h4>
+            {% endlocaltime %}
+            <p id="title" title="{{ data.snippet.title }}">
+                <span>{{ data.snippet.title }}</span>
+            </p>
+        </div>
+        <div id="wrapper">
+            <button id="trackStatusButton" title="Click to see list of trackers.">0 TRACKS</button>
+        </div>
+        </div>
+    </li>
+  {% endif %}
+
+  {% endwith %}
+
+{% endfor %}

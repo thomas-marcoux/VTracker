@@ -1,0 +1,478 @@
+/*
+
+
+
+	" Reimplement the wheel to either learn, or make it better. "
+
+    http://www.haydex.com/
+    https://www.youtube.com/watch?v=QOlTGA3RE8I
+    
+    Product Name: VTracker
+	Description: Tracking Video data.
+	Beneficiary: COSMOS
+	
+	Copyright © 1988 - 2020 HAYDEX, All Rights Reserved.
+	
+	
+	
+*/
+
+/** Global settings **/
+
+:root {
+    
+    /* theme */
+
+    --reddish: #fd4444;
+    --reddishLight: rgb(255, 113, 113);
+    --reddishLight2: rgb(253, 68, 68, 0.4);
+    --blackish: #242120;
+    --blackish2: #2c2928;
+    --shadow: rgb(0, 0, 0, 0.5);
+    --blackishTransparent0: rgb(36, 33, 32, 0.9);
+    --blackishTransparent1: rgb(36, 33, 32, 0.3);
+    --blackishTransparent2: rgb(36, 33, 32, 0.2);
+    --blackishTransparent3: rgb(36, 33, 32, 0);
+    --blackishTransparent4: rgb(36, 33, 32, 0);
+    --blackishTransparent5: rgba(36, 33, 32, 0.90);
+    --blackishShadow: hsla(15, 6%, 13%, 0.3);
+    --littleGrey: hsla(15, 6%, 20%, 0.9);
+    --littleGrey2: hsla(15, 6%, 25%, 1);
+    --greyishDark: hsla(15, 6%, 40%, 0.3);
+    --greyish: hsla(15, 6%, 40%, 1);
+    --lightGreyish: hsla(15, 6%, 60%, 1);
+    --lighterGreyish: rgb(230, 230, 230);
+    --whitish: hsla(15, 6%, 100%, 1);
+    --whitishTransparent1: hsla(15, 6%, 100%, 0.9);
+    --blueish: #2C8DFF;
+    --lightBlueish: rgb(136, 191, 255);
+    --lightBlueish1: rgb(75, 159, 255);
+
+    /* fonts */
+
+    --size12: 12px;
+    --size14: 14px;
+    --size16: 16px;
+    --size18: 18px;
+    --size22: 22px;
+    --size28: 28px;
+    --size30: 30px;
+    --size34: 34px;
+    --size38: 38px;
+    --size48: 48px;
+    --size58: 58px;
+
+    /* radius */
+
+    --radius5: 5px;
+    --radius13: 13px;
+    --radius15: 15px;
+    --radius25: 25px;
+    --radius1000: 1000px;
+
+    /* interface */
+
+    --interface: url(/static/youtube_tracker/images/node-cluster-interface.svg);
+    
+}
+
+html {
+
+    color: var(--blueishDark);
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+}
+
+body {
+
+	background-color:var(--whitishTransparent1);
+    margin: 0px;
+    box-sizing: inherit;
+
+}
+
+body::after {
+    position:absolute; width:0; height:0; overflow:hidden; z-index:-1;
+    content: var(--interface);
+  }  
+
+a {
+
+    text-decoration: none;
+    color: inherit;
+
+}
+
+a:hover {
+
+    color: inherit;
+
+}
+
+/* background: transparent; /* make scrollbar transparent
+::-webkit-scrollbar {
+    width: 0px;
+}
+*/
+/* 
+* {
+
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+    -ms-overflow-style: none;
+    scrollbar-width: none !important;
+
+} */
+
+
+ul {
+
+    list-style: none;
+    padding-inline-start: 10px !important;
+
+}
+
+body.freeze {
+
+    overflow: hidden;
+    
+}
+
+button {
+
+    background-color: transparent;
+    border: 0px;
+    outline: 0px;
+    cursor: hand;
+    cursor: pointer;
+
+}
+
+span.highlighter {
+
+    background-color: var(--blueishLight);
+
+}
+
+
+
+/* Diagram */
+
+div#d3-emotion-cluster-chart svg {
+
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+}
+
+div#d3-emotion-cluster-chart svg g {
+    pointer-events: all;
+}
+
+
+/* Filters */
+
+section#filters {
+
+    position: fixed;
+    top: 55%;
+    left: 0;
+    transform: translateY(-50%);
+    color: var(--whitish);
+    margin-left: 20px;
+    font-size: var(--size18);
+    z-index: 1;
+
+}
+
+section#filters ul li {
+
+    padding: 5px 10px;
+    margin: 10px 5px;
+    border-radius: 10px;
+    border: 2px solid var(--blackish);
+    cursor: pointer;
+    color: black;
+    background-color: white;
+
+}
+
+section#filters ul li:hover {
+    
+    opacity: 0.5;
+}
+
+
+/* More Info Modal */
+
+section#moreInfoModal {
+
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    justify-content: center;
+    z-index: 1000;
+
+}
+
+section#moreInfoModal.displayed {
+
+    display: flex;
+
+}
+
+section#moreInfoModal div#shadow {
+
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--blackishTransparent2);
+    opacity: 0.5;
+    
+}
+
+section#moreInfoModal div#messageBox {
+
+    position: fixed;
+    margin: 0px auto;
+    align-self: center;
+    width: calc(95vh / 1.3);
+    max-width: 500px;
+    max-height: 770px;
+    background-color: var(--whitish);
+    border-radius: 15px;
+    
+}
+
+section#moreInfoModal div#messageBox button#closeButton {
+
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 36px;
+    height: 36px;
+    background-image: var(--interface);
+    background-position: -474px -427px;
+    
+}
+
+section#moreInfoModal div#messageBox button#closeButton:hover {
+
+
+    /* background-position-x: -520px; */
+    
+}
+
+/** Misinfo **/
+
+section#moreInfoModal div#messageBox div#messageContent img.postImageModal {
+
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: var(--radius15) var(--radius15) 0px 0px;
+
+}
+
+section#moreInfoModal div#messageBox div#messageContent {
+
+    overflow: scroll;
+    
+}
+
+section#moreInfoModal div#messageBox div#messageContent div.detailsWrapper {
+
+    padding: 40px;
+    
+}
+
+section#moreInfoModal div#messageBox p#title {
+
+    font-size: 26px;
+    line-height: 30px;
+    font-weight: 600;
+
+}
+
+section#moreInfoModal div#messageBox p#title span#tag {
+
+    color: var(--reddish);
+
+}
+
+section#moreInfoModal div#messageBox ul#details {
+
+    margin-top: 20px;
+    list-style: none;
+    opacity: 0.6;
+    margin-bottom: 20px;
+
+}
+
+section#moreInfoModal div#messageBox ul#details div.detailsIcon {
+
+    display: inline-block;
+    width: 20px;
+    height: 26px;
+    background-image: var(--interface);
+
+}
+
+section#moreInfoModal div#messageBox ul#details li {
+
+    display: inline-block;
+    margin-right: 10px;
+    height: 20px;
+    overflow: hidden;
+
+}
+
+section#moreInfoModal div#messageBox ul#details li p {
+
+    display: inline-block;
+    vertical-align: top;
+
+}
+
+/** Debunk Date **/
+
+section#moreInfoModal div#messageBox ul#details li#debunkDate div#icon {
+
+    background-position: -454px -272px;
+
+}
+
+/** Debunked By **/
+
+section#moreInfoModal div#messageBox ul#details li#debunkedBy div#icon {
+
+    background-position: -477px -272px;
+    transform: scale(0.9);
+
+}
+
+/** Published **/
+
+section#moreInfoModal div#messageBox ul#details li#published {
+
+    /* display: none; */
+
+}
+
+section#moreInfoModal div#messageBox ul#details li#published div#icon {
+
+    background-position: -503px -273px;
+
+}
+
+section#moreInfoModal div#messageBox p#emotion span {
+
+    color: var(--whitish);
+    padding: 5px 10px;
+    background-color: rgb(148 103 189);
+    border-radius: 5px;
+
+}
+
+/** Location **/
+
+section#moreInfoModal div#messageBox ul#details li#location div#icon {
+
+    width: 15px;
+    background-position: -558px -273px;
+
+}
+
+/** Description **/
+
+section#moreInfoModal div#messageBox p#description {
+
+    margin-top: 30px;
+
+}
+
+/** Sources **/
+
+section#moreInfoModal div#messageBox div#sources {
+
+    margin-top: 30px;
+
+}
+
+section#moreInfoModal div#messageBox div#sources p {
+
+    display: inline-block;
+    vertical-align: top;
+    font-weight: 500;
+    word-wrap: break-word;
+    word-break: break-all;
+
+}
+
+section#moreInfoModal div#messageBox li#Source div.detailsIcon {
+
+    display: inline-block;
+    width: 19px;
+    height: 32px;
+    background-image: var(--interface);
+
+}
+
+section#moreInfoModal div#messageBox li#Source div.detailsIcon {
+
+    background-position: -578px -270px;
+
+}
+
+section#moreInfoModal div#messageBox div#messageContent {
+
+    overflow: scroll;
+    height: 100%;
+    
+}
+
+@media only screen and (max-width: 500px) {
+
+    ul#narrativeTree li.level ul.narratives li.narrative.open div.bottomSection div.posts {
+
+        width: 100%;
+    
+    }
+
+    /** More Information Modal **/
+
+    section#moreInfoModal div#messageBox {
+
+        width: 100vw;
+        height: 100vh;
+        max-height: 1000px;
+        
+    }
+
+    section#moreInfoModal div#messageBox div#messageContent div.detailsWrapper {
+
+        padding: 30px;
+        
+    }
+
+    section#moreInfoModal div#messageBox div#messageContent {
+
+        padding-bottom: 100px;
+        
+    }
+
+}
+
+#toggle_btn{
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    z-index: 10;
+    margin-left: 70%;
+    margin-top: 25%;
+}

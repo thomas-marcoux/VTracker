@@ -1,0 +1,202 @@
+{% extends "YTAdminConsole/index.html" %}
+
+{% block content %}
+
+<div class="row">
+	<h1 class="page-header">Instant Crawler</h1>
+</div>
+<h5>
+	This crawler is meant to be used as an exploratory tool to find relevant videos and channels.
+	It will run once and output the results to the YT_Crawler_Export folder in the shared COSMOS drive - under the name you enter below.
+</h5>
+<div class="row col-md-12 col-lg-8">
+	<form class="panel-body" enctype="multipart/form-data" action="{% url 'YTAdminConsole:addToInstantCrawler' %}" method="post">
+		{% csrf_token %}
+		<div class="row">
+			<div class="col-md-4">
+				<label>Name your output file</label>
+				{{ form.run_name }}
+			</div>
+			<div class="col-md-8">
+				<label>(Optional) Enter your Slack username if you would like to be notified when your file is ready</label>
+				{{ form.slack_name }}
+			</div>
+		</div>
+		{% if error_log|length > 0  %}
+			<div class="row">
+				<!-- Wrong entries -->
+				<div class="col-md-12">
+					<label>
+						The following Video/Channel IDs may have incorrect formatting and were not added to the Crawler.
+					</label>
+					<ul>
+						{% for item in error_log %}
+							<li>{{ item }}</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		{% endif %}
+		<div class="row">
+			<table class="table">
+				<thead>
+				  <tr>
+					<th scope="col">Crawling Options</th>
+					<th scope="col"></th>
+					<th scope="col">Fields crawled</th>
+				  </tr>
+				</thead>
+				<tbody>
+				  <tr>
+					<td>Videos</td>
+					<td>{{ form.get_videos }}</td>
+					<td>video_id, video_title, title_sentiment, title_toxicity, categoryId, category, tags, published_date, thumbnails_medium_url, description, description_sentiment, description_toxicity, channel_id, crawled_time</td>
+				  </tr>
+				  <tr>
+					<td>Channels</td>
+					<td>{{ form.get_channels }}</td>
+					<td>channel_id, channel_title, title_sentiment, title_toxicity, thumbnails_medium_url, description, description_sentiment, description_toxicity, joined_date, language, crawled_time, location</td>
+				  </tr>
+				  <tr>
+					<td>Comments</td>
+					<td>{{ form.get_comments }}</td>
+					<td>comment_id, commenter_name, commenter_id, comment_displayed, comment_original, likes, total_replies, published_date, updated_date, reply_to, video_id, sentiment, toxicity</td>
+				  </tr>
+				  <tr>
+					<td>Videos Statistics</td>
+					<td>{{ form.get_videos_stats }}</td>
+					<td>video_id, total_views, total_likes total_dislikes, total_comments, crawled_time</td>
+				  </tr>
+				  <tr>
+					<td>Channels Statistics</td>
+					<td>{{ form.get_channels_stats }}</td>
+					<td>channel_id, total_views, total_subscribers, total_videos, crawled_time</td>
+				  </tr>
+				  <tr>
+					<td>Related Videos</td>
+					<td>{{ form.get_related_videos }}</td>
+					<td>video_id, title, title_sentiment, title_toxicity, thumbnails_medium_url, published_date, channelId, channel_title, parent_video, crawled_time</td>
+				  </tr>
+				  <tr>
+					<td>Use Parallel Processing</td>
+					<td>{{ form.parallel_process }}</td>
+					<td></td>
+				  </tr>
+				</tbody>
+			  </table>
+		</div>
+		<!-- Content input row -->
+		<div class="row">
+			<!-- Channels/Videos column -->
+			<div class="col-md-6">
+				<label>
+					Video/Channel IDs
+				</label>
+				{{ form.content_list }}
+				<label class="custom-file-upload-btn"> Import Video/Channel IDs
+					<input name="content_file" accept=".csv, .txt" multiple="" id="id_content_file" type="file">
+				</label>
+			</div>
+			<!-- Keywords column -->
+			<div class="col-md-6">
+				<label>
+					Keywords
+				</label>
+				{{ form.keyword_list }}
+				<label class="custom-file-upload-btn"> Import Keywords
+					<input name="keyword_file" accept=".csv, .txt" multiple="" id="id_keyword_file" type="file">
+				</label>
+			</div>
+		</div>
+		<div position="-1" class="ng-isolate-scope">
+			<abbr title="Required" style="font-size: 135%; color: rgb(172, 41, 37); text-decoration: none; border-bottom: medium none; cursor: default;">*</abbr>
+			Indicates Required Field
+		</div>
+		<input type="submit" id="id_submit" class="btn btn-success btn-create" disabled="disabled" value="Submit"/>
+	</form>
+</div>
+
+<script type="text/javascript">
+	$( '#wrapper .side-menu-items' ).find( 'li.active' ).removeClass( 'active' );//this will remove the active class from  //previously active menu item 
+	$('#addToInstantCrawler').parent( 'li' ).addClass('active');
+</script>
+
+<!-- Utility functions -->
+<script>
+	// Go to the next line if last entry has no line break
+	function startAtNewLine(target) {
+		if (target.value != '' && target.value.substr(-1) != '\n') {
+			target.value += '\n';
+		}
+	}
+</script>
+
+<!-- Enable/Disable buttons -->
+<script>
+	// Enable submit button when content or keywords are entered
+	function checkForSubmitEnable(){
+		var enableSubmit = false;
+		var requiredInputs = document.getElementsByTagName('textarea');
+		for(var i=0; i < requiredInputs.length; i++){
+        	if(requiredInputs[i].value != ''){
+            	enableSubmit = true;
+        	}
+    	}
+		document.getElementById("id_submit").disabled = !enableSubmit;
+	}
+</script>
+
+<!-- Reads uploaded files and append to corresponding list -->
+<script>
+		function getFile(fileInput, targetList) {
+			if ('files' in fileInput && fileInput.files.length > 0) {
+				targetList.value = ""
+				for (i = 0; i < fileInput.files.length; i++) {
+					placeFileContent(targetList, fileInput.files[i]);
+				}
+				document.getElementById("id_submit").disabled = false;
+			}
+		}
+	
+		function placeFileContent(target, file) {
+			readFileContent(file).then(content => {
+			startAtNewLine(target);
+			target.value += content;
+			}).catch(error => console.log(error));
+		}
+	
+		function readFileContent(file) {
+			const reader = new FileReader();
+			return new Promise((resolve, reject) => {
+				reader.onload = event => resolve(event.target.result);
+				reader.onerror = error => reject(error);
+				reader.readAsText(file);
+			});
+		}
+	</script>
+
+<!-- Setup events -->
+<script>
+	window.onload = function(){
+		// Enable submit button if a textareas is filled
+		var requiredInputs = document.getElementsByTagName('textarea');
+		for(var i=0; i < requiredInputs.length; i++){
+			requiredInputs[i].onkeyup = checkForSubmitEnable;
+			requiredInputs[i].onblur = checkForSubmitEnable;
+		}
+
+		// Event listener for uploading content files
+		var contentList = document.getElementById('id_content_list');
+		var contentFile = document.getElementById('id_content_file');
+		contentFile.onchange =  function() {
+			getFile(contentFile, contentList); };
+
+		// Event listener for uploading keywords files
+		var keywordList = document.getElementById('id_keyword_list');
+		var keywordFile = document.getElementById('id_keyword_file');
+		keywordFile.onchange = function() { 
+			getFile(keywordFile, keywordList); };
+	};
+</script>
+
+{% endblock %}

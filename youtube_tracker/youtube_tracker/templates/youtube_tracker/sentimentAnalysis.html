@@ -1,0 +1,86 @@
+{% extends "youtube_tracker/analyticsBase.html" %}
+{% load humanize %}
+{% load static %}
+{% block body %}
+
+<title>SentimentAnalysis - VTracker</title>
+
+<!-- Stylesheets -->
+<link rel="stylesheet" href="{% static 'youtube_tracker/css/sentimentAnalysis.css' %}"/>
+
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/sentimentAnalysis.js' %}"></script>
+
+<section id="visualizations">
+
+    <figure id="sentimentAnalysisDiagram" class="figure">
+        <!-- Figure -->
+        <div id="figureWrapper" class="component">
+            <div id="spinner"></div>
+            <img src="{% static 'youtube_tracker/images/tempImages/sentimentDiagram.png' %}"  >
+         </div>
+
+        <!-- Statistics -->
+        <div id="statistics" class="component">
+            <ul id="statisticsWrapper">
+                <li>
+                    <h3>Joy</h3>
+                   
+                </li>
+                <li>
+                    <h3>Fear</h3>
+                   
+                </li>
+                <li>
+                    <h3>Anger</h3>
+                    
+                </li>
+                <li>
+                    <h3>Trust</h3>
+                    
+                </li>
+                <li>
+                    <h3>Disgust</h3>
+                    
+                </li>
+                <li>
+                    <h3>Sadness</h3>
+                    
+                </li>
+                <li>
+                    <h3>Suprise</h3>
+                    
+                </li>
+                <li>
+                    <h3>Anticipation</h3>
+                    
+                </li>
+               
+                
+            </ul>
+        </div>
+    </figure>
+
+    <figure id="videoDescriptionLanguageDiagram" class="figure">
+        <!-- Title -->
+        <div id = "titleWrapper">
+            <h3 id="diagramTitle">Videos</h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Videos -->
+        <div id="videosWrapper" class="component">
+            <input id="searchVideos" placeholder="Search Videos" class="searchBox">
+            
+        </div>
+        <!-- Video -->
+        <div id="videoPlayerWrapper" class="component">
+            <!-- <div id="player" class="embed-responsive embed-responsive-16by9">
+               
+            </div> -->
+            <iframe id="commentVideo" width="100%" height="100%" src="" 
+            title="YouTube video player" frameborder="0" allow="autoplay; encrypted-media" 
+            allowfullscreen></iframe>
+        </div>
+</section>
+
+{% endblock %}

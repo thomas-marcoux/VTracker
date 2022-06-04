@@ -1,0 +1,72 @@
+{% extends "youtube_tracker/base.html" %}
+{% load static %}
+{% block body %}
+
+    <!-- Tracker Scripts -->
+    <script type="text/javascript" src="{% static 'youtube_tracker/behavior/trackerFunctions.js' %}"></script>
+    <script type="text/javascript" src="{% static 'youtube_tracker/behavior/trackers.js' %}"></script>
+
+    <!-- Stylesheets START -->
+    <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/trackers.css' %}">
+    <!-- Stylesheets END -->
+
+    <!-- Search -->
+    <section id="search">
+        <div id="wrapper">
+            <input type="text" id="searchBox" placeholder="Search Trackers" autocomplete="off">
+            <div id="searchIcon"></div>
+        </div>
+    </section>
+
+    <!-- separator -->
+    <div id="separator"></div>
+
+    <!-- Options -->
+    <section id="options">
+        <p id="counters">
+            <span id="trackersCounter">{{ trackerCount }}</span>
+            <span>Trackers</span>
+        </p>
+        <div id="views">
+            <p id="label">View</p>
+            <button id="gridView" class="viewButton selected"></button>
+            <button id="listView" class="viewButton"></button>
+        </div>
+    </section>
+
+    <!-- Trackers START -->
+    <main id="trackers">
+        <div id="newTrackerWrapper">
+            <button id="newTracker">
+                <p>+</p>
+                <p id="description">Create a new tracker</p>
+            </button>
+            <div id="form">
+                <input id="title" placeholder="Title" class="input">
+                <textarea id="description" placeholder="Description" class="input"></textarea>
+                <div id="submitWrapper">
+                    <button id="create">Create</button>
+                    <button id="cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        {% for tracker in trackerList reversed %}
+            {% include "youtube_tracker/tracker_card.html" %}
+        {% endfor %}
+    </main>
+
+    <!-- Return TOP -->
+    <button id="returnTop" title="Return to top."></button>
+
+    <!-- Copyright -->
+    <footer>
+        <div id="copyright">
+            <a id="cosmos" href="http://cosmos.ualr.edu"></a>
+            <p id="description">
+                COLLABORATORIUM FOR SOCIAL MEDIA AND ONLINE BEHAVIORAL STUDIES
+            </p>
+        </div>
+    </footer>
+
+{% endblock %}

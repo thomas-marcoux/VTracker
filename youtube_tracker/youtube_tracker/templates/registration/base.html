@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+        <meta content="Track video data with content and social network analysis" name="description">
+        <meta content="COSMOS" name="author">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+        <title>VTracker</title>
+        
+        <!-- Favicons START -->
+        <link rel="apple-touch-icon" sizes="180x180"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-apple-touch-favicon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-favicon-16x16.png' %}">
+        <!-- https://mobiforge.com/design-development/adding-favicons-in-a-multi-browser-multi-platform-world -->
+        <!-- Favicons END -->
+
+        <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/login.css' %}">
+       
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f" crossorigin="anonymous"></script>
+
+        <script type="text/javascript" src="{% static 'youtube_tracker/behavior/loginFunctions.js' %}"></script>
+    </head>
+    <body>
+        {% block body %}
+        {% endblock %}
+    </body> 
+</html>

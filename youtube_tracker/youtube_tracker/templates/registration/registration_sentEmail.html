@@ -1,0 +1,16 @@
+{% extends "registration/base.html" %}
+
+{% block body %}
+<div id="grid-container">
+    <main id="login-content">
+        <header>
+            <h1>Email sent</h1>
+        </header>
+        <p>A email verification has been sent to {{ user.email }}.</p>
+        <hr>
+        <footer>
+            <p><a href="{% url 'registration' %}">Back to registration</a></p>
+        </footer>
+    </main>
+</div>
+{% endblock %}

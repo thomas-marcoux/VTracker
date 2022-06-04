@@ -1,0 +1,401 @@
+{% extends "youtube_tracker/analyticsBase.html" %}
+{% load humanize %}
+{% load static %}
+{% block body %}
+
+<title>NarrativeAnalysis - VTracker</title>
+
+<!-- Stylesheets -->
+<link rel="stylesheet" href="{% static 'youtube_tracker/css/narrativeAnalysis.css' %}"/>
+   
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/narrativeAnalysis.js' %}"></script>
+
+
+<!-- Narrative Tree -->
+
+<div id="narrative-tree">
+
+    <!-- Entities Column -->
+
+    <div id="entities-column" class="column">
+        <div class="head">
+            <div class="title">Keywords</div>
+            <div class="counter"><span>0</span> items</div>
+            <div id="sort-items">
+                <p id="sort-label">Sort by </p>
+                <div id="sort-wrapper">
+                    <p id="sort-type">Date</p>
+                    <button class="sort-button"></button>
+                </div>
+            </div>
+        </div>
+        <form>
+            <input id= "keywordSearch" placeholder="Search">
+        </form>
+        <ul class="items-list displayed">
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>COVID-19<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Chinese Government<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+            <li>
+                <div id="choice"></div>
+                <div class="connector"></div>
+                <button class="ungroup-button"></button>
+                <ul class="subitems-list">
+                    <li>Assault Weapon<button class="remove-button"></button></li>
+                </ul>
+            </li>
+        </ul>
+        <div id="entities-controls">
+            <button id="group-button" title="Group Selected Entities"><div id="group-count">0</div></button>
+            <button id="cancel-button"></button>
+        </div>
+    </div>
+
+    <!-- Narratives Column -->
+
+    <div id="narratives-column" class="column">
+        <div class="head">
+            <div class="title">Narratives</div><button class="sort-button"></button>
+            <div class="counter"><span>0</span> items</div>
+            <div id="sort-items">
+                <p id="sort-label">Sort by </p>
+                <div id="sort-wrapper">
+                    <p id="sort-type">Date</p>
+                    <button class="sort-button"></button>
+                </div>
+            </div>
+        </div>
+        <ul class="items-list">
+            <li>
+                <div class="connector"></div>
+                <p>The American Red Cross is closely monitoring the outbreak</p>
+                <div id="narratives-controls">
+                    <button id="narratives-edit-button"></button>
+                    <button id="narratives-confirm-button"></button>
+                    <button id="narratives-cancel-button"></button>
+                </div>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <p>Coronaviruses are common causes of colds</p>
+                <div id="narratives-controls">
+                    <button id="narratives-edit-button"></button>
+                    <button id="narratives-confirm-button"></button>
+                    <button id="narratives-cancel-button"></button>
+                </div>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <p>Coronaviruses are common causes of colds</p>
+                <div id="narratives-controls">
+                    <button id="narratives-edit-button"></button>
+                    <button id="narratives-confirm-button"></button>
+                    <button id="narratives-cancel-button"></button>
+                </div>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <p>Coronaviruses are common causes of colds</p>
+                <div id="narratives-controls">
+                    <button id="narratives-edit-button"></button>
+                    <button id="narratives-confirm-button"></button>
+                    <button id="narratives-cancel-button"></button>
+                </div>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <p>Coronaviruses are common causes of colds</p>
+                <div id="narratives-controls">
+                    <button id="narratives-edit-button"></button>
+                    <button id="narratives-confirm-button"></button>
+                    <button id="narratives-cancel-button"></button>
+                </div>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <p>Coronaviruses are common causes of colds</p>
+                <div id="narratives-controls">
+                    <button id="narratives-edit-button"></button>
+                    <button id="narratives-confirm-button"></button>
+                    <button id="narratives-cancel-button"></button>
+                </div>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <p>Coronaviruses are common causes of colds</p>
+                <div id="narratives-controls">
+                    <button id="narratives-edit-button"></button>
+                    <button id="narratives-confirm-button"></button>
+                    <button id="narratives-cancel-button"></button>
+                </div>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <p>Coronaviruses are common causes of colds</p>
+                <div id="narratives-controls">
+                    <button id="narratives-edit-button"></button>
+                    <button id="narratives-confirm-button"></button>
+                    <button id="narratives-cancel-button"></button>
+                </div>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <p>Coronaviruses are common causes of colds</p>
+                <div id="narratives-controls">
+                    <button id="narratives-edit-button"></button>
+                    <button id="narratives-confirm-button"></button>
+                    <button id="narratives-cancel-button"></button>
+                </div>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <p>Coronaviruses are common causes of colds</p>
+                <div id="narratives-controls">
+                    <button id="narratives-edit-button"></button>
+                    <button id="narratives-confirm-button"></button>
+                    <button id="narratives-cancel-button"></button>
+                </div>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <p>President Donald Trump and a top US health official cautioned young people to heed the advice to socially distance and be wary of the virus.</p>
+                <div id="narratives-controls">
+                    <button id="narratives-edit-button"></button>
+                    <button id="narratives-confirm-button"></button>
+                    <button id="narratives-cancel-button"></button>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Posts Column -->
+
+    <div id="posts-column" class="column">
+        <div class="head">
+            <div class="title">Posts</div><button class="sort-button"></button>
+            <div class="counter"><span>0</span> items</div>
+            <div id="sort-items">
+                <p id="sort-label">Sort by </p>
+                <div id="sort-wrapper">
+                    <p id="sort-type">Date</p>
+                    <button class="sort-button"></button>
+                </div>
+            </div>
+        </div>
+        <ul class="items-list">
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">Madrid detects first case of Brazilian coronavirus variant</h2>
+                <p id="posts-source">Sky News</p>
+                <p id="posts-date">Feb 03 2021 - 05:00 PM</p>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">House majority leader hopes to bring Covid relief bill for floor vote the week of Feb. 22</h2>
+                <p id="posts-source">CNN</p>
+                <p id="posts-date">Oct 06 2020 - 2:10 PM</p>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">White House outlines Biden’s coronavirus-related events next week</h2>
+                <p id="posts-source">Al Arabiya</p>
+                <p id="posts-date">May 20 2020 - 11:10 PM</p>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">White House outlines Biden’s coronavirus-related events next week</h2>
+                <p id="posts-source">Al Arabiya</p>
+                <p id="posts-date">May 20 2020 - 11:10 PM</p>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">White House outlines Biden’s coronavirus-related events next week</h2>
+                <p id="posts-source">Al Arabiya</p>
+                <p id="posts-date">May 20 2020 - 11:10 PM</p>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">White House outlines Biden’s coronavirus-related events next week</h2>
+                <p id="posts-source">Al Arabiya</p>
+                <p id="posts-date">May 20 2020 - 11:10 PM</p>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">White House outlines Biden’s coronavirus-related events next week</h2>
+                <p id="posts-source">Al Arabiya</p>
+                <p id="posts-date">May 20 2020 - 11:10 PM</p>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">White House outlines Biden’s coronavirus-related events next week</h2>
+                <p id="posts-source">Al Arabiya</p>
+                <p id="posts-date">May 20 2020 - 11:10 PM</p>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">White House outlines Biden’s coronavirus-related events next week</h2>
+                <p id="posts-source">Al Arabiya</p>
+                <p id="posts-date">May 20 2020 - 11:10 PM</p>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">White House outlines Biden’s coronavirus-related events next week</h2>
+                <p id="posts-source">Al Arabiya</p>
+                <p id="posts-date">May 20 2020 - 11:10 PM</p>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">White House outlines Biden’s coronavirus-related events next week</h2>
+                <p id="posts-source">Al Arabiya</p>
+                <p id="posts-date">May 20 2020 - 11:10 PM</p>
+            </li>
+            <li>
+                <div class="connector"></div>
+                <h2 id="posts-title">White House outlines Biden’s coronavirus-related events next week</h2>
+                <p id="posts-source">Al Arabiya</p>
+                <p id="posts-date">May 20 2020 - 11:10 PM</p>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Preview Column -->
+
+    <div id="preview-column" class="column">
+        <div class="head">
+            <div class="title">Preview</div>
+            <div class="counter"><span>0</span> items</div>
+        </div>
+        <div class="items-list post">
+            <img src="" class="post-image">
+            <h2 class="post-title">White House outlines Biden’s coronavirus-related events next week</h2>
+            <p class="post-date">Sep 12 2020 - 09:00 AM</p>
+            <p class="post-source">CNN</p>
+            <p class="post-content">The nation’s top government watchdogs on Monday appointed Glenn Fine, the acting inspector general for the Pentagon, to
+            lead the newly created committee <span class="highligher">that oversees implementation of the $2 trillion coronavirus relief bill signed by
+            President Donald Trump last week.</span>
+            Fine will lead a panel of fellow inspectors general, <span class="highligher">dubbed the Pandemic Response Accountability Committee, and command
+            an $80 million budget meant to “promote transparency and support oversight” of the massive disaster response
+            legislation. His appointment was made by a fellow committee of inspectors general, assigned by the new law to pick a
+            chairman of the committee.</span>
+            
+            Fine, who served as Justice Department inspector general from 2000 to 2011 — spanning parts of the Clinton, Bush and
+            Obama presidencies — will join nine other inspectors general on the new committee. They include the IGs of the
+            Departments of Defense, Education, Health and Human Services, Homeland Security, Justice, Labor, and the Treasury; the
+            inspector general of the Small Business Administration; and the Treasury inspector general for Tax Administration.</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- Submenu -->
+
+<ul id="submenu">
+    <li class="submenuItem">Date</li>
+    <li class="submenuItem">Relevance</li>
+    <li class="submenuItem">Alphabetically</li>
+</ul>
+
+{% endblock %}
+
+

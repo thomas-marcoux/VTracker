@@ -1,0 +1,65 @@
+{% extends "YTAdminConsole/index.html" %}
+
+{% block content %}
+<div class="row">
+    <h3 class="page-header">DiffBot Requests</h3>
+    <div class="col-lg-3" >
+        <div class="crawled panel panel-primary" >
+            <div class="panel-heading" style="min-height:120px">
+            <div class="row">
+                <div class="col-xs-9 ">
+                    <div  class="huge" >{{callsMade}}  </div>
+                    <div  >Total : {{totalCalls}} </div>
+                </div>
+            </div>
+            </div>
+            <div class="panel-footer" >
+                <div class="row"  >
+                    <div  class="col-xs-9 text-right" class = "nav-link" >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $( '#wrapper .side-menu-items' ).find( 'li.active' ).removeClass( 'active' );//this will remove the active class from  //previously active menu item 
+    $('#dashboard').parent( 'li' ).addClass('active');
+
+    function requeststats(type){
+            $.ajax({
+            type: 'GET',
+            cache: false,
+            url: '{% url "YTAdminConsole:dashStats" %}',
+            data: {
+                type:type
+            },
+            success: function (response) {
+                countStats = JSON.parse(response.countStatsJson);
+                console.log(countStats);
+                updateStats(countStats)
+            },
+            error: function () {
+                console.log('DID NOT GET new data');
+            }
+        });
+    }
+    
+
+    function updateStats(countStats){
+        for (let i in countStats) {
+            let type = countStats[i]
+            for (let t in type ){
+                $("#"+t+"-"+i ).text(countStats[i][t])
+                if (t=="crawled"){
+                    test = countStats[i][t]
+                    $("#"+t+"-"+i+"-link").attr("href", "{% url 'YTAdminConsole:stat-details' %}?status=crawled&type="+i+"&total="+ countStats[i][t] );
+                }
+            }
+        }
+    }
+
+</script>
+
+{% endblock %}

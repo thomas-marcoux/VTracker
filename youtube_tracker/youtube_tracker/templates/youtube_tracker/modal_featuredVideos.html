@@ -1,0 +1,57 @@
+{%for item in items %}
+
+<li id="card" class="video">
+    <ul id="statistics">
+            {% if item.viewCount != '0' %}
+            <li id="views" title="Views">
+                <div id="icon"></div>
+                <p id="counter">{{ item.viewCount }}</p>
+            </li>
+            {% endif %}
+
+            {% if item.likeCount != '0' %}
+            <li id="likes" title="Likes">
+                <div id="icon"></div>
+                <p id="counter">{{ item.likeCount }}</p>
+            </li>
+            {% endif %}
+
+            {% if item.dislikeCount != '0' %}
+            <li id="dislikes" title="Dislikes">
+                <div id="icon"></div>
+                <p id="counter">{{ item.dislikeCount }}</p>
+            </li>
+            {% endif %}
+
+        </ul>
+    <div id="thumbnail">
+        <a href="https://youtube.com/watch?v={{ item.videoId }}" target="_blank"><img id="photo"  src= "{{ item.thumbnailsMediumUrl }}"></a>
+        <button id="checkMark"></button>
+        <div id="shadow"></div>
+        <button id="favor"></button>
+        <div id="duration">{{ item.duration }}</div>
+    </div>
+    <div id="detailsWrapper">
+        <div id="details">
+                <div id="wrapper">
+
+                    <h4 id="channel">
+                        <a href="">
+                            {{ item.channelTitle}}
+                        </a>
+                    </h4>
+                    <span id="separator">·</span>
+
+                    <h4 id="date">{{ item.publishedAt}}</h4>
+                </div>
+                <p id="title" title="{{ item.videoTitle }}">
+                    <a href="https://youtube.com/watch?v={{ item.videoId }}" target="_blank"><span>{{ item.videoTitle}}</span></a>
+                </p>
+            </div>
+        <div id="wrapper">
+            <button id="trackStatusButton" title="Click to see list of trackers.">0 TRACKS</button>
+        </div>
+    </div>
+</li>
+
+{% endfor %}

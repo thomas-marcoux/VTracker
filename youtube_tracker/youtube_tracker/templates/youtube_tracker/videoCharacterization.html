@@ -1,0 +1,152 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<!--
+
+
+
+	" Reimplement the wheel to either learn, or make it better. "
+
+    http://www.haydex.com/
+    https://www.youtube.com/watch?v=QOlTGA3RE8I
+    
+    Product Name: VTracker
+	Description: Tracking Video data.
+	Beneficiary: COSMOS
+	
+	Copyright © 1988 - 2021 HAYDEX, All Rights Reserved.
+	
+	
+	
+-->
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="author" content="HAYDEX">
+        <meta name="description" content="Tracking Video Data.">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+        <title>Video Characterization</title>
+        
+        <!-- Favicons START -->
+        <link rel="apple-touch-icon" sizes="180x180"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-apple-touch-favicon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-favicon-16x16.png' %}">
+        <!-- https://mobiforge.com/design-development/adding-favicons-in-a-multi-browser-multi-platform-world -->
+        <!-- Favicons END -->
+
+        <!-- Presentation -->
+        <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/videoCharacterization.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/nodeCluster.css' %}"/>
+        
+        <!-- Behavior -->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
+        <!-- For Data Manipulation -->
+        <script src="https://cdn.jsdelivr.net/npm/danfojs@0.2.4/lib/bundle.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript" src="{% static 'youtube_tracker/libs/scripts/jquery-3.2.1.min.js' %}"></script>
+        
+        <script>
+            let JSONContextData = '{{ JSONContextData | escapejs }}';
+        </script>
+
+        <script type="text/javascript" src="{% static 'youtube_tracker/behavior/videoCharacterization.js' %}"></script>
+        <script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/nodeCluster.js' %}"></script>
+
+    </head>
+    <body>
+        <div id="charts">
+            <div id="treemapVisualization" class="chartBlock" style="height:850px; margin-left: 500px; margin-top: 30px;"></div>
+
+            <!-- 2D Cluster Chart -->
+            <div id="twoDClusterVisualization" class="chartBlock" style="height:850px; margin-left: 500px; margin-top: 30px;">
+                <div class="chart-container">
+                    <section style="margin-left:650px; z-index:1" id="filters">
+                        <ul></ul>
+                    </section>
+                    <div id="d3-emotion-cluster-chart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side Bar -->
+        <div id="sideBar">
+            <div id="data" class="sideBarOptions">
+                <p id="dataLabel">Data</p>
+                <ul id="dataList" class="sideBarOptionsList multi">
+                    <li id="APAC" class="selected"><span>Propaganda Videos in Indo-Pacific Region</span></li>
+                    <li id="BalticOps" class="selected"><span>NATO Baltic Operations 2020</span></li>
+                    <li id="CE2019_Influential" class="selected"><span>Canada Elections 2020 - Influential Videos</span></li>
+                    <li id="CE2019_Suspicious" class="selected"><span>Canada Elections 2020 - Suspicious Videos</span></li>
+                </ul>
+            </div>
+
+            <!-- Dimensions -->
+            <div id="dimensions" class="sideBarOptions">
+                <p id="dimensionsLabel">Dimensions</p>
+                <ul id="dimensionsList" class="sideBarOptionsList multi">
+                    <li id="moviebarcodes_labels"><span>Movie Barcode</span></li>
+                    <li id="titles_emotion_dominant" class="selected"><span>Emotion Features (Titles)</span></li>
+                    <li id="transcripts_emotion_dominant"><span>Emotion Features (Transcripts)</span></li>
+                    <li id="titles_toxicity_dominant" class="selected"><span>Toxicity Features (Titles)</span></li>
+                    <li id="transcripts_toxicity_dominant"><span>Toxicity Features (Transcripts)</span></li>
+                    <li id="topics_string"><span>(Advanced) Topic Modeling</span></li>
+                    <li id="content_creator_network_clusters"><span>(Advanced) Network Clusters</span></li>
+                    <li id="videoCategorizationDimention" class="disabled"><span>Video Categorization</span></li>
+                    <li id="organicInorganicAnalysisDimention" class="disabled"><span>Organic/Inorganic Analysis</span></li>
+                    <li id="topicDiversityAndPeriodicityDimention" class="disabled"><span>Topic Diversity & Periodicity</span></li>
+                </ul>
+            </div>
+
+            <!-- Visualizations -->
+            <div id="visualization" class="sideBarOptions">
+                <p id="visualizationLabel">Visualization</p>
+                <ul id="visualizationList" class="sideBarOptionsList">
+                    <li id="treemapVisualization"><span>Treemap</span></li>
+                    <li id="twoDClusterVisualization" class="selected"><span>2D Cluster Results</span></li>
+                    <li id="threeDClusterResultsVisualization" class="disabled"><span>3D Cluster Results</span></li>
+                    <li id="TSNEVisualization" class="disabled"><span>T-SNE</span></li>
+                    <li id="hierarchicalClusteringDendogramVisualization" class="disabled"><span>Hierarchical Clust. Dendo.</span></li>
+                    <li id="networkCommunitiesVisualization" class="disabled"><span>Network Communities</span></li>
+                    <li id="topicModelingResultsVisualization" class="disabled"><span>Topic Modeling Results</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Video Modal for 2D Cluster -->
+        <section id="moreInfoModal" class="">
+            <div id="shadow"></div>
+            <div id="messageBox">
+                <button id="closeButton"></button>
+                <div id="messageContent">
+                    <img id="videoImage" class="postImageModal">
+                    <div class="detailsWrapper">
+                        <p id="title"><span id="videoTitle"></span></p>
+                        <ul id="details">
+                            <li id="Source">
+                                <div id="icon" class="detailsIcon"></div>
+                                <p id="label"></p>
+                                <p id="value"></p>
+                            </li>
+                            <li id="published">
+                                <div id="icon" class="detailsIcon"></div>
+                                <p id="label"></p>
+                                <p id="videoPublished"></p>
+                            </li>
+                        </ul>
+                        <p id="emotion" >
+                            <span id="videoEmotion"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+          </section>
+
+    </body>
+</html>

@@ -1,0 +1,28 @@
+{% load humanize %}
+
+<table id="relatedVideosTable" class="tableDiagram">
+    <colgroup>
+        <col id="imagesColumn"/>
+        <col id="titleColumn"/>
+        <col id="relatedToColumn"/>
+        <col id="tracksColumn"/>
+    </colgroup>
+    <thead>
+        <tr class="headRow">
+            <th id="imagesColumn"></th>
+            <th id="titleColumn">Title <button class="active">></button></th>
+            <th id="relatedToColumn">Related to <button>></button></th>
+            <th id="tracksColumn">Tracks <button>></button></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for video in relatedVideos %}
+        <tr>
+            <td><img src="{{video.thumbnails_medium_url}}"></td>
+            <td>{{video.title}}</td>
+            <td>{{video.related_to_count | intcomma}}<span> Videos</span></td>
+            <td><button class="trackButton">0 Tracks</button></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

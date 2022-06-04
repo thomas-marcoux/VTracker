@@ -1,0 +1,446 @@
+/* Space out content a bit */
+body {
+    padding-bottom: 20px;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Custom page header */
+.header {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+    padding-bottom: 19px;
+}
+
+/* Custom page footer */
+.footer {
+    padding-top: 19px;
+    color: #777;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Customize container */
+@media (min-width: 768px) {
+    .container {
+        max-width: 730px;
+    }
+}
+
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+
+/* Supporting marketing content */
+.marketing {
+    margin: 40px 0;
+}
+
+.marketing p + h4 {
+    margin-top: 28px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    /* Remove the padding we set earlier */
+    .header,
+    .marketing,
+    .footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Space out the masthead */
+    .header {
+        margin-bottom: 30px;
+    }
+
+    /* Remove the bottom border on the jumbotron for visual effect */
+    .jumbotron {
+        border-bottom: 0;
+    }
+}
+
+.nav > li.active > a {
+    text-decoration: none;
+    background-color: #eee;
+}
+.huge{
+    font-size: 40px;
+}
+
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+.material-icons.md-48 { font-size: 64px; }
+
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+.form-control,
+.btn,
+.dropdown-menu,
+.input-group-addon,
+.nav-tabs > li > a,
+.nav-tabs.nav-justified > li > a,
+.nav-pills > li > a,
+.navbar,
+.navbar-fixed-top,
+.navbar-fixed-bottom,
+.navbar-static-top,
+.navbar-toggle,
+.navbar-toggle .icon-bar,
+.pagination,
+.badge,
+.jumbotron,
+.thumbnail,
+.alert,
+.progress,
+.panel,
+.panel > .list-group .list-group-item,
+.panel-group .panel,
+.well,
+.well-lg,
+.well-sm,
+.modal-content,
+.tooltip-inner,
+.popover,
+.popover-title,
+.carousel-indicators li {
+    border-radius: 0 !important;
+}
+
+.panel-heading {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+.page-header {
+    margin-top: 25px;
+}
+
+/*------------------------------------------- Custom File upload Button ------------------------------------------------*/
+
+input[type="file"]#site-list-csv-file {
+    visibility: hidden;
+    height: .0001px;
+    width: .0001px;
+    opacity: 0;
+}
+
+.custom-file-upload-btn {
+    color: black;
+    display: inline-block;
+    background: -webkit-linear-gradient(top, #f9f9f9, #e3e3e3);
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px 8px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    font-size: 10pt;
+}
+
+.custom-file-upload-btn:hover {
+    border-color: black;
+}
+
+.custom-file-upload-btn:active {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+.csv-file-panel{
+    margin-bottom: 10px;
+    margin-top: 8px;
+}
+
+#site-list-text-area{
+    padding: 10px;
+    line-height: 175%;
+    background-color: #f9f9f9;
+    margin-bottom: 5px;
+    overflow: scroll;
+    white-space: nowrap;
+}
+
+.custom-file-upload-btn.disabled{
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.confirm-pass.ng-invalid.ng-dirty {
+    border-color: #bf3b50;
+    outline-color: #bf3b50;
+}
+
+/*---------------------------------------------- START Spinner Style ---------------------------------------------------*/
+
+.spinner {
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin: 15% auto;
+    position: relative;
+
+    border: 3px solid rgba(0,0,0,0.5);
+    border-top-color: transparent;
+    border-radius: 100%;
+
+    -webkit-animation: spin 1s infinite linear;
+    -moz-animation: spin 1s infinite linear;
+    -ms-animation: spin 1s infinite linear;
+    -o-animation: spin 1s infinite linear;
+    animation: spin 1s infinite linear;
+}
+
+/*
+
+.spinner:after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: -5px;
+    left: 0px;
+
+    border: 4px solid transparent;
+    border-bottom-color: rgba(0,0,0,0.5);
+
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+*/
+
+@-webkit-keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+}
+
+@-moz-keyframes spin {
+    to { -moz-transform: rotate(360deg); }
+}
+
+@-ms-keyframes spin {
+    to { -ms-transform: rotate(360deg); }
+}
+
+@-o-keyframes spin {
+    to { -o-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/*---------------------------------------------- END Spinner Style -----------------------------------------------------*/
+
+/*---------------------------------------------- START Sidebar Style ---------------------------------------------------*/
+
+.sidebar {
+    position: fixed;
+    height: 100%;
+    margin-top: 0;
+	width: 250px;
+    background-color: #034f9c;
+    border-color: transparent;
+}
+
+.sidebar .sidebar-nav {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+ul.side-menu-items {
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+ul.side-menu-items > li {
+    border-bottom: 1px solid #002d5a;
+    position: relative;
+    display: block;
+}
+
+ul.side-menu-items > li.active {
+    border-color: #0061c1;
+}
+
+ul.side-menu-items > li > a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    background-color: #004b96;
+    color: #add5ff;
+    text-decoration: none;
+}
+
+ul.side-menu-items > li:hover > a {
+    background-color: #0075ea;
+    color: #dceeff;
+    border-color: #002d5a;
+}
+
+ul.side-menu-items > li.active > a {
+    background-color: #0075ea;
+    color: #dceeff;
+}
+
+/*---------------------------------------------- END Sidebar Style -----------------------------------------------------*/
+
+#wrapper{
+    position: relative;
+    top: 64px;
+}
+
+#page-wrapper{
+    position: inherit;
+	margin: 0 0 0 250px;
+	padding: 0 30px;
+	border-left: 1px solid #e7e7e7;
+}
+
+.navbar-fixed-top{
+    padding: 0 30px;
+}
+
+/*#page-wrapper{
+    min-height: 100%;
+}*/
+
+.navbar-top-links li a {
+    padding: 15px;
+    min-height: 64px;
+    line-height: 2.5;
+}
+
+.view-link-btn{
+    padding: 0;
+    margin-bottom: 10px;
+    box-shadow: none !important;
+    color: #0a6ebd;
+}
+
+.view-link-btn:hover,
+.view-link-btn:focus{
+    text-decoration: none;
+    color: #0a6ebd;
+    background-color: transparent;
+}
+
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn{
+    opacity: 0.50;
+}
+
+.alert-danger {
+    background-color: #e84f4f;
+}
+
+form label, .packet-header .packet-label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.field-comment textarea.form-control {
+    padding: 5px;
+    font-size: 13px;
+    background-color: #f9f9f9 !important;
+}
+
+.panel-heading {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.packet{
+    margin-bottom: 12px;
+}
+
+label{
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Login Form CSS */
+.form-heading { color:#fff; font-size:23px;}
+.panel h2{ color:#444444; font-size:18px; margin:0 0 8px 0;}
+.panel p { color:#777777; font-size:14px; margin-bottom:30px; line-height:24px;}
+.login-form .form-control {
+  background: #f7f7f7 none repeat scroll 0 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 50px;
+  line-height: 50px;
+}
+.main-div {
+  background: #ffffff none repeat scroll 0 0;
+  border-radius: 2px;
+  margin: 10px auto 30px;
+  max-width: 65%;
+  padding: 50px 70px 70px 71px;
+}
+
+.login-form .form-group {
+  margin-bottom:10px;
+}
+.login-form{ text-align:center;}
+.forgot a {
+  color: #777777;
+  font-size: 14px;
+  text-decoration: underline;
+}
+.login-form  .btn.btn-primary {
+  background: #f0ad4e none repeat scroll 0 0;
+  border-color: #f0ad4e;
+  color: #ffffff;
+  font-size: 14px;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  padding: 0;
+}
+.forgot {
+  text-align: left; margin-bottom:30px;
+}
+.botto-text {
+  color: #ffffff;
+  font-size: 14px;
+  margin: auto;
+}
+.login-form .btn.btn-primary.reset {
+  background: #ff9900 none repeat scroll 0 0;
+}
+.back { text-align: left; margin-top:10px;}
+.back a {color: #444444; font-size: 13px;text-decoration: none;}
+

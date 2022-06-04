@@ -1,0 +1,35 @@
+{% load tz %}
+
+{% for item in items %}
+
+<li id="card" class="video">
+    <div id="thumbnail">
+        <a href="https://www.youtube.com/watch?v={{ item.video_id }}" target="_blank">
+            <img id="photo" id="photo" src= "{{ item.thumbnails_medium_url }}">
+        </a>
+        <div id="shadow"></div>
+        <button id="favor"></button>
+        <div id="duration"> {{ item.duration }} </div>
+    </div>
+    <div id="detailsWrapper">
+        <div id="details">
+            <div id="wrapper">
+                <h4 id="channel">{{ item.channel_title }}</h4>
+                <span id="separator">·</span>
+                {% localtime on %}
+                <h4 id="date">{{ item.published_date|date:"M d Y h:i A" }}</h4>
+                {% endlocaltime %}
+            </div>
+            <a href="https://www.youtube.com/watch?v={{ item.video_id }}" target="_blank">
+                <p id="title" title="{{item.title}} ">
+                    <span>{{item.title}}</span>
+                </p>
+            </a>
+        </div>
+        <div id="wrapper">
+            <button id="trackStatusButton" title="Click to see list of trackers.">0 TRACKS</button>
+        </div>
+    </div>
+</li>
+
+{% endfor %}

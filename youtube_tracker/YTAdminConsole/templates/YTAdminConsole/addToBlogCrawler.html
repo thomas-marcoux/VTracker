@@ -1,0 +1,195 @@
+{% extends "YTAdminConsole/index.html" %}
+
+{% block content %}
+
+<div class="row">
+	<h1 class="page-header">Blog Crawler</h1>
+</div>
+<h5>
+	This crawler automatically captures manageable, analysis-ready JSON data for a given set of blog posts.<br/>
+	Crawling may take a few minutes depending on the size of the request - <b>the maximum amount of blog posts returned is 50 for now</b>.
+</h5>
+<div class="row col-md-12 col-lg-8">
+	<form class="panel-body" enctype="multipart/form-data" action="{% url 'YTAdminConsole:addToBlogCrawler' %}" method="post">
+		{% csrf_token %}
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label>Name your output file
+						<abbr title="Required" style="font-size: 135%; color: rgb(172, 41, 37); text-decoration: none; border-bottom: medium none; cursor: default;">*</abbr>
+					</label>
+					{{ form.run_name }}
+				</div>
+			</div>
+		</div>
+		{% if error_log|length > 0  %}
+			<div class="row">
+				<!-- Wrong entries -->
+				<div class="col-md-6">
+					<label>
+						The following Blog URLs may have incorrect formatting.
+					</label>
+					<ul>
+						{% for item in error_log %}
+							<li>{{ item }}</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		{% endif %}
+
+		<!-- Content input row -->
+		<div class="row">
+			<!-- URLs -->
+			<div id="url_section" class="col-md-6">
+				<label>
+                    Blog URLs
+                    <abbr title="Required" style="font-size: 135%; color: rgb(172, 41, 37); text-decoration: none; border-bottom: medium none; cursor: default;">*</abbr>
+				</label>
+				{{ form.content_list }}
+				<label class="custom-file-upload-btn"> Import Blog Posts URLs
+					<input name="content_file" accept=".csv, .txt" multiple="" id="id_content_file" type="file">
+				</label>
+				<input type="submit" id="url_submit_button" class="btn btn-create btn-block" name="url_db" disabled="disabled" value="Crawl URLs and send to Blog DataBase"/>
+				<h5 class="text-center">Send to Database and</h5>
+				<div id="url_button_group" class="btn-group btn-group-justified">
+					  <div class="btn-group">
+						<input type="submit" id="url_submit_button" class="btn btn-create" name="url_json" disabled="disabled" value="Download as JSON" width="auto"/>
+					  </div>
+					  <div class="btn-group">
+						  <input type="submit" id="url_submit_button" class="btn btn-create" name="url_xlsx" disabled="disabled" value="Download as XLSX" width="auto"/>
+					  </div>
+				</div>
+			</div>
+			<!-- Keywords -->
+			<div id="keyword_section" class="col-md-6">
+				<label>
+					Keywords
+				</label>
+				{{ form.keyword_list }}
+				<label class="custom-file-upload-btn"> Import Keywords
+					<input name="keyword_file" accept=".csv, .txt" multiple="" id="id_keyword_file" type="file">
+				</label>
+				<!-- Keyword Crawler Options -->
+				<table class="table">
+					<tbody>
+					<tr>
+						<td>Use diffbot for crawling. <b>This is a paying service.</b></td>
+						<td>{{ form.use_diffbot }}</td>
+					</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="keyword_submit_button" class="btn btn-create btn-block" name="keyword_db" disabled="disabled" value="Crawl Keywords and send to Blog DataBase"/>
+				<h5 class="text-center">Send to Database and</h5>
+				<div id="keyword_button_group" class="btn-group btn-group-justified">
+					<div class="btn-group">
+						<input type="submit" id="keyword_submit_button" class="btn btn-create" name="keyword_json" disabled="disabled" value="Download as JSON" filetype="json"/>
+					  </div>
+					  <div class="btn-group">
+						<input type="submit" id="keyword_submit_button" class="btn btn-create" name="keyword_xlsx" disabled="disabled" value="Download as XLSX" filetype="xlsx"/>
+					  </div>
+				</div>
+			</div>
+		</div>
+		<div position="-1" class="ng-isolate-scope">
+			<abbr title="Required" style="font-size: 135%; color: rgb(172, 41, 37); text-decoration: none; border-bottom: medium none; cursor: default;">*</abbr>
+			Indicates Required Field
+		</div>
+	</form>
+</div>
+
+<script type="text/javascript">
+	$( '#wrapper .side-menu-items' ).find( 'li.active' ).removeClass( 'active' );//this will remove the active class from  //previously active menu item 
+	$('#addToBlogCrawler').parent( 'li' ).addClass('active');
+</script>
+
+<!-- Utility functions -->
+<script>
+	// Go to the next line if last entry has no line break
+	function startAtNewLine(target) {
+		if (target.value != '' && target.value.substr(-1) != '\n') {
+			target.value += '\n';
+		}
+	}
+</script>
+
+<!-- Enable/Disable buttons -->
+<script>
+	// Enable submit button when content or keywords are entered
+	function checkForSubmitEnable(){
+
+		function check(input, buttons) {
+			for(var i=0; i < buttons.length; i++){
+				buttons[i].disabled = true;
+				if(input.value != ''){
+					buttons[i].disabled = false;
+				}
+			}
+		}
+
+		var contentList = document.getElementById('id_content_list');
+		var keywordList = document.getElementById('id_keyword_list');
+		var url_submit_buttons = document.querySelectorAll("div#url_section input#url_submit_button");
+		var keyword_submit_buttons = document.querySelectorAll("div#keyword_section input#keyword_submit_button");
+
+		check(contentList, url_submit_buttons);
+		check(keywordList, keyword_submit_buttons);
+	}
+</script>
+
+<!-- Reads uploaded files and append to corresponding list -->
+<script>
+		function getFile(fileInput, targetList, submit_buttons) {
+			if ('files' in fileInput && fileInput.files.length > 0) {
+				targetList.value = ""
+				placeFileContent(targetList, fileInput);
+			}
+		}
+	
+		function placeFileContent(target, fileInput) {
+			for (i = 0; i < fileInput.files.length; i++) {
+				readFileContent(fileInput.files[i]).then(content => {
+				startAtNewLine(target);
+				target.value += content;
+				checkForSubmitEnable();
+				}).catch(error => console.log(error));
+			}
+		}
+	
+		function readFileContent(file) {
+			const reader = new FileReader();
+			return new Promise((resolve, reject) => {
+				reader.onload = event => resolve(event.target.result);
+				reader.onerror = error => reject(error);
+				reader.readAsText(file);
+			});
+		}
+	</script>
+
+<!-- Setup events -->
+<script>
+	window.onload = function(){
+		// Enable submit button if a textareas is filled
+		var requiredInputs = document.getElementsByTagName('textarea');
+		for(var i=0; i < requiredInputs.length; i++){
+			requiredInputs[i].onkeyup = checkForSubmitEnable;
+			requiredInputs[i].onblur = checkForSubmitEnable;
+		}
+
+		// Event listener for uploading content files
+		var contentList = document.getElementById('id_content_list');
+		var contentFile = document.getElementById('id_content_file');
+		var submit_buttons = document.querySelectorAll("#url_submit_button");
+		contentFile.onchange =  function() {
+			getFile(contentFile, contentList, submit_buttons); };
+
+		// Event listener for uploading keywords files
+		var keywordList = document.getElementById('id_keyword_list');
+		var keywordFile = document.getElementById('id_keyword_file');
+		var submit_buttons = document.querySelectorAll("#keyword_submit_button");
+		keywordFile.onchange = function() { 
+			getFile(keywordFile, keywordList, submit_buttons); };
+	};
+</script>
+
+{% endblock %}

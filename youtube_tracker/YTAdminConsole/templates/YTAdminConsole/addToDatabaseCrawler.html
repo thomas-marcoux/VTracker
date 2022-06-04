@@ -1,0 +1,246 @@
+{% extends "YTAdminConsole/index.html" %}
+
+{% block content %}
+
+<div class="row">
+	<h1 class="page-header">Database Crawler</h1>
+</div>
+<h5>
+	This crawler is meant to be used for established, ongoing projects. It will create a new database and keep track of content over time.
+	Be aware that making changes to existing entries is likely to create inconsistencies in your data.
+</h5>
+<div class="row col-md-12 col-lg-8">
+	<form class="panel-body" enctype="multipart/form-data" action="{% url 'YTAdminConsole:addToDatabaseCrawler' %}" method="post">
+		{% csrf_token %}
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label>Enter a recognizable name for this task. This will be the name of the new database.
+						<abbr title="Required" style="font-size: 135%; color: rgb(172, 41, 37); text-decoration: none; border-bottom: medium none; cursor: default;">*</abbr>
+					</label>
+					{{ form.run_name }}
+				</div>
+			</div>
+		</div>
+		{% if error_log|length > 0  %}
+			<div class="row">
+				<!-- Wrong entries -->
+				<div class="col-md-12">
+					<label>
+						The following Video/Channel IDs may have incorrect formatting and were not added to the Crawler. Note the daily crawler does not accept channels.
+					</label>
+					<ul>
+						{% for item in error_log %}
+							<li>{{ item }}</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		{% endif %}
+		<div class="row">
+			<table class="table">
+				<thead>
+				  <tr>
+					<th scope="col" class="text-nowrap">Crawling Options</th>
+					<th scope="col"></th>
+					<th scope="col">Description</th>
+				  </tr>
+				</thead>
+				<tbody>
+				  <tr>
+					<td>Comments</td>
+					<td>{{ form.get_comments }}</td>
+					<td>Will crawl comments for selected content.</td>
+				  </tr>
+				  <tr>
+					<td>Related Videos</td>
+					<td>{{ form.get_related_videos }}</td>
+					<td>Will crawl the videos deemed "related" to selected content as per the YouTube algorithm.</td>
+				  </tr>
+				  <tr>
+					<td>Search Channels by Keywords</td>
+					<td>{{ form.channels_by_keyword }}</td>
+					<td>Will perform cursory relevancy check on Channels by only crawling the Channel's Videos including given Keyword(s). This avoids collecting large amounts of irrelevant videos.</td>
+				  </tr>
+				</tbody>
+			  </table>
+		</div>
+		<!-- Content input row -->
+		<div class="row">
+			<!-- Channels/Videos column -->
+			<div class="col-md-4">
+				<label>
+					Video/Channel IDs
+				</label>
+				{{ form.content_list }}
+				<label class="custom-file-upload-btn"> Import Video/Channel IDs
+					<input name="content_file" accept=".csv, .txt" multiple="" id="id_content_file" type="file">
+				</label>
+			</div>
+			<!-- Keywords column -->
+			<div class="col-md-4">
+				<label>
+					Keywords
+				</label>
+				{{ form.keyword_list }}
+				<label class="custom-file-upload-btn"> Import Keywords
+					<input name="keyword_file" accept=".csv, .txt" multiple="" id="id_keyword_file" type="file">
+				</label>
+			</div>
+			<!-- Daily column -->
+			<div class="col-md-4">
+				<label>
+					Videos to be crawled daily
+				</label>
+				{{ form.daily_content_list }}
+				<label class="custom-file-upload-btn"> Import Video IDs
+					<input name="content_file" accept=".csv, .txt" multiple="" id="id_daily_content_file" type="file">
+				</label>
+			</div>
+		</div>
+		<div position="-1" class="ng-isolate-scope">
+			<abbr title="Required" style="font-size: 135%; color: rgb(172, 41, 37); text-decoration: none; border-bottom: medium none; cursor: default;">*</abbr>
+			Indicates Required Field
+		</div>
+		<input type="submit" id="id_submit" class="btn btn-success btn-create" disabled="disabled" value="Submit"/>
+	</form>
+</div>
+
+<script type="text/javascript">
+	$( '#wrapper .side-menu-items' ).find( 'li.active' ).removeClass( 'active' );//this will remove the active class from  //previously active menu item 
+	$('#addToDatabaseCrawler').parent( 'li' ).addClass('active');
+</script>
+
+<!-- Utility functions -->
+<script>
+	// Go to the next line if last entry has no line break
+	function startAtNewLine(target) {
+		if (target.value != '' && target.value.substr(-1) != '\n') {
+			target.value += '\n';
+		}
+	}
+</script>
+
+<!-- Enable/Disable buttons -->
+<script>
+	// Enable submit button when content or keywords are entered
+	function checkForSubmitEnable(){
+		var enableSubmit = false;
+		var requiredInputs = document.getElementsByTagName('textarea');
+		for(var i=0; i < requiredInputs.length; i++){
+        	if(requiredInputs[i].value != ''){
+            	enableSubmit = true;
+        	}
+    	}
+		document.getElementById("id_submit").disabled = !enableSubmit;
+	}
+</script>
+
+<!-- Reads uploaded files and append to corresponding list -->
+<script>
+		function getFile(fileInput, targetList) {
+			if ('files' in fileInput && fileInput.files.length > 0) {
+				targetList.value = ""
+				for (i = 0; i < fileInput.files.length; i++) {
+					placeFileContent(targetList, fileInput.files[i]);
+				}
+				document.getElementById("id_submit").disabled = false;
+			}
+		}
+	
+		function placeFileContent(target, file) {
+			readFileContent(file).then(content => {
+			startAtNewLine(target);
+			target.value += content;
+			}).catch(error => console.log(error));
+		}
+	
+		function readFileContent(file) {
+			const reader = new FileReader();
+			return new Promise((resolve, reject) => {
+				reader.onload = event => resolve(event.target.result);
+				reader.onerror = error => reject(error);
+				reader.readAsText(file);
+			});
+		}
+	</script>
+
+<!-- Setup events -->
+<script>
+	window.onload = function(){
+		// Enable submit button if a textareas is filled
+		var requiredInputs = document.getElementsByTagName('textarea');
+		for(var i=0; i < requiredInputs.length; i++){
+			requiredInputs[i].onkeyup = checkForSubmitEnable;
+			requiredInputs[i].onblur = checkForSubmitEnable;
+		}
+
+		// Event listener for uploading content files
+		var contentList = document.getElementById('id_content_list');
+		var contentFile = document.getElementById('id_content_file');
+		contentFile.onchange =  function() {
+			getFile(contentFile, contentList); };
+
+		// Event listener for uploading keywords files
+		var keywordList = document.getElementById('id_keyword_list');
+		var keywordFile = document.getElementById('id_keyword_file');
+		keywordFile.onchange = function() { 
+			getFile(keywordFile, keywordList); };
+
+		// Event listener for uploading daily content files
+		var contentList = document.getElementById('id_daily_content_list');
+		var contentFile = document.getElementById('id_daily_content_file');
+		contentFile.onchange =  function() {
+			getFile(contentFile, contentList); };
+	};
+</script>
+
+<!-- Autocomplete script for Task field & automatic ID -->
+<script>
+	function resetFields() {
+		document.getElementById("id_content_list").value = '';
+		document.getElementById("id_daily_content_list").value = '';
+		document.getElementById("id_keyword_list").value = '';
+		document.getElementById("get_comments").checked = false;
+		document.getElementById("get_related_videos").checked = false;
+		document.getElementById("channels_by_keyword").checked = false;
+	}
+
+	function populateFields(taskName, tasks) {
+		jQuery.each(tasks, function() {
+			if (taskName == this.fields.task_name) {
+				if (this.fields.videos) {document.getElementById("id_content_list").value = this.fields.videos.join('\n') + '\n';}
+				if (this.fields.videos_daily) {document.getElementById("id_daily_content_list").value = this.fields.videos_daily.join('\n') + '\n';}
+				if (this.fields.channels) {document.getElementById("id_content_list").value += this.fields.channels.join('\n');}
+				if (this.fields.keywords) {document.getElementById("id_keyword_list").value = this.fields.keywords.join('\n');}
+				document.getElementById("get_comments").checked = this.fields.get_comments;
+				document.getElementById("get_related_videos").checked = this.fields.get_related_videos;
+				document.getElementById("channels_by_keyword").checked = this.fields.channels_by_keyword;
+			}
+		});
+	}
+
+	$( function() {
+		var taskElement = document.getElementById("task_name");
+		// Get JSON data from template variable
+		var taskJSON = {{ tasks|safe }};
+		var taskNames = []
+		//Get task names
+		jQuery.each(taskJSON, function() {
+			taskNames.push(this.fields.task_name);
+		});
+		// Setup autocomplete
+		$("#task_name").autocomplete({source: taskNames});
+		// Setup auto-population events
+		$("#task_name").on("autocompleteselect", function(event, ui ) {
+			resetFields();
+			populateFields(ui.item.value, taskJSON);
+		});
+		taskElement.addEventListener("keyup", function() {
+			populateFields(taskElement.value, taskJSON);
+		});
+	} );
+</script>
+
+
+{% endblock %}

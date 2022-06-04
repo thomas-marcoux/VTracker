@@ -1,0 +1,148 @@
+/*
+
+
+
+    " Reimplement the wheel to either learn, or make it better. "
+
+    http://www.hayder.io/
+    https://www.youtube.com/watch?v=QOlTGA3RE8I
+    
+  Product Name: YouTubeTracker,
+	Description: Tracking YouTube"s data.
+	Beneficiary: COSMOS
+	
+	Copyright © 1992 - 2021 HAYDER, All Rights Reserved.
+	
+	
+	
+*/
+
+
+
+@import "/static/youtube_tracker/css/templates/analytics-template.css";
+
+
+/***** Network Analysis  Diagram START *****/
+
+main#content div#dashboard section#visualizations figure#networkGraph.figure {
+
+   grid-row-gap: 5px;
+   height: 600px;
+   grid-template-rows: 80% auto;
+
+}
+
+
+main#content div#dashboard section#visualizations figure#networkGraph.figure ul#statisticsWrapper {
+    
+    display: flex;
+    height: 100%;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-left: 150px;
+    
+
+}
+
+main#content div#dashboard section#visualizations figure#networkGraph.figure ul#statisticsWrapper li {
+
+    border-radius: var(--radius15);
+    padding: 25px 30px;
+    margin-right: 100px;
+
+}
+
+ul#statisticsWrapper li h3 {
+
+    font-size: var(--size17);
+    font-weight: 400;
+
+}
+
+ul#statisticsWrapper li p {
+
+    font-size: var(--size28);
+    font-weight: 600;
+    
+}
+h3#diagramTitle {
+    padding :  15px;
+}
+/***** Network Analysis  Diagram END*****/
+
+/***** Related Videos  START *****/
+
+main#content div#dashboard section#visualizations figure#videosDiagram.figure {
+
+    grid-template-columns: 230px auto;
+    grid-template-rows: repeat(5, auto);
+    min-height: 400px;
+    height: 500px;
+    background-color: var(--greyishDark2);
+    border-radius: var(--radius25);
+
+}
+
+/** Search **/
+
+form#search {
+
+    margin: 100px;
+    margin-top: 50px;
+    max-width: 500px;
+    padding: 0px 7px;
+  
+  }
+  
+  form#search label {
+  
+    display: none;
+  
+  }
+  
+  form#search input#searchBox {
+  
+     border-radius: var(--radius25);
+     border: 2px solid var(--whitishTransparent1);
+     background-color: var(--blackish);
+     width: 70%;
+     font-size: 22px;
+     color: var(--whitish);
+     padding: 10px 20px;
+     outline: none;
+     text-align: center;
+  }
+
+  /** Pagination **/
+
+main#content div#dashboard section#visualizations  div#pagination {
+
+    text-align: center;
+    margin: 50px 0px;
+ 
+  
+  }
+  
+  main#content div#dashboard section#visualizations  div#pagination li {
+  
+    display: inline-block;
+    margin: 0px 10px;
+    padding: 8px 14px;
+    border-radius: var(--radius25);
+    cursor: pointer;
+  
+  }
+  
+  main#content div#dashboard section#visualizations  div#pagination li.selected {
+  
+    background-color: var(--reddish);
+  
+  }
+  
+  main#content div#dashboard section#visualizations  div#pagination li:hover {
+  
+    background-color: var(--greyish);
+  
+  }
+  

@@ -1,0 +1,110 @@
+{% extends "youtube_tracker/analyticsBase.html" %}
+{% load humanize %}
+{% load static %}
+{% block body %}
+
+<title>Posting Frequency - VTracker</title>
+
+<!-- Stylesheets -->
+<link rel="stylesheet" href="{% static 'youtube_tracker/css/posting-frequency.css' %}"/>
+    <link rel="stylesheet" href="{% static 'youtube_tracker/libs/styles/tabulator_midnight.css' %}" />
+
+
+<script>
+    let JSONContextData = '{{ JSONContextData | escapejs }}';
+</script>
+
+<!-- World Map -->
+<link rel="stylesheet" href="{% static 'youtube_tracker/libs/styles/jquery-jvectormap-2.0.3.css' %}"/>
+<script type="text/javascript"
+        src="{% static 'youtube_tracker/libs/scripts/jquery-jvectormap-2.0.3.min.js' %}"></script>
+<script type="text/javascript"
+        src="{% static 'youtube_tracker/libs/scripts/jquery-jvectormap-world-mill.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/barChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/lineChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/worldMap.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/pieChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/channelObserver.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/postingFrequency.js' %}"></script>
+
+<section id="visualizations">
+
+    <figure id="postingFrequencyDiagram" class="figure">
+
+        <!-- Channels -->
+        <div id="channelsWrapper" class="component">
+            <input id="searchChannelsFrequency" placeholder="Search Channels" class="searchBox">
+            <ul id="channelsList">
+                {% for channel in trackerData.channels %}
+                    <li id="{{channel.channel_id}}" >{{ channel.channel_title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Figure -->
+        <div id="figureWrapper" class="component">
+            <div id="spinner"></div>
+            <div id="postingFrequencyFigure"></div>
+        </div>
+
+        <!-- Statistics -->
+        <div id="statistics" class="component">
+        </div>
+    </figure>
+
+    <figure id="videoCategoryDistributionDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Video Category Distribution</h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper" class="component">
+             <!--left content in there-->
+            <div id="figureWrapperLeft" style="width: 50%; float:left">
+                <div id="videoCategoryBarChart"></div>
+            </div>
+             
+             <div id="figureWrapperRight" style="width: 50%; float:right; height: 70%; padding-top: 30px;">
+                <!--right content in there-->
+                <div id="videoCategoryPieChart"></div>
+             </div>
+        </div>
+    </figure>
+
+    <figure id="channelLocationDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Channel Location</h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper" class="component">
+            <div id="spinner"></div>
+            <div id="channelsWorldMapFigure" style="width: 775px; height: 375px"></div>
+        </div>
+        <!-- Content -->
+        <div id="contentWrapper" class="component">
+            <input id="searchChannelsLocation" placeholder="Search Channels" class="searchBox">
+        </div>
+    </figure>
+
+    <figure id="channelDetailsDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Channel Details</h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Content -->
+        <div id="contentWrapper" class="component">
+            <input id="searchChannelsDetails" placeholder="Search Channels" class="searchBox">
+        </div>
+    </figure>
+
+</section>
+
+{% endblock %}

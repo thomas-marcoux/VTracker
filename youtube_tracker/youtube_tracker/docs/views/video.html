@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>video.py</title>
+  <link rel="stylesheet" href="..\pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>video.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Views, utilities, and REST API calls related to video functions.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>General imports</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">dateutil.parser</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Barcode imports</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Django imports</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+<span class="kn">from</span> <span class="nn">django.forms.models</span> <span class="kn">import</span> <span class="n">model_to_dict</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">JsonResponse</span><span class="p">,</span> <span class="n">Http404</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="kn">import</span> <span class="n">render_to_string</span>
+<span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">ObjectDoesNotExist</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Sub packages</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">.youtubeUtils</span> <span class="kn">import</span> <span class="n">YoutubeRequestBuilder</span><span class="p">,</span> <span class="n">executeYouTubeQuery</span><span class="p">,</span> <span class="n">formatYouTubeResponse</span>
+<span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">addChannelEntry</span><span class="p">,</span> <span class="n">getChannelDetails</span>
+<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">Videos</span><span class="p">,</span> <span class="n">VideosDaily</span><span class="p">,</span> <span class="n">Channels</span><span class="p">,</span> <span class="n">RelatedVideos</span>
+<span class="kn">from</span> <span class="nn">.genericUtilities</span> <span class="kn">import</span> <span class="n">getTimeInSeconds</span>
+<span class="kn">from</span> <span class="nn">.queryUtils</span> <span class="kn">import</span> <span class="n">getTrackerVideoIDs</span><span class="p">,</span> <span class="n">getTrackersWithRelationship</span><span class="p">,</span> <span class="n">getTrackingNumbers</span>
+<span class="kn">from</span> <span class="nn">.wrappers</span> <span class="kn">import</span> <span class="n">ajax_post_required</span><span class="p">,</span> <span class="n">ajax_get_required</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">videoCategoriesMapping</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="s1">&#39;Film &amp; Animation&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="s1">&#39;Autos &amp; Vehicles&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;10&#39;</span><span class="p">:</span> <span class="s1">&#39;Music&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;15&#39;</span><span class="p">:</span> <span class="s1">&#39;Pets &amp; Animals&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;17&#39;</span><span class="p">:</span> <span class="s1">&#39;Sports&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;18&#39;</span><span class="p">:</span> <span class="s1">&#39;Short Movies&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;19&#39;</span><span class="p">:</span> <span class="s1">&#39;Travel &amp; Events&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;20&#39;</span><span class="p">:</span> <span class="s1">&#39;Gaming&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;21&#39;</span><span class="p">:</span> <span class="s1">&#39;Videoblogging&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;22&#39;</span><span class="p">:</span> <span class="s1">&#39;People &amp; Blogs&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;23&#39;</span><span class="p">:</span> <span class="s1">&#39;Comedy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;24&#39;</span><span class="p">:</span> <span class="s1">&#39;Entertainment&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;25&#39;</span><span class="p">:</span> <span class="s1">&#39;News &amp; Politics&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;26&#39;</span><span class="p">:</span> <span class="s1">&#39;Howto &amp; Style&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;27&#39;</span><span class="p">:</span> <span class="s1">&#39;Education&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;28&#39;</span><span class="p">:</span> <span class="s1">&#39;Science &amp; Technology&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;29&#39;</span><span class="p">:</span> <span class="s1">&#39;Nonprofits &amp; Activism&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;30&#39;</span><span class="p">:</span> <span class="s1">&#39;Movies&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;31&#39;</span><span class="p">:</span> <span class="s1">&#39;Anime/Animation&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;32&#39;</span><span class="p">:</span> <span class="s1">&#39;Action/Adventure&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;33&#39;</span><span class="p">:</span> <span class="s1">&#39;Classics&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;34&#39;</span><span class="p">:</span> <span class="s1">&#39;Comedy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;35&#39;</span><span class="p">:</span> <span class="s1">&#39;Documentary&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;36&#39;</span><span class="p">:</span> <span class="s1">&#39;Drama&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;37&#39;</span><span class="p">:</span> <span class="s1">&#39;Family&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;38&#39;</span><span class="p">:</span> <span class="s1">&#39;Foreign&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;39&#39;</span><span class="p">:</span> <span class="s1">&#39;Horror&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;40&#39;</span><span class="p">:</span> <span class="s1">&#39;Sci-Fi/Fantasy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;41&#39;</span><span class="p">:</span> <span class="s1">&#39;Thriller&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;42&#39;</span><span class="p">:</span> <span class="s1">&#39;Shorts&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;43&#39;</span><span class="p">:</span> <span class="s1">&#39;Shows&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;44&#39;</span><span class="p">:</span> <span class="s1">&#39;Trailers&#39;</span><span class="p">,</span>
+<span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <h2>Render</h2>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Return a render of the Video Characterization Page. This is a demo page using static values form a file and will change in the future.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">videoCharacterization</span><span class="p">(</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ytt_directory</span> <span class="o">=</span> <span class="s1">&#39;youtube_tracker&#39;</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;videoCharacterizationSample.csv&#39;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="n">ytt_directory</span><span class="p">,</span> <span class="s1">&#39;files&#39;</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+        <span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">video_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;video_id&#39;</span><span class="p">])</span>
+        <span class="n">videos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Videos</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">video_id__in</span><span class="o">=</span><span class="n">video_ids</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">&#39;video_id&#39;</span><span class="p">,</span> <span class="s1">&#39;video_title&#39;</span><span class="p">))</span>
+        <span class="n">videos_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">videos</span><span class="p">)</span>
+        <span class="n">data_df</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">videos_df</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;video_id&#39;</span><span class="p">)</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;youtube_tracker/videoCharacterization.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;JSONContextData&#39;</span><span class="p">:</span> <span class="n">json_data</span><span class="p">})</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Http404</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <h2>AJAX Calls</h2>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Return requested video object as dictionary.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@ajax_get_required</span>
+<span class="k">def</span> <span class="nf">getVideo</span><span class="p">(</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">video_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">video_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;videoId&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">video_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Missing video ID.&#39;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">video</span> <span class="o">=</span> <span class="n">Videos</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">video_id</span><span class="o">=</span><span class="n">video_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Video does not exist in the database.&#39;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span><span class="n">model_to_dict</span><span class="p">(</span><span class="n">video</span><span class="p">),</span> <span class="n">safe</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Return information to populate video modal.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@ajax_get_required</span>
+<span class="k">def</span> <span class="nf">getVideoModal</span><span class="p">(</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">video_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;contentId&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">video_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Missing video ID.&#39;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">youtube_requester</span> <span class="o">=</span> <span class="n">YoutubeRequestBuilder</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">)</span>
+    <span class="n">trackers</span> <span class="o">=</span> <span class="n">getTrackersWithRelationship</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">video_id</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">video_data</span> <span class="o">=</span> <span class="n">getVideoStatistics</span><span class="p">(</span><span class="n">youtube_requester</span><span class="p">,</span> <span class="n">video_id</span><span class="p">)</span>
+        <span class="n">channel_id</span> <span class="o">=</span> <span class="n">video_data</span><span class="p">[</span><span class="s1">&#39;snippet&#39;</span><span class="p">][</span><span class="s1">&#39;channelId&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]},</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">channel_data</span> <span class="o">=</span> <span class="n">getChannelDetails</span><span class="p">(</span><span class="n">youtube_requester</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]},</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">video_data</span><span class="p">[</span><span class="s1">&#39;totalTracking&#39;</span><span class="p">],</span> <span class="n">video_data</span><span class="p">[</span><span class="s1">&#39;globalTracking&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">getTrackingNumbers</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">[</span><span class="n">video_id</span><span class="p">])</span>
+    <span class="n">video_data</span><span class="p">[</span><span class="s1">&#39;totalTracking&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">video_data</span><span class="p">[</span><span class="s1">&#39;totalTracking&#39;</span><span class="p">][</span><span class="n">video_id</span><span class="p">]</span>
+    <span class="n">video_data</span><span class="p">[</span><span class="s1">&#39;globalTracking&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">video_data</span><span class="p">[</span><span class="s1">&#39;globalTracking&#39;</span><span class="p">][</span><span class="n">video_id</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;videoData&#39;</span><span class="p">:</span> <span class="n">video_data</span><span class="p">,</span> <span class="s1">&#39;channelData&#39;</span><span class="p">:</span> <span class="n">channel_data</span><span class="p">,</span> <span class="s1">&#39;trackerList&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">trackers</span><span class="p">)})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Return rendered view of a given video&rsquo;s related videos for modal display.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@ajax_get_required</span>
+<span class="k">def</span> <span class="nf">getRelatedVideos</span><span class="p">(</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">video_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;contentId&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">video_id</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Missing video ID.&#39;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">max_results</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;maxResults&#39;</span><span class="p">):</span>
+        <span class="n">max_results</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;maxResults&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">related_videos</span> <span class="o">=</span> <span class="n">getLiveRelatedVideos</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">video_id</span><span class="p">,</span> <span class="n">max_results</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">related_videos</span> <span class="o">=</span> <span class="n">getOfflineRelatedVideos</span><span class="p">(</span><span class="n">video_id</span><span class="p">,</span> <span class="n">max_results</span><span class="p">)</span>
+    <span class="n">related_videos_render</span> <span class="o">=</span> <span class="n">render_to_string</span><span class="p">(</span><span class="s1">&#39;youtube_tracker/modal_relatedVideos.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="n">related_videos</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;related_videos&#39;</span><span class="p">:</span> <span class="n">related_videos_render</span><span class="p">})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Return video IDs of videos matching the search value. Used in tracker details page to paginate search results.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@ajax_post_required</span>
+<span class="k">def</span> <span class="nf">getTrackerVideos</span><span class="p">(</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">tracker_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;trackerId&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;trackerId&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">search_value</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;searchValue&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;searchValue&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">tracker_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Missing tracker ID.&#39;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">video_ids</span> <span class="o">=</span> <span class="n">getTrackerVideoIDs</span><span class="p">(</span><span class="n">tracker_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">search_value</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">search_value</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">video_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Videos</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">video_id__in</span><span class="o">=</span><span class="n">video_ids</span><span class="p">,</span> <span class="n">video_title__icontains</span><span class="o">=</span><span class="n">search_value</span><span class="p">))</span>
+                         <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;video_id&#39;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-published_date&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;itemIDs&#39;</span><span class="p">:</span> <span class="n">video_ids</span><span class="p">})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>Return rendered video items from select IDs, to be shown in the tracker details page.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@ajax_post_required</span>
+<span class="k">def</span> <span class="nf">getPaginatedVideos</span><span class="p">(</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">video_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;itemIDs[]&#39;</span><span class="p">)</span>
+    <span class="n">barcode_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;barcodeWidth&#39;</span><span class="p">))</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;barcodeWidth&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">2048</span>
+    <span class="n">videos</span> <span class="o">=</span> <span class="n">Videos</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">video_id__in</span><span class="o">=</span><span class="n">video_ids</span><span class="p">))</span>\
+        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">&#39;video_id&#39;</span><span class="p">,</span> <span class="s1">&#39;thumbnails_medium_url&#39;</span><span class="p">,</span> <span class="s1">&#39;video_title&#39;</span><span class="p">,</span> <span class="s1">&#39;published_date&#39;</span><span class="p">,</span> <span class="s1">&#39;channel_id&#39;</span><span class="p">,</span> <span class="s1">&#39;movie_barcode&#39;</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-published_date&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">video</span> <span class="ow">in</span> <span class="n">videos</span><span class="p">:</span>
+        <span class="n">video</span><span class="p">[</span><span class="s1">&#39;movie_barcode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">getBarcode</span><span class="p">(</span><span class="n">video</span><span class="p">[</span><span class="s1">&#39;movie_barcode&#39;</span><span class="p">],</span> <span class="n">barcode_width</span><span class="p">)</span>
+    <span class="n">channel_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">video</span><span class="p">[</span><span class="s1">&#39;channel_id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">video</span> <span class="ow">in</span> <span class="n">videos</span><span class="p">]</span>
+    <span class="n">channels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Channels</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">channel_id__in</span><span class="o">=</span><span class="n">channel_ids</span><span class="p">))</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">&#39;channel_id&#39;</span><span class="p">,</span> <span class="s1">&#39;channel_title&#39;</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">video</span> <span class="ow">in</span> <span class="n">videos</span><span class="p">:</span>
+        <span class="n">video</span><span class="p">[</span><span class="s1">&#39;channel_title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">video</span><span class="p">[</span><span class="s1">&#39;channel_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">channel</span><span class="p">[</span><span class="s1">&#39;channel_id&#39;</span><span class="p">]:</span>
+                <span class="n">video</span><span class="p">[</span><span class="s1">&#39;channel_title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel</span><span class="p">[</span><span class="s1">&#39;channel_title&#39;</span><span class="p">]</span>
+    <span class="n">cards_render</span> <span class="o">=</span> <span class="n">render_to_string</span><span class="p">(</span><span class="s1">&#39;youtube_tracker/tracker_itemsCard.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;videos&#39;</span><span class="p">:</span> <span class="n">videos</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;render&#39;</span><span class="p">:</span> <span class="n">cards_render</span><span class="p">})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>Return video barcode with its duration, to be shown in video modal.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@ajax_post_required</span>
+<span class="k">def</span> <span class="nf">getSingleVideoBarcode</span><span class="p">(</span><span class="n">request</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">video_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;videoId&#39;</span><span class="p">)</span>
+    <span class="n">as_list</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;asList&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span> <span class="k">else</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">video_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;Missing video ID.&#39;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">barcode_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;barcodeWidth&#39;</span><span class="p">))</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;barcodeWidth&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">2048</span>
+    <span class="n">barcode_height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;barcodeHeight&#39;</span><span class="p">))</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;barcodeHeight&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">video</span> <span class="o">=</span> <span class="n">Videos</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">video_id</span><span class="o">=</span><span class="n">video_id</span><span class="p">))</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s1">&#39;video_id&#39;</span><span class="p">,</span> <span class="s1">&#39;video_title&#39;</span><span class="p">,</span> <span class="s1">&#39;movie_barcode&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">video</span><span class="p">[</span><span class="s1">&#39;movie_barcode&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;No movie barcode available for this video.&#39;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
+    <span class="n">video</span><span class="p">[</span><span class="s1">&#39;movie_barcode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">getBarcode</span><span class="p">(</span><span class="n">video</span><span class="p">[</span><span class="s1">&#39;movie_barcode&#39;</span><span class="p">],</span> <span class="n">barcode_width</span><span class="p">,</span> <span class="n">barcode_height</span><span class="p">,</span> <span class="n">as_list</span><span class="p">)</span>
+    <span class="n">in_seconds</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">video_duration</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">video_duration</span> <span class="o">=</span> <span class="n">getVideoDuration</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">video_id</span><span class="p">,</span> <span class="n">in_seconds</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;API error </span><span class="si">{0}</span><span class="s2"> : </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s1">&#39;barcode&#39;</span><span class="p">:</span> <span class="n">video</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">video_duration</span><span class="p">})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <h2>Utility Functions</h2>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>Return live video details from the YouTube API for modal display.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getLiveVideoDetails</span><span class="p">(</span><span class="n">youtube</span><span class="p">,</span> <span class="n">video_id</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">query</span> <span class="o">=</span> <span class="n">youtube</span><span class="o">.</span><span class="n">videos</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">part</span><span class="o">=</span><span class="s1">&#39;statistics,snippet,contentDetails&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">video_id</span><span class="p">,)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">executeYouTubeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;items&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;viewCount&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">formatYouTubeResponse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;viewCount&#39;</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;likeCount&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">formatYouTubeResponse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;likeCount&#39;</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dislikeCount&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">formatYouTubeResponse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;dislikeCount&#39;</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;commentCount&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">formatYouTubeResponse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;commentCount&#39;</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">formatYouTubeResponse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>Return video details from the database for modal display.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getOfflineVideoStatistics</span><span class="p">(</span><span class="n">video_id</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">video</span> <span class="o">=</span> <span class="n">Videos</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">video_id</span><span class="o">=</span><span class="n">video_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
+        <span class="n">video</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">video_daily</span> <span class="o">=</span> <span class="n">VideosDaily</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">video_id</span><span class="o">=</span><span class="n">video_id</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-extracted_date&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+        <span class="n">video_daily</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">video</span> <span class="ow">and</span> <span class="n">video_daily</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;viewCount&#39;</span><span class="p">:</span> <span class="n">video_daily</span><span class="o">.</span><span class="n">total_views</span><span class="p">,</span>
+            <span class="s1">&#39;likeCount&#39;</span><span class="p">:</span> <span class="n">video_daily</span><span class="o">.</span><span class="n">total_likes</span><span class="p">,</span>
+            <span class="s1">&#39;dislikeCount&#39;</span><span class="p">:</span> <span class="n">video_daily</span><span class="o">.</span><span class="n">total_dislikes</span><span class="p">,</span>
+            <span class="s1">&#39;commentCount&#39;</span><span class="p">:</span> <span class="n">video_daily</span><span class="o">.</span><span class="n">total_comments</span><span class="p">,</span>
+            <span class="s1">&#39;snippet&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;channelId&#39;</span><span class="p">:</span> <span class="n">video</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">channel_id</span> <span class="k">if</span> <span class="n">video</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">video</span><span class="o">.</span><span class="n">video_title</span> <span class="k">if</span> <span class="n">video</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="n">data</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>Return live related videos details from the YouTube API for modal display.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getLiveRelatedVideos</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">video_id</span><span class="p">,</span> <span class="n">max_results</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">related_videos</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">query_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;part&#39;</span><span class="p">:</span> <span class="s2">&quot;id,snippet&quot;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;video&#39;</span><span class="p">,</span> <span class="s1">&#39;relatedToVideoId&#39;</span><span class="p">:</span> <span class="n">video_id</span><span class="p">,</span> <span class="s1">&#39;maxResults&#39;</span><span class="p">:</span> <span class="n">max_results</span><span class="p">}</span>
+    <span class="n">youtube_requester</span> <span class="o">=</span> <span class="n">YoutubeRequestBuilder</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">)</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">youtube_requester</span><span class="o">.</span><span class="n">search</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="o">**</span><span class="n">query_params</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">executeYouTubeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;items&#39;</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">related_video</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;video_id&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="s1">&#39;videoId&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;snippet&#39;</span><span class="p">][</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;thumbnails_medium_url&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;snippet&#39;</span><span class="p">][</span><span class="s1">&#39;thumbnails&#39;</span><span class="p">][</span><span class="s1">&#39;default&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;published_date&#39;</span><span class="p">:</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;snippet&#39;</span><span class="p">][</span><span class="s1">&#39;publishedAt&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;channel_title&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;snippet&#39;</span><span class="p">][</span><span class="s1">&#39;channelTitle&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">getVideoDuration</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="s1">&#39;videoId&#39;</span><span class="p">])</span>
+                <span class="p">}</span>
+            <span class="n">related_videos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">related_video</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">related_videos</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <p>Return related videos details from the database for modal display.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getOfflineRelatedVideos</span><span class="p">(</span><span class="n">video_id</span><span class="p">,</span> <span class="n">max_results</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">related_videos</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">RelatedVideos</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">parent_video</span><span class="o">=</span><span class="n">video_id</span><span class="p">)[:</span><span class="n">max_results</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">content</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+            <span class="n">related_video</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                <span class="s1">&#39;thumbnails_medium_url&#39;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">thumbnails_medium_url</span><span class="p">,</span>
+                <span class="s1">&#39;published_date&#39;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">published_date</span><span class="p">,</span> <span class="s1">&#39;channel_title&#39;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">channel_title</span><span class="p">,</span>
+                <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="kc">None</span>
+                <span class="p">}</span>
+            <span class="n">related_videos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">related_video</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">related_videos</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>Return video details. Attempts to query the live API, then the database.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getVideoStatistics</span><span class="p">(</span><span class="n">youtube</span><span class="p">,</span> <span class="n">video_id</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">getLiveVideoDetails</span><span class="p">(</span><span class="n">youtube</span><span class="p">,</span> <span class="n">video_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">getOfflineVideoStatistics</span><span class="p">(</span><span class="n">video_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      <p>Query live data for given video_id and insert to DB along with its parent channel.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">addVideoEntry</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">video_id</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">video</span> <span class="o">=</span> <span class="n">Videos</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">video_id</span><span class="o">=</span><span class="n">video_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">video</span>
+    <span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">youtube_requester</span> <span class="o">=</span> <span class="n">YoutubeRequestBuilder</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">)</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">youtube_requester</span><span class="o">.</span><span class="n">videos</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">part</span><span class="o">=</span><span class="s1">&#39;statistics,snippet&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">video_id</span><span class="p">,)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">executeYouTubeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span> <span class="ow">or</span> <span class="s1">&#39;items&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;items&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Video </span><span class="si">{0}</span><span class="s2"> unavailable. No entry was created.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">video_id</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;items&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="n">addChannelEntry</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;snippet&#39;</span><span class="p">][</span><span class="s1">&#39;channelId&#39;</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Video </span><span class="si">{0}</span><span class="s2"> was not added to the tracker. Cannot find channel.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">video_id</span><span class="p">))</span>
+    <span class="n">video</span> <span class="o">=</span> <span class="n">Videos</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">video_id</span><span class="o">=</span><span class="n">video_id</span><span class="p">,</span>
+        <span class="n">video_title</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;snippet&#39;</span><span class="p">][</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">videoCategoriesMapping</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;snippet&#39;</span><span class="p">][</span><span class="s1">&#39;categoryId&#39;</span><span class="p">]],</span>
+        <span class="n">published_date</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;snippet&#39;</span><span class="p">][</span><span class="s1">&#39;publishedAt&#39;</span><span class="p">],</span>
+        <span class="n">thumbnails_medium_url</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;snippet&#39;</span><span class="p">][</span><span class="s1">&#39;thumbnails&#39;</span><span class="p">][</span><span class="s1">&#39;medium&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;snippet&#39;</span><span class="p">][</span><span class="s1">&#39;description&#39;</span><span class="p">],</span>
+        <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">video</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-34'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-34'>#</a>
+      </div>
+      <p>Return duration of given video_id. In displayable format by default or in seconds if specified.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getVideoDuration</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">video_id</span><span class="p">,</span> <span class="n">in_seconds</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-35'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-35'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">youtube_requester</span> <span class="o">=</span> <span class="n">YoutubeRequestBuilder</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">)</span>
+    <span class="n">video_data</span> <span class="o">=</span> <span class="n">youtube_requester</span><span class="o">.</span><span class="n">videos</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">part</span><span class="o">=</span><span class="s1">&#39;contentDetails&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">video_id</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="n">formatYouTubeResponse</span><span class="p">(</span><span class="n">video_data</span><span class="p">[</span><span class="s1">&#39;items&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;duration&#39;</span><span class="p">,</span> <span class="n">is_date</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">in_seconds</span><span class="p">:</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">getTimeInSeconds</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">duration</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">duration</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      <p>Return barcode from the DB&rsquo;s video&rsquo;s JSON array.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">getBarcode</span><span class="p">(</span><span class="n">json_barcode</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">as_list</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="ow">not</span> <span class="n">json_barcode</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">np_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">json_barcode</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>  <span class="c1"># Parse the numpy list from string</span>
+    <span class="n">flipped_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np_array</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Switch from BGR to RGB values</span>
+    <span class="n">new_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">flipped_array</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Add dimension to convert matrix to image tensor</span>
+    <span class="n">new_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">new_img</span><span class="p">,</span> <span class="p">[</span><span class="mi">224</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">new_image</span> <span class="o">=</span> <span class="n">new_image</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">new_image</span><span class="p">)</span>  <span class="c1"># Convert image tensor to Pillow Image object</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+    <span class="n">buffered</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">buffered</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">as_list</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">base64_encoded_result_bytes</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">buffered</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+        <span class="n">base64_encoded_result_str</span> <span class="o">=</span> <span class="n">base64_encoded_result_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">base64_encoded_result_str</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

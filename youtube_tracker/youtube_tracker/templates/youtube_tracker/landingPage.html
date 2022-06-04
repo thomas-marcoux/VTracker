@@ -1,0 +1,216 @@
+{% load static %}
+<!DOCTYPE html>
+
+<!--
+
+
+
+	" Reimplement the wheel to either learn, or make it better. "
+
+    http://www.haydex.com/
+    https://www.youtube.com/watch?v=QOlTGA3RE8I
+    
+    Product Name: VTracker,
+	Description: Tracking video data.
+	Beneficiary: COSMOS
+	
+	Copyright © 1992 - 2018 HAYDEX, All Rights Reserved.
+	
+	
+	
+-->
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="author" content="HAYDEX">
+        <meta name="description" content="Tracking video data.">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+        <title>VTracker</title>
+        
+        <!-- Favicons START -->
+        <link rel="apple-touch-icon" sizes="180x180"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-apple-touch-favicon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-favicon-16x16.png' %}">
+        <!-- https://mobiforge.com/design-development/adding-favicons-in-a-multi-browser-multi-platform-world -->
+        <!-- Favicons END -->
+
+        <!-- Stylesheets START -->
+        <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/base.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/landing.css' %}">
+        <!-- Stylesheets END -->
+        
+        <script src="{% static 'youtube_tracker/behavior/landing.js' %}"></script>
+
+    </head>
+    <body>
+        
+        <!-- Header START -->
+        {% if user.is_authenticated %}
+            {% include "youtube_tracker/baseHeader.html" %}
+            <style>
+                header {
+                    background-color: var(--greyishDark2);
+                }
+            </style>
+        {% else %}
+            {% include "youtube_tracker/landingHeader.html" %}
+        {% endif %}
+        <!-- Header END -->
+
+        <!-- Theme START -->
+        <section id="theme">
+            <h1 id="title">Track Video Data</h1>
+            <p id="description">Monitor and suggest valuable insights in a drill down fashion using content analysis and social
+                network analysis</p>
+            <div id="search">
+                <input type="text" id="searchBox" placeholder="Search">
+                <div id="searchIcon"></div>
+                <div id="line"></div>
+            </div>
+            <button id="startButton">Start Tracking</button>
+            <div id="gradient"></div>
+            <div id="whiteBox"></div>
+            <div id="themeIllustration"></div>
+        </section>
+        <!-- Theme END -->
+
+        <!-- Help START -->
+        <button id="helpButton" onclick="location.href='{% url 'userGuidePage' %}'">?</button>
+        <!-- Help END -->
+
+        <!-- Why START -->
+        <section id="why">
+            <h1 id="title">Why VTracker?</h1>
+            <p id="description">VTracker helps sociologists to track and analyze videos of particular interests by designing and integrating unique features </p>
+            <ul id="items">
+                <li id="item1" class="whyListItem">
+                    <div id="illustration"></div>
+                    <h3 id="title">Research Based</h3>
+                    <p id="details">Built to review user behavior in video-based online spaces.</p>
+                </li>
+                <li id="item2" class="whyListItem">
+                    <div id="illustration"></div>
+                    <h3 id="title">User Friendly</h3>
+                    <p id="details">Easy-to-use interface for the user.</p>
+                </li>
+                <li id="item3" class="whyListItem">
+                    <div id="illustration"></div>
+                    <h3 id="title">Mobile Optimized</h3>
+                    <p id="details">Render efficiently on Desktop and Mobile devices.</p>
+                </li>
+            </ul>
+            <button id="startTrackingButton" onclick="location.href='{% url 'homePage' %}'">Start Tracking</button>
+        </section>
+        <!-- Why END -->
+
+        <!-- What START -->
+        <section id="what">
+            <h1 id="title">What Can You Do With It?</h1>
+
+            <div id='HAYDEXSlider'>
+                <div id='wrapper'>
+                    <div id='scroller'>
+                        <div id='page' class='page blueprint'>
+                            <div id='slide' class='slide blueprint'>
+                                <div id='image'></div>
+                                <div id='subtitle'></div>
+                                <div id='title'></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='left' class='arrow'></div>
+                <div id='right' class='arrow'></div>
+                <div id='chromeHighlightBug'></div>
+                <div id="pagination">
+                    <div class="pageIndicator blueprint"></div>
+                </div>
+                <div id='chromeHighlightBug'></div>
+            </div>
+
+            <ul id="items">
+                <ul id="items1" class="whatListItems">
+                    <li id="item1" class="whatListItem">
+                        <h3 id="title">Engagement Analysis</h3>
+                        <p id="details">Explore user behavior on select content</p>
+                    </li>
+                    <li id="item2" class="whatListItem">
+                        <h3 id="title">Keyword Trends Exploration</h3>
+                        <p id="details">Reveal shifts in online discussion</p>
+                    </li>
+                    <li id="item3" class="whatListItem">
+                        <h3 id="title">Influence Detection</h3>
+                        <p id="details">Check influence of channels, videos, and networks</p>
+                    </li>
+                </ul>
+            </ul>
+            <!-- <button id="leftArrow" class="arrow"></button>
+            <button id="rightArrow" class="arrow"></button> -->
+            <button id="startTrackingButton" onclick="location.href='{% url 'homePage' %}'">Start Tracking</button>
+        </section>
+        <!-- What END -->
+
+        <!-- Testimonials START 
+        <section id="testimonials">
+            <h4 id="title">Testimonials</h4>
+            <ul id="items">
+                <li id="item1" class="testimonialsListItem">
+                    <p id="quote">" Design is not just what it looks like and feels like. Design is how it works. "</p>
+                    <p id="author">Steve Jobs 2022</p>
+                </li>
+            </ul>
+        </section>
+         Testimonials END -->
+
+        <!-- Sponsors START -->
+        <section id="sponsors">
+            <h4 id="title">Our Sponsors</h4>
+            <ul id="items">
+                <li id="item1" class="sponsorsListItem">
+                    <a href="https://www.nsf.gov/" target="_blank"><div id="logo"></div></a>
+                    <h4 id="label">National Science Foundation</h4>
+                </li>
+                <li id="item2" class="sponsorsListItem">
+                    <a href="https://www.onr.navy.mil/" target="_blank"><div id="logo"></div></a>
+                    <h4 id="label">Office of Naval Research</h4>
+                </li>
+                <li id="item3" class="sponsorsListItem">
+                    <a href="https://www.afrl.af.mil/" target="_blank"><div id="logo"></div></a>
+                    <h4 id="label">Air Force Research Laboratory</h4>
+                </li>
+                <li id="item4" class="sponsorsListItem">
+                    <a href="https://www.darpa.mil/" target="_blank"><div id="logo"></div></a>
+                    <h4 id="label">Defense Advanced Research Projects Agency</h4>
+                </li>
+                <li id="item5" class="sponsorsListItem">
+                    <a href="https://www.arl.army.mil/" target="_blank"><div id="logo"></div></a>
+                    <h4 id="label">Army Research Office</h4>
+                </li>
+                <li id="item6" class="sponsorsListItem">
+                    <a href="https://www.dhs.gov/" target="_blank"><div id="logo"></div></a>
+                    <h4 id="label">Department of Homeland Security</h4>
+                </li>
+            </ul>
+        </section>
+        <!-- Sponsors END -->
+
+        <!-- COSMOS START -->
+        <section id="COSMOS">
+            <h1 id="title">Developed By</h1>
+            <div id="logo"></div>
+            <a href="https://cosmos.ualr.edu/" target="_blank"><button id="learnMoreButton">Learn More</button></a>
+        </section>
+        <!-- COSMOS END -->
+
+        <!-- Footer START -->
+        <footer>
+            <p id="copyright">Copyright © <span id="copyright-date"></span>, COSMOS. All Rights Reserved.</p>
+        </footer>
+        <!-- Footer END -->
+    </body>
+</html>

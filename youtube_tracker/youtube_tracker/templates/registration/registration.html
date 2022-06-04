@@ -1,0 +1,48 @@
+{% extends "registration/base.html" %}
+    {% block body %}
+        <div id="grid-container">
+            <!-- Registration START -->
+            <main id="login-content">
+                <header>
+                    <h1>Join VTracker</h1>
+                    <p>Create an account to gain access to our analytics and data</p>
+                </header>
+                <form class="login-form" method="post" action="{% url 'registration' %}">
+                    {% csrf_token %}
+                    <p class ="requiredField">Required fields are followed by <strong><abbr title="required"> * </abbr></strong></p>
+                    <div class="group">
+                        <label class="label" for="email">
+                            Email<strong><abbr  class ="requiredField" title="required"> * </abbr></strong>
+                        </label>
+                        {{ form.email }}
+                    </div>
+                    <div class="group">
+                        <label class="label" for="pass">
+                            Password<strong><abbr class ="requiredField" title="required"> * </abbr></strong>
+                        </label>
+                        {{ form.password }}
+                        <button aria-hidden="true" id="eye" title="Show Password" type="button" tabIndex="-1">
+                    </div>
+                    <div class="group">
+                        <label class="label" for="pass">
+                            Re-type Password<strong><abbr class ="requiredField" title="required"> * </abbr></strong>
+                        </label>
+                        {{ form.password2 }}
+                    </div>
+                    <!-- Error message(s) -->
+                    <div class="group">
+                        <p>{{ form.email.errors }}</p>
+                        <p>{{ form.password.errors }}</p>
+                        <p>{{ form.password2.errors }}</p>
+                    </div>
+                    <button class="submit-button" type="submit">
+                        <span class="button-text">Register</span>
+                    </button>
+                </form>
+                <hr>
+                <footer>
+                    <p>Already have an account? Please <a href="{% url 'login' %}">Login</a></p>
+                </footer>
+            </main>
+        </div>
+    {% endblock %}

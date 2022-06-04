@@ -1,0 +1,30 @@
+{% with tracker as i %}
+    <div id="tracker">
+        {% if i.is_public %}
+        <br><p>-Shared-</p>
+        {% endif %}
+        <a href="{% url 'trackerDetails' i.tracker_id %}">
+            <h2 id="title">{{ i.tracker_name }}</h2>
+        </a>
+        {% if i.tracker_description and i.tracker_description|length > 0 %}
+            <p id="description">{{ i.tracker_description }}</p>
+        {% endif %}
+        <div id="videosWrapper" class="wrapper">
+            <h2 id="videosCounter" class="counter">{{ i.video_count }}</h2>
+            <p id="videosLabel">videos</p>
+        </div>
+        <div id="channelsWrapper" class="wrapper">
+            <h2 id="channelsCounter" class="counter">{{ i.channel_count }}</h2>
+            <p id="channelsLabel">channels</p>
+        </div>
+        <div id="actionsWrapper" class="wrapper">
+            <button id="analyticsButton" class="button"
+                onclick="location.href='{% url 'dashboardAnalytics' i.tracker_id %}?public={{ i.is_public }}'"></button>
+            <button id="editButton" class="button"
+                onclick="location.href='{% url 'trackerDetails' i.tracker_id %}'"></button>
+            {% if not i.is_public or user.is_staff %}
+            <button id="deleteButton" class="button" trackerName="{{ i.tracker_name }}"></button>
+            {% endif %}
+        </div>
+    </div>
+{% endwith %}

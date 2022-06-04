@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html style="min-width: 960px;">
+<head>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"  rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'YTAdminConsole/css/bootswatch-paper-theme.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'YTAdminConsole/css/main.css' %}">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<!-- Toast Messages -->
+<link rel="stylesheet" href="{% static 'YTAdminConsole/css/jquery.toastmessage.css' %}">
+<script src="{% static 'YTAdminConsole/js/jquery.toastmessage.js' %}"></script>
+{% include "toastmessages_fragment.html" %}
+
+</head>
+<body>
+
+	<!-- Toast Messages -->
+	{% for message in messages %} 
+		<script type="text/javascript">
+			$().toastmessage('{{ message.level_tag }}', "{{ message }}");
+		</script>
+	{% endfor %} 
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+    <!-- navbar-fixed-top-->
+    <div class="navbar-header">
+        <a class="navbar-brand" href="{% url 'YTAdminConsole:dashBoard' %}" >Admin Console | YouTubeTracker</a>
+	</div>
+	<ul class="nav navbar-top-links navbar-right">
+		{{user.first_name}}
+		<a class="nav-link" id="logout" href="{% url 'YTAdminConsole:logout_view' %}">
+			<i class="material-icons md-36"  style="vertical-align: left">exit_to_app</i>
+		</a>
+	</ul>
+	<!-- /.navbar-header -->
+    <header-notification></header-notification>
+    </nav>
+    <div id="wrapper">
+		<div class="sidebar" role="navigation"><!--element-height-setter idol-selector="document"-->
+			<div class="sidebar-nav">
+			{% block sidebar %}
+				<ul class="side-menu-items" id="side-menu">
+					<li class="active" class="nav-item"><a id= "dashboard" class="nav-link" href="{% url 'YTAdminConsole:dashBoard' %}">Dashboard</a></li>
+					<li class="nav-item"><a id= "addToInstantCrawler" class="nav-link" href="{% url 'YTAdminConsole:addToInstantCrawler' %}">Instant Crawler</a></li>
+					<li class="nav-item"><a id= "addToDatabaseCrawler" class="nav-link" href="{% url 'YTAdminConsole:addToDatabaseCrawler' %}">Database Crawler</a></li>
+					<li class="nav-item"><a id= "addToBlogCrawler" class="nav-link" href="{% url 'YTAdminConsole:addToBlogCrawler' %}">Blog Crawler</a></li>
+					<li class="nav-item"><a id= "exportdata" class="nav-link" href="{% url 'YTAdminConsole:exportData' %}">Export Data</a></li>
+				</ul>
+			{% endblock %}
+			</div>
+		</div>  
+		<div id="page-wrapper">
+			{% block content %}{% endblock %}
+		</div>
+	</div>
+	<script>
+	$(document).ready(function() {	
+		$("#logout").click(function(e) {
+			e.preventDefault();
+			window.location.href=this.href;
+		});
+	});
+	</script>
+</body>
+</html>

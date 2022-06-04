@@ -1,0 +1,239 @@
+{% extends "YTAdminConsole/index.html" %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div>
+    <div class="row">
+            <h3 class="page-header">{{title}} {{id}}</h3>
+    </div>
+    <div class="row">
+        <table id ="stat-dets" class="display datatable" class="dataTables_wrapper" style="width:100%">
+            <thead>
+                <tr>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    let choices = [
+		'Low',
+		'Medium',
+		'High',
+		'Critical'
+    ]
+
+	$(document).ready(function(){
+        var id_me = '{{id}}';
+        if ('{{status}}'=='crawled'){
+            if (id_me == "Channel")
+            {
+                $("#stat-dets").DataTable({
+                    "processing": true,
+                    "language": { "processing": '<i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i>' },
+                    "serverSide": true,
+                    "ajax": {
+                        "url": "{% url 'YTAdminConsole:statsByStatus' %}?status={{status}}&type={{id}}",
+                        "dataSrc":"data"
+                    },
+                    "columns": 
+                        [
+                            { "data": "channel_id__channel_title", "title" : "Title", "name":"channel_title" , "searchable": true},
+                            { "data": "channel_id" , "title" : "Channel Id","name":"channel_title"  , "searchable": true},
+                            { "data": "channel_id__joined_date", "title" : "Joined Date" ,"name":"joined_date" ,
+                                "type": "date",
+                                "render":function (data) {
+                                        return moment.utc(data).format('lll')
+                                    }},
+                            { "data": "channel_id__added_to_db_time", "title" : "Added to DB on", "name":"added_to_db_time" , "searchable": false,
+                                "type": "date",
+                                "render":function (data) {
+                                        return moment.utc(data).format('lll')
+                                }},
+                            { "data": "channel_id__location" , "title" : "Location","name":"location"  , "searchable": true},
+                            { "data": "channel_id__language" , "title" : "language","name":"language"  , "searchable": true},
+                            { "data": "total_subscribers", "title" : "Subscribers","name":"total_subscribers"  , "className": "dt-body-right",
+                                "render":function (data) {
+                                    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }},
+                            { "data": "total_videos", "title" : "Videos" ,"name":"total_videos" , "className": "dt-body-right",
+                                "render":function (data) {
+                                    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }},
+                            { "data": "total_views", "title" : "Views" ,"name":"total_views" , "className": "dt-body-right",
+                                "render":function (data) {
+                                    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }},
+                            { "data": "extracted_date", "title" : "Last Extracted" ,"name":"extracted_date"  ,
+                                "type": "date",
+                                "render":function (data) {
+                                    return moment.utc(data).format('lll')
+                                }}
+                        ]
+                    ,
+                    "columnDefs": 
+                    [
+                            {
+                                targets: [3,4,5],
+                                className: 'dt-head-center'
+                            }
+                    ],  
+                        "order": [[ 3, "desc" ]],
+                        "deferRender": true,
+                        "paging":true,
+                        "lengthMenu": [10, 25, 50, 75, 100],
+                        "pagingType": "full_numbers",
+                });
+            }
+            else if (id_me == "Video") {
+                $("#stat-dets").DataTable({
+                    "serverSide": true,
+                    "processing": true,
+                    "ajax": {
+                        "url": "{% url 'YTAdminConsole:statsByStatus' %}?status={{status}}&type={{id}}&total={{total}}",
+                        "dataSrc":"data"
+                    },
+                    "columns": 
+                        [
+                            { "data": "video_id__video_title", "title" : "Title" , "name":"video_title" , "searchable": true },
+                            { "data": "video_id" , "title" : "Video Id" , "name":"video_id" , "searchable": false  },
+                            { "data": "video_id__published_date", "title" : "Published Date" , "name":"published_date" , "searchable": false,
+                                "type": "date",
+                                "render":function (data) {
+                                        return moment.utc(data).format('lll')
+                                    }},
+                            { "data": "video_id__category", "title" : "Category", "name":"category" },
+                            { "data": "video_id__added_to_db_time", "title" : "Added to DB on", "name":"added_to_db_time" , "searchable": false,
+                                "type": "date",
+                                "render":function (data) {
+                                        return moment.utc(data).format('lll')
+                                }},
+                            { "data": "total_views", "title" : "Total Views", "name":"total_views" , "searchable": false, "className": "dt-body-right", "orderable" : false, 
+                                "render":function (data) {
+                                    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }},
+                            { "data": "total_likes", "title" : "Total Likes", "name":"total_likes" , "searchable": false, "className": "dt-body-right", "orderable" : false, 
+                                "render":function (data) {
+                                    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }},
+                            { "data": "total_dislikes", "title" : "Total Dislikes", "name":"total_dislikes" , "searchable": false, "className": "dt-body-right", "orderable" : false, 
+                                "render":function (data) {
+                                    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }},
+                            { "data": "total_comments", "title" : "Total Comments", "name":"total_comments" , "searchable": false, "className": "dt-body-right", "orderable" : false, 
+                                "render":function (data) {
+                                    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }},
+                            { "data": "extracted_date", "title" : "Last Extracted", "name":"extracted_date" , "searchable": false  , "orderable" : false, 
+                                "type": "date",
+                                "render":function (data) {
+                                    if (data==="N/A"){
+                                            return "N/A"
+                                        }
+                                        return moment.utc(data).format('lll')
+                                }},
+                        ]
+                    ,
+                    "columnDefs": 
+                    [
+                        {
+                            targets:[5,6,7,8],
+                            className: 'dt-head-center'
+                        },
+                    ],
+                        "order": [[ 4, "desc" ]],
+                        "deferRender": true,
+                        "paging":true,
+                        "searching": true,
+                        "lengthMenu": [10, 25, 50, 75, 100],
+                        "pagingType": "full_numbers",
+                });
+
+            
+            }
+        }
+        else{
+                $("#stat-dets").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{% url 'YTAdminConsole:statsByStatus' %}?status={{status}}&type={{id}}",
+                    "dataSrc":"data"
+                },
+                "columns": 
+                    [
+                        { "data": "content_id" , "title" : id_me+" Id","name":"content_id"  },
+                        { "data": "priority", "title" : "Priority","name":"priority"  , "orderable" : false,
+                            "render": function(d,t,r){
+                                    var $select = $("<select></select>", {
+                                        "id": r.source_id +"-priority",
+                                        "value": d,
+                                        "class": 'form-control ; priority',                                      
+                                    });
+                                    $.each(choices, function(k,v){
+                                        var $option = $("<option></option>", {
+                                            "text": v,
+                                            "value": v
+                                        });
+                                        if(d === v){
+                                            $option.attr("selected", "selected")
+                                        }
+                                        $select.append($option);
+                                    })
+                                    
+                                    return $select.prop("outerHTML");
+                                }
+                        },
+                        { "data": "added_to_db_time", "title" : "Added to DB on", "name":"added_to_db_time" , "searchable": false,
+                                "type": "date",
+                                "render":function (data) {
+                                        return moment.utc(data).format('lll')
+                                }},
+                        { "data": "user_id", "title" : "Added By" ,"name":"user_id"  , "orderable" : false},
+                        { "data": "tracker_id", "title" : "Tracker","name":"tracker_id"  , "orderable" : false, "searchable": false},
+                    ]
+                ,
+                    "language": { "processing": '<i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i>' },
+                    "deferRender": true,
+                    "paging":true,
+                    "searching": true,
+                    "lengthMenu": [10, 25, 50, 75, 100],
+                    "pagingType": "full_numbers",
+                });
+            }
+        }
+    );
+    
+    $(function (){
+        $(document).on('change', '.priority', function () {
+            let new_pr = this.value
+            let s_id = this.id.split("-")[0]
+            updatePriority(new_pr, s_id)    
+        });
+    });
+
+    function updatePriority(pr, sourceID){
+        // alert ('priority changed for ' + sourceID + ' to ' + pr )
+        $.ajax({
+            data:{
+                priority:pr, 
+                sourceid:sourceID,
+            },
+            url : "{% url 'YTAdminConsole:updatePriority' %}"
+        }).done(function(data){
+            // stat_table.destroy()
+            // draw_newtable()
+            console.log("Updated priority Successfully")
+
+        }).fail(function(e){
+            console.log("failed")
+        })
+    }
+</script>
+
+{% endblock %}

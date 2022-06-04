@@ -1,0 +1,25 @@
+{% load humanize %}
+
+<table id="channelsLocationTable">
+    <colgroup>
+        <col id="titleColumn" />
+        <col id="locationColumn" />
+        <col id="videosColumn" />
+    </colgroup>
+    <thead>
+        <tr class="headRow">
+            <th id="titleColumn"><div class="tableHeadWrapper active">Name <button>></button></div></th>
+            <th id="locationColumn"><div class="tableHeadWrapper">Location <button>></button></div></th>
+            <th id="videosColumn"><div class="tableHeadWrapper">Videos <button>></button></div></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for channel_id, channel in contextData.items %}
+            <tr>
+                <td>{{ channel.channel_title }}</td>
+                <td>{{ channel.location }}</td>
+                <td>{{ channel.total_videos | intcomma }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

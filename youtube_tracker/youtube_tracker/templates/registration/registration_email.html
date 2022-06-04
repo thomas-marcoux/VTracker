@@ -1,0 +1,10 @@
+{% autoescape off %}
+    Hello,
+
+    Thank you for signing up on Vtracker. Please click the link below to activate your account:
+    https://{{ domain }}{% url 'registrationActivate' uidb64=uid token=token %}
+
+    Sincerely,
+    The Vtracker Team
+
+{% endautoescape %}

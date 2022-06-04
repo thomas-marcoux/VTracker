@@ -1,0 +1,90 @@
+{% extends "youtube_tracker/analyticsBase.html" %}
+{% load humanize %}
+{% load static %}
+{% block body %}
+
+<title>Content Engagement - VTracker</title>
+
+<!-- Stylesheets -->
+<link rel="stylesheet" href="{% static 'youtube_tracker/css/contentEngagement.css' %}"/>
+
+<script>
+    let JSONContextData = '{{ JSONContextData | escapejs }}';
+</script>
+
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/barChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/treeMap.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/lineChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/contentEngagement.js' %}"></script>
+
+<section id="visualizations">
+
+    <figure id="contentEngagementDiagram" class="figure">
+
+        <!-- Leading Statistics -->
+        <div id="viewsComponent" class="component selectable">
+            <h3>Views</h3>
+            <p>...</p>
+        </div>
+        <div id="likesComponent" class="component selectable">
+            <h3>Likes</h3>
+            <p>...</p>
+        </div>
+        <div id="dislikesComponent" class="component selectable">
+            <h3>Dislikes</h3>
+            <p>...</p>
+        </div>
+        <div id="suscribersComponent" class="component selectable">
+            <h3>Suscribers</h3>
+            <p>...</p>
+        </div>
+        <div id="commentsComponent" class="component selectable">
+            <h3>Comments</h3>
+            <p>...</p>                
+        </div>
+
+        <!-- Figure -->
+        <div id="figureWrapper" class="component">
+            <div id="spinner"></div>
+            <div id="figure"></div>
+        </div>
+
+    </figure>
+
+    <figure id="videoDescriptionLanguageDiagram" class="figure">
+        <!-- Title -->
+        <div id = "titleWrapper">
+            <h3 id="diagramTitle">Video Ranked by Commenters</h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Videos -->
+        <div id="videosWrapper" class="component">
+            <input id="searchVideos" placeholder="Search Videos" class="searchBox">
+            
+        </div>
+        <!-- Video -->
+        <div id="videoPlayerWrapper" class="component">
+            <!-- <div id="player" class="embed-responsive embed-responsive-16by9">
+               
+            </div> -->
+            <iframe id="videoPlayer" width="100%" height="100%" src="" 
+            title="YouTube video player" frameborder="0" allow="autoplay; encrypted-media" 
+            allowfullscreen></iframe>
+        </div>
+    </figure>
+
+    <figure id="videoDetailsDiagram" class="figure">
+        <!-- Title -->
+        <div id = "titleWrapper">
+            <h3 id="diagramTitle">Videos</h3>
+        </div>
+        <!-- Videos -->
+        <div id="videosWrapper" class="component">
+            <input id="searchVideos" placeholder="Search Channels" class="searchBox">
+         </div>
+    </figure>
+
+</section>
+
+{% endblock %}

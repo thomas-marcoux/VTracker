@@ -1,0 +1,346 @@
+/** Track Menu **/
+
+div#trackMenu {
+
+    position: absolute;
+    left: 50%;
+    margin-left: -150px;
+    bottom: 100%;
+    text-align: center;
+
+}
+
+div#trackMenu.hidden {
+
+    display: none;
+
+}
+
+div#trackMenu.dummy {
+
+    display: none;
+
+}
+
+div#trackMenu div#menu {
+
+    width: 300px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    background-color: var(--whitish);
+    border-radius: var(--radius15);
+
+}
+
+div#trackMenu div#arrow {
+
+    width: 0px;
+    height: 0px;
+    border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+    border-top: 20px solid var(--whitish);
+    margin: 0px auto;
+    margin-top: -2px;
+
+}
+
+div#trackMenu div#menu input#searchBox {
+
+    width: 90%;
+    color: var(--blackish);
+    border: 0px solid;
+    font-size: var(--size28);
+    font-weight: 400;
+    text-align: left;
+    background-color: var(--lighterGreyish);
+    text-indent: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: var(--radius1000);
+    outline: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+
+}
+
+div#trackMenu div#menu input#searchBox::placeholder {
+
+    color: var(--blackish);
+
+}
+
+div#trackMenu div#menu input#searchBox:focus::placeholder {
+
+    opacity: 0.2;
+
+}
+
+div#trackMenu div#menu ul#trackers {
+
+    max-height: 200px;
+    overflow-y: scroll;
+    list-style: none;
+    padding-bottom: 10px;
+
+}
+
+div#trackMenu div#menu ul#trackers li {
+
+    height: 40px;
+    color: var(--blackish);
+    text-align: left;
+    font-size: var(--size18);
+    font-weight: 500;
+    padding-left: 5%;
+    padding-right: 5%;
+    line-height: 40px;
+    vertical-align: middle;
+    border-radius: var(--radius1000);
+    width: 90%;
+    margin: 0px auto;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: hand;
+    cursor: pointer;
+    
+}
+
+div#trackMenu div#menu ul#trackers li span {
+
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 80%;
+
+}
+
+div#trackMenu div#menu ul#trackers li a {
+
+    color: var(--blackish);
+
+}
+
+div#trackMenu div#menu ul#trackers li:hover {
+
+    background-color: var(--reddish);
+    color: var(--whitish);
+
+}
+
+div#trackMenu div#menu ul#trackers li:hover > button#checkMark {
+
+    background-position: -107px -141px;
+
+}
+
+div#trackMenu div#menu ul#trackers li button#checkMark {
+
+    position: relative;
+    width: 35px;
+    height: 35px;
+    top: 50%;
+    margin-top: -17px;
+    background-image: var(--homeInterface);
+    background-position: -161px -141px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border:0px;
+    outline:0px;
+    float: right;
+    opacity: 0.2;
+    cursor: hand;
+    cursor: pointer;
+    
+}
+
+div#trackMenu div#menu ul#trackers li button#checkMark:hover {
+
+    opacity: 0.5;
+
+}
+
+div#trackMenu div#menu ul#trackers li button#checkMark.selected {
+
+    opacity: 1;
+
+}
+
+div#trackMenu div#menu p#status {
+
+    color: var(--blackish);
+    padding-left: 10%;
+    padding-right: 10%;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+}
+
+div#trackMenu div#menu form#createTrackerForm {
+
+    text-align: left;
+    margin: 5%;
+    margin-bottom: 0px;
+    color: var(--blackish);
+
+}
+
+div#trackMenu div#menu form#createTrackerForm button#addTracker {
+
+    display: block;
+    margin: 0px auto;
+    padding: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-image: var(--homeInterface);
+    background-position: -11px -86px;
+    background-repeat: no-repeat;
+    background-color: var(--reddish);
+    border-radius: var(--radius1000);
+    outline:0;
+    border: none;
+    cursor: hand;
+    cursor: pointer;
+    
+}
+
+div#trackMenu div#menu form#createTrackerForm button#addTracker:hover {
+
+    background-color: var(--reddishLight);
+
+}
+
+div#trackMenu div#menu form#createTrackerForm div#createTrackerFormWrapper {
+
+    transition: max-height 200ms;
+    max-height: 0px;
+    overflow: hidden;
+
+}
+
+div#trackMenu div#menu form#createTrackerForm .input {
+
+    float: left;
+    padding: 15px;
+    border-radius: var(--radius25);
+    color: var(--blackish);
+    font-family: "Roboto", sans-serif;
+    font-size: var(--size18);
+    font-weight: 400;
+    text-align: left;
+    border: 2px solid var(--lighterGreyish);
+    width: 100%;
+    outline: 0px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+}
+
+div#trackMenu div#menu form#createTrackerForm input#trackerName {
+
+    margin-bottom: 10px;
+    height: 40px;
+
+}
+
+div#trackMenu div#menu form#createTrackerForm textarea#trackerDescription {
+
+    resize: none;
+    height: 70px;
+
+}
+
+div#trackMenu div#menu form#createTrackerForm button#createTracker {
+
+    display: block;
+    margin: 0px auto;
+    height: 40px;
+    padding-left: 15px;
+    padding-right: 15px;
+    line-height: 40px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-radius: var(--radius1000);
+    border: 0px solid var(--blackish);
+    outline:0;
+    font-size: var(--size16);
+    font-weight: 600;
+    background-color: var(--reddish);
+    color: var(--whitish);
+    cursor: hand;
+    cursor: pointer;
+    
+}
+
+div#trackMenu div#menu form#createTrackerForm button#createTracker:hover {
+
+    background-color: var(--reddishLight);
+
+}
+
+div#trackMenu.card {
+
+    display: block;
+    z-index: 10100;
+
+}
+
+div#trackMenu.footer {
+
+    display: block;
+    z-index: 1001;
+    margin-bottom: 5px;
+
+}
+
+div#trackMenu.footer div#menu ul#trackers {
+
+    max-height: 280px;
+
+}
+
+div#trackMenu div#menu form#createTrackerForm.creating div#createTrackerFormWrapper {
+
+    max-height: 170px;
+
+}
+
+div#trackMenu div#menu form#createTrackerForm.creating button#addTracker {
+
+    display: none;
+
+}
+
+div#trackMenu div#menu form#createTrackerForm:not(.creating) button#createTracker {
+
+    display: none;
+
+}
+
+main#content ul#cards.listView li#card div#trackMenu {
+
+    left: 124%;
+    margin-left: 0px;
+    bottom: -140px;
+
+}
+
+main#content ul#cards.listView li#card div#trackMenu div#arrow {
+
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-right: 20px solid var(--whitish);
+    margin-left: -20px;
+    margin-top: 0px;
+    left: -18px;
+    bottom: 135px;
+
+}

@@ -1,0 +1,127 @@
+{% extends "youtube_tracker/analyticsBase.html" %}
+{% load humanize %}
+{% load static %}
+{% block body %}
+
+<title>Topic Distribution- VTracker</title>
+
+<!-- Stylesheets -->
+<link rel="stylesheet" href="{% static 'youtube_tracker/css/topicAnalysis.css' %}"/>
+
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/topicAnalysis.js' %}"></script>
+
+<section id="visualizations">
+
+    <figure id="topicDistributionDiagram" class="figure">
+
+        <!-- Topics -->
+        <div id="topicsWrapper" class="component">
+            <input id="searchTopic" placeholder="Search Topics" class="searchBox">
+            <ul id="topicsList">
+                <li>Topic 1: Government</li>
+                <li>Topic 2: Trump</li>
+                <li>Topic 4: Russia</li>
+                <li>Topic 5: Russia</li>
+                <li>Topic 6: Russia</li>
+                <li>Topic 7: Russia</li>
+                <li>Topic 8: Russia</li>
+                <li>Topic 9: Russia</li>
+                <li>Topic 10: Russia</li>
+            </ul>
+        </div>
+
+        <!-- Figure -->
+        <div id="figureWrapper" class="component">
+            <div id="spinner"></div>
+            <img src="{% static 'youtube_tracker/images/tempImages/topicAnalysis.png' %}"  >
+        </div>
+
+        <!-- Statistics -->
+        <div id="statistics" class="component">
+            <ul id="statisticsWrapper">
+                <li>
+                    <h3>Channel Distribution</h3>
+                    <p>34%</p>
+                </li>
+                <li>
+                    <h3>Channels</h3>
+                    <p>80</p>
+                </li>
+                <li>
+                    <h3>Comments</h3>
+                    <p>34</p>
+                </li>
+                <li>
+                    <h3>Most Active</h3>
+                    <p>Name</p>
+                </li>
+               
+                
+            </ul>
+        </div>
+    </figure>
+
+     <!-- Keyword Distribution Diagram  -->
+     <figure id="keywordDistributionDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Keywords of  <a href="#">Topic 1</a> </h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <img src="{% static 'youtube_tracker/images/tempImages/commonwords.png' %}"  >
+        </div>
+    </figure>
+
+    <!-- TopicDiagram-->
+    <figure id="topicDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Distribution of  <a href="#">Topic 1</a> </h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <img src="{% static 'youtube_tracker/images/tempImages/figure2.png' %}"  >
+            <div id="spinner"></div>
+        </div>
+    </figure>
+    
+    <!--VideoDescription LanguageDiagram-->
+    <figure id="videoDescriptionLanguageDiagram" class="figure">
+        <!-- Title -->
+        <div id = "titleWrapper">
+            <h3 id="diagramTitle">Video Description Language Discription</h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Videos -->
+        <div id="videosWrapper" class="component">
+            <input id="searchVideos" placeholder="Search Videos" class="searchBox">
+            
+        </div>
+        <!-- Video -->
+        <div id="videoPlayerWrapper" class="component">
+            <!-- <div id="player" class="embed-responsive embed-responsive-16by9">
+               
+            </div> -->
+            <iframe id="videoPlayer" width="100%" height="100%" src="" 
+            title="YouTube video player" frameborder="0" allow="autoplay; encrypted-media" 
+            allowfullscreen></iframe>
+        </div>
+    </figure>
+
+    <figure id="topicDiscriptionDiagram" class="figure">
+        <!-- Title -->
+        <div id = "titleWrapper">
+            <h3 id="diagramTitle">Topic</h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+
+    </figure>
+
+{% endblock %}

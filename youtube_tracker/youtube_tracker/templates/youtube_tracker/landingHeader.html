@@ -1,0 +1,29 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/landingHeader.css' %}">
+<header>
+    <a href="#" id="logo"></a>
+    <nav>
+        <ul>
+            <li id="featuresLink">
+                <a href="#what">Features</a>
+            </li>
+            <li id="sponsorsLink">
+                <a href="#sponsors">Sponsors</a>
+            </li>
+            <li id="learnLink">
+                <a href="#" onclick="location.href='{% url 'userGuidePage' %}'">Learn</a>
+            </li>
+            <li>
+                <div id="name">
+                    {% if user.is_authenticated %}
+                        {{ user.email }}
+                    {% else %}
+                    <a href="{% url 'login' %}">
+                        <button id="loginButton">Login</button>
+                    </a>
+                    {% endif %}
+                </div>
+            </li>
+        </ul>
+    </nav>
+</header>

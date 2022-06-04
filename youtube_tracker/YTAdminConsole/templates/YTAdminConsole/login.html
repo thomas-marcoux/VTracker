@@ -1,0 +1,69 @@
+{% load static %}
+<html>
+  <head>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'YTAdminConsole/css/main.css' %}">
+  </head>
+<body id="LoginForm">
+<div class="container">
+<h1 class="form-heading">Login Form</h1>
+<div class="login-form">
+<div class="main-div">
+    <div class="panel">
+   <h2>Youtube Tracker</h2>
+   <h2>Admin Console Login</h2>
+   <p>Please enter your email and password</p>
+   </div>
+    <form id="loginForm">
+		{% csrf_token %}
+        <div class="form-group">
+			{{loginForm.email}} 
+        </div>
+        <div class="form-group">
+			{{loginForm.password}}
+        </div>
+        <!-- <div class="forgot">
+        <a href="reset.html">Forgot password?</a> -->
+				<!-- </div> -->
+		<button type="submit" class="btn btn-primary">Login</button>
+		<!-- {% if messages %}
+		<br>
+		{% for message in messages %}
+			<a class="text-danger align-bottom">{{ message }}</a>
+		{% endfor %}
+		{% endif %} -->
+		<div class="text-danger align-bottom" id="feedback" name="feedback"></div>
+    </form>
+    </div>
+</div></div></div>
+
+<script>
+
+	window.getCookieByName = function (name) {
+			var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+			if (match) return match[2];
+	};
+
+	$("#loginForm").submit(function(e) {
+		e.preventDefault();
+		var frm = $('#loginForm');
+		$.ajax({
+			type: 'POST',
+			url: "{% url 'YTAdminConsole:login_view' %}",
+			headers: {"X-CSRFToken": getCookieByName("csrftoken")},
+			data: frm.serialize(),
+			success: function(data)
+			{
+			   window.location = data.url;
+			},		
+			error: function(data){
+				console.log(data.responseJSON.message);
+				$("#feedback").text(data.responseJSON.message)
+			}
+		});
+	});
+	</script>
+</body>
+</html>
+

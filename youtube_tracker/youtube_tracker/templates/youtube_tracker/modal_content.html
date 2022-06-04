@@ -1,0 +1,162 @@
+<div id="video" class="modal">
+            <div id="player">
+                <div id="wrapper">
+                    <div id="videoLink"></div>
+                </div>
+
+                <div id="movieBarCodeWrapper">
+                        <div id="movieBarCode">
+                            {% if video.movie_barcode %}
+                            <img src="data:image/png;base64, {{ video.movie_barcode }}"></img>
+                            {% endif %}
+                        </div>
+{#                        <div id="movieBarCodePointer">▼</div>#}
+                </div>
+
+            </div>
+            <div id="tools">
+                <div id="details">
+                    <div id="head">
+                        <div id="titleWrapper">
+                            <p id="title"> ___ Title </p>
+                        </div>
+                        <div id="statistics">
+                            <div id="tracks"><span id="icon"></span><p>___ Tracks</p></div>
+                            <div id="globalTracks"><span id="icon"></span><p>___ K Global Tracks</p></div>
+                            <div id="views"><span id="icon"></span><p> ___ Views </p></div>
+                            <div id="likes"><span id="icon"></span><p> ___ Likes </p></div>
+                            <div id="dislikes"><span id="icon"></span><p> ___ Dislikes </p></div>
+                            <div id="comments"><span id="icon"></span><p> ___ Comments </p></div>
+                        </div>
+                    </div>
+                    <div id="horizontalSeparator"></div>
+                    <div id="channel">
+                        <div id="iconWrapper">
+                            <div id="profile"><img id="photo" src=""></div>
+                            <div id="nameWrapper">
+                                <p id="name"> ___ Name </p>
+                                <p id="published"> ___ Published Date </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="horizontalSeparator"></div>
+                    <div id="description">
+                        <p>
+                            <!-- Edited in Home.js -->
+                        </p>
+                    </div>
+                </div>
+
+                <div id="trackers">
+                    <p id="title">My Trackers</p>
+                    <input id="search" placeholder="Search Trackers"></input>
+                    <ul id="trackers">
+                        <!-- Edited in Home.js -->
+                    </ul>
+                    <!-- <p id="status">Click the + button below to create a new tracker.</p> -->
+                    <form id="createTrackerForm">
+                        <div id="createTrackerFormWrapper">
+                            <input id="trackerName" type="text" placeholder="Name" autocomplete="off" class="input">
+                            <textarea id="trackerDescription" placeholder="Description" autocomplete="off" class="input"></textarea>
+                        </div>
+
+                        <button id="addTracker" title="Create a new tracker"></button>
+                        <div id="createWrapper">
+                            <button id="createTracker" title="Create tracker">CREATE</button>
+                            <button id="cancel" title="Cancel creating a tracker">CANCEL</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="horizontalSeparator"></div>
+                <div id="relatedVideos">
+                    <p id="label">Related Videos</p>
+                    <ul id="cards"></ul>
+                    <div id="loading"></div>
+                </div>
+        </div>
+</div>
+
+<div id="channel" class="modal">
+            <div id="master">
+{#                <div id="banner">#}
+{#                    <img src="assets/images/channel-banner.jpg" alt="">#}
+{#                </div>#}
+                <div id="content">
+                    <div id="details">
+                        <div id="channel">
+                            <div id="topWrapper">
+                                <div id="iconWrapper">
+                                    <div id="profile"><img id="photo" src=""></div>
+                                    <div id="nameWrapper">
+                                        <p id="name"> ___ Name </p>
+                                        <p id="published"> ___ Published Date </p>
+                                    </div>
+                                </div>
+                                <button id="favor"></button>
+                            </div>
+                            <div id="statistics">
+{#                                <div id="tracks"><span id="icon"></span>#}
+{#                                    <p> ___ Tracks </p>#}
+{#                                </div>#}
+{#                                <div id="globalTracks"><span id="icon"></span>#}
+{#                                    <p> ___ Global Tracks </p>#}
+{#                                </div>#}
+                                <div id="views"><span id="icon"></span>
+                                    <p> ___ Views </p>
+                                </div>
+                                <div id="videos"><span id="icon"></span>
+                                    <p> ___ Videos </p>
+                                </div>
+                                <div id="subscribers"><span id="icon"></span>
+                                    <p> ___ Subscribers </p>
+                                </div>
+                                <div id="location"><span id="icon"></span>
+                                    <p> ___ Location </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="horizontalSeparator"></div>
+                        <div id="description">
+                            <p> ___ Description </p>
+                        </div>
+                    </div>
+                    <div id="horizontalSeparator"></div>
+                    <div id="videos">
+                        <p id="label">Featured Videos</p>
+                        <ul id="cards">
+                        </ul>
+                        <div id="loading"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="side">
+                <div id="trackers">
+                    <p id="title">My Trackers</p>
+                    <input id="search" placeholder="Search Trackers"></input>
+                    <ul id="trackers">
+                        <!-- Edited in Home.js -->
+                    </ul>
+                    <!-- <p id="status">Click the + button below to create a new tracker.</p> -->
+                    <form id="createTrackerForm">
+                        <div id="createTrackerFormWrapper">
+                            <input id="trackerName" type="text" placeholder="Name" autocomplete="off" class="input">
+                            <textarea id="trackerDescription" placeholder="Description" autocomplete="off"
+                                class="input"></textarea>
+                        </div>
+
+                        <button id="addTracker" title="Creat a new tracker"></button>
+                        <div id="createWrapper">
+                            <button id="createTracker" title="Create tracker">CREATE</button>
+                            <button id="cancel" title="Cancel creating a tracker">CANCEL</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="horizontalSeparator"></div>
+                <div id="relatedChannels">
+                    <p id="label">Featured Channels</p>
+                    <ul id="cards"></ul>
+                    <div id="loading"></div>
+                </div>
+            </div>
+            <button id="scrollDown" title="Scroll video for details"></button>
+        </div>

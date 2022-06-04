@@ -1,0 +1,98 @@
+{% extends "youtube_tracker/analyticsBase.html" %}
+{% load humanize %}
+{% load static %}
+{% block body %}
+
+<title>Content Analysis - VTracker</title>
+
+<!-- Stylesheets -->
+<link rel="stylesheet" href="{% static 'youtube_tracker/css/contentAnalysis.css' %}"/>
+
+<script>
+    let JSONContextData = '{{ JSONContextData | escapejs }}';
+</script>
+
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/barChart.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/treeMap.js' %}"></script>
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/contentAnalysis.js' %}"></script>
+
+
+<!-- Visualizations -->
+<section id="visualizations">
+
+    <figure id="contentAnalysisDiagram" class="figure">
+
+        <!-- Leading Statistics -->
+        <div id="languageComponent" class="component selectable">
+             <div id="tooltip">
+              <h3>Leading Language</h3>
+              <button id="information" title="Detected language of the video descriptions."></button>
+             </div>
+          <p>---</p>
+        </div>
+        <div id="categoryComponent" class="component selectable">
+            <div id="tooltip">
+            <h3>Leading Category</h3>
+            <button id="information" title="Video categories as assigned by the creator."></button>
+             </div>
+            <p>---</p>
+        </div>
+        <div id="opinionComponent" class="component selectable">
+            <div id="tooltip">
+            <h3>Leading Sentiment</h3>
+            <button id="information" title="Sentiment as given by TextBlob."></button>
+             </div>
+            <p>---</p>
+        </div>
+        <div id="keywordComponent" class="component selectable">
+            <div id="tooltip">
+            <h3>Leading Keyword</h3>
+            <button id="information" title="Most frequent keywords in video descriptions."></button>
+             </div>
+            <p>---</p>
+        </div>
+        <div id="emotionComponent" class="component selectable">
+            <div id="tooltip">
+            <h3>Leading Emotion</h3>
+            <button id="information" title="Emotion as given by EmoNet."></button>
+             </div>
+            <p>---</p>
+        </div>
+
+        <!-- Figure -->
+        <div id="figureWrapper" class="component">
+            <div id="spinner"></div>
+            <div id="figure"></div>
+        </div>
+
+    </figure>
+
+    <figure id="videoDescriptionLanguageDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Video Titles and Comments</h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Videos -->
+        <div id="videosWrapper" class="component">
+            <input id="searchVideos" placeholder="Search Videos" class="searchBox">
+        </div>
+        <!-- Comments -->
+        <div id="commentsWrapper" class="component">
+        </div>
+    </figure>
+
+    <figure id="videoDetailsDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Video Details</h3>
+        </div>
+        <!-- Videos -->
+        <div id="videosWrapper" class="component">
+            <input id="searchVideos" placeholder="Search Videos" class="searchBox">
+        </div>
+
+</section>
+
+{% endblock %}

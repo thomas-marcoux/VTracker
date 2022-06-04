@@ -1,0 +1,71 @@
+{% load static %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/baseHeader.css' %}">
+
+<script type="text/javascript">
+
+    function initializeLogout() {
+        let logoutButton = document.getElementById("logout");
+        logoutButton.addEventListener("click", function (e) {
+            e.preventDefault();
+            window.location.href = "{% url 'logout' %}";
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function(){
+        initializeLogout();
+    });
+
+</script>
+
+<header>
+    <a href="{% url 'getLandingPage' %}" id="logo"></a>
+    <nav>
+        <ul>
+            <a href="{% url 'homePage' %}">
+                <li id="homeLink" class="navigationButton">
+                    <div id="homeIcon" class="navIcon"></div>
+                    <span style="top: -3px; position: relative;">Home</span>
+                </li>
+            </a>
+            <a href="{% url 'trackerList' %}">
+                <li id="trackersLink" class="navigationButton">
+                    <div id="trackersIcon" class="navIcon"></div>
+                    <span style="top: -3px; position: relative;">Trackers</span>
+                </li>
+            </a>
+            <!-- <a href="{% url 'eventsList' %}">
+                <li id="eventsLink" class="navigationButton">
+                    <div id="eventsIcon" class="navIcon"></div>
+                    <span style="top: -3px; position: relative;">Events</span>
+                </li>
+            </a>
+            <a href="#">
+                <li id="favoritesLink" class="navigationButton">
+                    <div id="favoritesIcon" class="navIcon"></div>
+                    <span style="top: -3px; position: relative;">Favorites</span>
+                </li>
+            </a> -->
+        </ul>
+    </nav>
+    <div id="username">
+        <!-- <div id="photo">
+            <div id="indicator" class="active"></div>
+        </div> -->
+        <div id="name">
+            {% if user.is_authenticated %}
+                {{ user.email }}
+            {% else %}
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </div>
+        {% if user.is_authenticated %}
+            <div id="menu">
+                <a id="logout" href="{% url 'logout' %}">
+                    <i class="material-icons">exit_to_app</i>
+                </a>
+            </div>
+        {% endif %}
+        <div id="arrow"></div>
+    </div>
+</header>

@@ -1,0 +1,16 @@
+{% extends "registration/base.html" %}
+
+{% block body %}
+<div id="grid-container">
+    <main id="login-content">
+        <header>
+            <h1>Something went wrong</h1>
+        </header>
+        <p>Please try again or contact the administrator.</p>
+        <hr>
+        <footer>
+            <p><a href="{% url 'registration' %}">Back to registration</a></p>
+        </footer>
+    </main>
+</div>
+{% endblock %}

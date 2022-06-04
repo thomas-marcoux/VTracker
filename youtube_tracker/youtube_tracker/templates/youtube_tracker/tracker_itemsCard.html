@@ -1,0 +1,25 @@
+{% load tz %}
+
+{% for video in videos %}
+    <li id="{{ video.video_id }}" class="video">
+        <img id="photo" src="{{ video.thumbnails_medium_url }}">
+        <div id="wrapper">
+            <h2 id="title"><a>{{ video.video_title | truncatechars:65 }}</a></h2>
+            {% if video.channel_title %}
+            <p id="channel">{{ video.channel_title }}</p>
+            <span id="separator">·</span>
+            {% endif %}
+            {% localtime on %}
+            <p id="date">{{ video.published_date|date:"M d Y h:i A" }}</p>
+            {% endlocaltime %}
+            <!-- <button id="trackStatusButton" title="Click to see list of trackers.">0 TRACKS</button> -->
+            {% if user.is_staff %}
+            <button id="delete"></button>
+            {% endif %}
+        </div>
+        {% if video.movie_barcode %}
+            <img id="barcode" title="Dominant frame color barcode"
+                src="data:image/png;base64, {{ video.movie_barcode }}"></img>
+        {% endif %}
+    </li>
+{% endfor %}

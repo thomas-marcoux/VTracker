@@ -1,0 +1,356 @@
+{% extends "YTAdminConsole/index.html" %}
+
+{% block content %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+<div class="row">
+	<h1 class="page-header">Export Data</h1>
+</div>
+<div class="row">
+	<div class="panel panel-default">
+		<div  id="count_message" class="panel-heading"> 
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default csv-file-panel">
+						<div  class="panel-body">
+							<form id="download_this" >
+								<div class="col-md-12" class="form-group">
+										<div class= "query_this">
+											<label> 
+												Time period : 
+												<input style="text-align:center" type="text" name="joined_from" id="joined_from" class="datepicker" value="" >
+												To 
+												<input style="text-align:center" type="text" name="joined_to" id="joined_to" class="datepicker" value="" >
+											</label>
+										</div>
+									</br>
+									<div class="row">
+										<!-- {% if trackers %}
+										<div class="form-group" id="Trackers">
+											<label class="col-lg-2 control-label" style="border-bottom: 1px solid #D3D3D3;"> Trackers </label>
+											<div class=row>
+												<div class="col-lg-10">
+													<div class="radio">
+														<label>
+															Select Trackers :
+														</label>
+													</div>
+													<div class="col-lg-10">
+														<div id="keyword_fields" class="query_this" >	
+															<label class="col-md-4" class="checkbox-inline">
+																	<input class="keyword_fields" type="checkbox" name="selectall_kyw" id="selectall_kyw" >All 
+															</label>															
+															{% for id in trackers %}
+															<label class="col-md-4" class="checkbox-inline">
+																<input class="keyword_fields" type="checkbox" name="{{id.Key}}" id="{{id.Key}}">{{id.Value}}
+															</label>
+															{% endfor %}											
+														</div>
+													</div>
+												</div>												
+											</div>										
+										</br> 
+										{% endif %} -->
+										<!-- {% if trackers %}
+										<div class="form-group" id="Trackers">
+											<label class="col-lg-2 control-label" style="border-bottom: 1px solid #D3D3D3;"> Trackers </label>
+											<div class=row>
+												<div class="col-lg-10">
+													<div class="radio">
+														<label>
+															Select Trackers :
+														</label>
+													</div>
+													<div class="col-lg-10">
+														<div id="keyword_fields" class="query_this" >	
+															<label class="col-md-4" class="checkbox-inline">
+																	<input class="keyword_fields" type="checkbox" name="selectall_kyw" id="selectall_kyw" >All 
+															</label>															
+															{% for id in trackers %}
+															<label class="col-md-4" class="checkbox-inline">
+																<input class="keyword_fields" type="checkbox" name="{{id.Key}}" id="{{id.Key}}">{{id.Value}}
+															</label>
+															{% endfor %}											
+														</div>
+													</div>
+												</div>												
+											</div>										
+										</br> 
+										{% endif %} -->
+										<div class="form-group" id="channels" >
+											<label class="col-lg-2 control-label" style="border-bottom: 1px solid #D3D3D3;">Channels </label>
+												<div class=row>
+													<div class="col-lg-10">
+														<div class="radio">
+															<label>
+																Select attributes :
+															</label>
+														</div>
+														<div class="col-lg-10">
+															<div id="channel_fields"  >	
+																<label class="col-md-4" class="checkbox-inline">
+																		<input class="channel_fields" type="checkbox" name="selectall_ch" id="selectall_ch" >All 
+																</label>															
+																{% for id in ch_attr %}
+																	<label class="col-md-4" class="checkbox-inline">
+																		<input class="channel_fields" type="checkbox" name="{{id.Key}}" id="{{id.Key}}">{{id.Value}}
+																	</label>
+																{% endfor %}											
+															</div>
+														</div>
+													</div>
+												</div>
+										</div>
+									</div>									
+									</br> 
+									<div class="form-group" id="videos">
+										<label class="col-lg-2 control-label" style="border-bottom: 1px solid #D3D3D3;">Videos </label>
+										<div class=row>
+											<div class="col-lg-10">			
+												<div class="radio">
+													<label>
+														Select attributes :
+													</label>
+												</div>
+												<div class="col-md-10">
+													<div id="video_fields"  >	
+														<label class="col-md-4" class="checkbox-inline">
+																<input class="video_fields" type="checkbox" name="selectall_vid" id="selectall_vid" >All 
+														</label>														
+														{% for id in vid_attr %}
+															<label class="col-md-4" class="checkbox-inline">
+																<input class="video_fields" type="checkbox" name="{{id.Key}}" id="{{id.Key}}">{{id.Value}}
+															</label>
+														{% endfor %}												
+													</div>
+												</div>
+												<!-- <div class= "query_this" >
+													<label> 
+														Published Date : 
+														<input style="text-align:center" type="text" name="published_from" id="published_from" class="datepicker" value="" >
+														To 
+														<input style="text-align:center" type="text" name="published_to" id="published_to" class="datepicker" value="" >
+													</label>
+												</div> -->
+											</div>
+										</div>
+									</div>
+								<button  type="submit">Download</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+	var params ="";
+	var vid_attrs=[];
+	var ch_attrs=[];
+	var kyw_attrs=[];
+
+	$( '#wrapper .side-menu-items' ).find( 'li.active' ).removeClass( 'active' );//this will remove the active class from previously active menu item 
+	$('#exportdata').parent( 'li' ).addClass('active');
+
+
+	$("#download_this").submit(function(e) {
+		e.preventDefault();
+		ajaxEvent('submit')
+	});
+
+	function ajaxEvent(action){
+		// console.log('action :' + action )
+		// console.log('startDate :' + $("#joined_from").val() )
+		// console.log('endDate :' +  $("#joined_to").val() )
+		console.log('vid_fields :' + vid_attrs )
+		console.log('ch_fields :' + ch_attrs )
+		console.log('trackers :' + kyw_attrs )
+		$.ajax({
+			cache: false,
+			type:"POST",
+			url:"{% url 'YTAdminConsole:exportfile' %}",
+			data: {
+				'action' : action,
+				'startDate' : $("#joined_from").val(),
+				'endDate' : $("#joined_to").val(),
+				'vid_fields' : vid_attrs,
+				'ch_fields': ch_attrs,
+				'trackers': kyw_attrs,
+				'csrfmiddlewaretoken': '{{ csrf_token }}'
+			},
+			success: function(data){
+				if (action === 'submit'){
+					var blob = new Blob([data])
+					var link=document.createElement('a')
+					link.style = "display: none";  
+					link.href = window.URL.createObjectURL(blob)
+					link.download = "export.json"
+					document.body.appendChild(link);
+					link.click();
+					reset_form()
+				}
+				else {
+					var obj = JSON.parse (JSON.stringify(data)) 
+					$("#count_message").text( "Download Youtube Data : " + obj.Channels + " Channels,  " + obj.Videos +" Videos ")			
+					params = ""
+				}
+			},
+			error: function(e){
+				alert(e);
+			}
+
+		})
+	}
+
+	function reset_form(){
+		vid_attrs=[]
+		ch_attrs=[]
+		kyw_attrs=[]
+		$("#download_this")[0].reset();
+		ajaxEvent('default');
+	}
+
+	$(".query_this").change(function() {
+		var test= get_fields();
+		ajaxEvent('count')
+	});	
+
+	$(function(){
+		let momentStartDate = moment().subtract(1, 'years');
+        let momentEndDate = moment();
+        let startDate = momentStartDate.toDate();
+        let endDate = momentEndDate.toDate();
+
+		var dateFormat = "yy-mm-dd",
+		from = $( "#joined_from" ).datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true,
+
+		})
+		.on( "change", function() {
+          to.datepicker( "option", "minDate", getDate( this ) );
+        }),
+		to = $( "#joined_to" ).datepicker({
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			changeYear: true,
+		})
+		.on( "change", function() {
+          from.datepicker( "option", "maxDate", getDate( this ) );
+        });
+		
+		function getDate( element ) {
+			var date;
+			try {
+				date = $.datepicker.parseDate( dateFormat, element.value );
+			} catch( error ) {
+				date = null;
+			}
+			return date;
+		}
+	});
+
+	$(document).ready(function() {
+			
+		ajaxEvent('default');
+		
+		$(".video_fields").click(function() {
+			var checked = $(this).attr("id");
+			if(checked=="selectall_vid"){
+				var status = $(this).is(':checked')
+				$('.video_fields:checkbox').each(function() {
+            		this.checked = status;
+					if (status){
+						vid_attrs.push(this.id);
+					}else{
+						vid_attrs=[]
+					}					                     
+        		})
+			}else{
+				if ($(this).is(':checked')) {
+					vid_attrs.push(checked);
+				}else{
+					($('input[name=selectall_vid]')[0]).checked=false;
+					vid_attrs.splice($.inArray(checked, vid_attrs),1);
+				}
+			}
+			if ($.inArray($("#selectall_vid").attr("id"), vid_attrs) !=-1 )	{
+				vid_attrs.splice($.inArray($("#selectall_vid").attr("id"), vid_attrs),1);
+			}
+		});
+
+		$(".channel_fields").click(function() {
+			var checked = $(this).attr("id");
+			if (checked=="selectall_ch"){
+				var status = $(this).is(':checked')
+				$('.channel_fields:checkbox').each(function() {
+            		this.checked = status;    
+					if (status){
+						ch_attrs.push(this.id);
+					}else{
+						ch_attrs=[]
+					}					                 
+        		})
+			}else{
+				if ($(this).is(':checked')) {
+					ch_attrs.push(checked);
+				}else{
+					($('input[name=selectall_ch]')[0]).checked=false;	
+					ch_attrs.splice($.inArray(checked, ch_attrs),1);
+				}
+				 
+			}
+			if ($.inArray($("#selectall_ch").attr("id"), ch_attrs) !=-1 )	{
+				ch_attrs.splice($.inArray($("#selectall_ch").attr("id"), ch_attrs),1);
+			}
+			
+		});
+
+		$(".keyword_fields").click(function() {
+			var checked = $(this).attr("id");
+			if(checked=="selectall_kyw"){
+				var status = $(this).is(':checked')
+				$('.keyword_fields:checkbox').each(function() {
+            		this.checked = status;
+					if (status){
+						kyw_attrs.push(this.id);
+					}else{
+						kyw_attrs=[]
+					}					                     
+        		})
+			}else{
+				if ($(this).is(':checked')) {
+					kyw_attrs.push(checked);
+				}else{
+					($('input[name=selectall_kyw]')[0]).checked=false;
+					kyw_attrs.splice($.inArray(checked, kyw_attrs),1);
+				}
+			}
+			if ($.inArray($("#selectall_kyw").attr("id"), kyw_attrs) !=-1 )	{
+				kyw_attrs.splice($.inArray($("#selectall_kyw").attr("id"), kyw_attrs),1);
+			}
+		});
+
+	});
+
+	function get_fields(){
+		if ($("#joined_from").val()){
+			params+="&joined_from="+$("#joined_from").val()
+		}
+		if ($("#joined_to").val()){
+			params+="&joined_to="+$("#joined_to").val()
+		}
+		return params
+	}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,213 @@
+
+header {
+
+    display: flex;
+    position: fixed;
+    grid-area: Header;
+    justify-content: center;
+    text-align: center;
+    top:0px;
+    width: 100%;
+    background-color: var(--blackish);
+    height: 60px;
+
+    z-index: 10000;
+
+}
+
+header.scroll {
+
+    z-index: 10000;
+
+}
+
+header a#logo {
+
+    position: absolute;
+    align-self: center;
+    left: 0px;
+    margin-left: 20px;
+    width: 235px;
+    height: 30px;
+    background-image: var(--homeInterface);
+    background-repeat: no-repeat;
+    background-position: -11px -11px;
+
+}
+
+header.scroll a#logo {
+
+    background-position: -11px -51px;
+
+}
+
+header a#logo:hover {
+
+    opacity: 0.8;
+
+}
+
+header nav {
+
+    white-space: nowrap;
+
+}
+
+header.scroll nav {
+
+    display: none;
+
+}
+
+header div.navIcon {
+    
+    display: inline-flex;
+    align-self: center;
+    background-repeat: no-repeat;
+    margin-right: 0px;
+
+}
+
+header div#homeIcon {
+
+    width: 20px;
+    height: 19px;
+    background-image: var(--homeInterface);
+    background-position: -38px -337px;
+    
+
+}
+
+header div#trackersIcon {
+
+    width: 22px;
+    height: 19px;
+    background-image: var(--homeInterface);
+    background-position: -11px -337px;
+
+}
+
+header div#favoritesIcon {
+
+    width: 20px;
+    height: 19px;
+    background-image: var(--homeInterface);
+    background-position: -64px -337px;
+
+}
+
+header div#eventsIcon {
+
+    width: 20px;
+    height: 19px;
+    background-image: var(--homeInterface);
+    background-position: -88px -337px;
+
+}
+
+li.navigationButton {
+
+    color: var(--whitish);
+    display: inline-block;
+    background-color: var(--greyishDark);
+    width: 150px;
+    height: 45px;
+    line-height: 50px;
+    font-size: var(--size22);
+    font-weight: 400;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: var(--radius1000);
+    margin-top: 5px;
+    margin-bottom: 5px;
+    cursor: hand;
+    cursor: pointer;
+    
+}
+
+li.navigationButton:hover {
+
+    background-color: var(--greyish);
+
+}
+
+li.navigationButton.selected {
+
+    background-color: var(--reddish);
+
+}
+
+li.navigationButton p {
+
+    display: inline-block;
+    line-height: 45px;
+    vertical-align: top;
+
+}
+
+header div#username {
+
+    display: flex;
+    position: absolute;
+    align-self: center;
+    white-space: nowrap;
+    right: 0px;
+    margin-right: 20px;
+
+}
+
+header div#username div#photo {
+
+    align-self: center;
+    position: relative;
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--whitish);
+    border-radius: var(--radius1000);
+
+}
+
+header div#username div#indicator.active {
+
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: -3px;
+    right: -3px;
+    border-radius: var(--radius1000);
+    background-color: var(--reddish);
+
+}
+
+header div#username div#name {
+
+    display: inline-block;
+    font-weight: 600;
+    height: 50px;
+    line-height: 50px;
+    vertical-align: top;
+    margin-left: 10px;
+
+}
+
+header div#username div#menu {
+
+    display: inline-flex;
+    align-self: center;
+    width: 20px;
+    height: 17px;
+    margin-left: 20px;
+    /* background-image: var(--homeInterface); */
+    background-position: -74px -291px;
+    background-repeat: no-repeat;
+    cursor: hand;
+    cursor: pointer;
+    
+}
+
+header div#username div#menu:hover {
+
+    opacity: 0.5;
+
+}

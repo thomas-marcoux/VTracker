@@ -1,0 +1,135 @@
+{% extends "youtube_tracker/base.html" %}
+{% load static %}
+{% block body %}
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/home.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/trackerModal.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/trackerMenu.css' %}">
+
+    <script src="{% static 'youtube_tracker/behavior/home.js' %}"></script>
+
+    <script src="{% static 'youtube_tracker/behavior/trackerFunctions.js' %}"></script>
+    <script src="{% static 'youtube_tracker/libs/scripts/numeral.min.js' %}"></script>
+
+    <!-- Search -->
+    <section id="search">
+        <div id='wrapper'>
+            {% if query %}
+            <input type="text" id="searchBox" placeholder="Search YouTube" value="{{ query }}"autocomplete="off" list="searchSuggestions">
+            {% else %}
+            <input type="text" id="searchBox" placeholder="Search YouTube" autocomplete="off" list="searchSuggestions">
+            {% endif %}
+            <div id="searchIcon"></div>
+            <datalist id="searchSuggestions"></datalist>
+        </div>
+    </section>
+
+    <!-- separator -->
+    <div id="separator"></div>
+
+    <!-- Options -->
+    <section id='options'>
+        <p id='counters' class='hidden'>
+            <span>About </span>
+            <span id='videoCounter'>450B</span>
+            <span> Search Results</span>
+            <!-- <span id='separator'>·</span>
+            <span id='channelCounter'>109M</span>
+            <span>Channels</span> -->
+        </p>
+        
+        <ul id="filters">
+            <span id="label">Sort by : </span><span id="sortLabel"></span>
+            <li class="filter"><button class="filter selected">Relevance</button></li>
+            <li class="filter"><button class="filter">Today</button></li>
+            <li class="filter"><button class="filter">This week</button></li>
+            <li class="filter"><button class="filter">This month</button></li>
+            <li class="filter"><button class="filter">Views</button></li>
+            <li class="filter"><button class="filter">Rating</button></li>
+            <li class="filter"><button class="filter">Date</button></li>
+            <li class="filter"><button class="filter">Title</button></li>
+            <li class="filter"><button class="filter">Video Count</button></li>
+            <li class="filter"><button class="filter more hidden">▼</button></li>
+        </ul>
+        
+        <div id='views'>
+            <p id='label'>View</p>
+            <button id='gridView' class='viewButton selected'></button>
+            <button id='listView' class='viewButton'></button>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <main id="content">
+        <ul id='cards'>
+        </ul>
+        <div id="loading"></div>
+    </main>
+
+    <!-- Return TOP -->
+    <button id="returnTop" title="Return to top."></button>
+
+    <!-- Bottom -->
+    <section id="bottom">
+        <div id="message">
+            <div id="wrapper">
+                <p id="details"></p>
+                <div id="buttonWrapper">
+                    <button id="track" title="Track selection.">TRACK</button>
+                </div>
+            </div>
+            <button id="close" title="Cancel selection."></button>
+        </div>
+    </section>
+        
+    <!-- Copyright -->
+    <footer>
+        <div id="copyright">
+            <a id="cosmos" href="http://cosmos.ualr.edu"></a>
+            <p id="description">
+                COLLABORATORIUM FOR SOCIAL MEDIA AND ONLINE BEHAVIORAL STUDIES
+            </p>
+        </div>
+    </footer>
+
+    <!-- Overlay -->
+    <div id="overlay"></div>
+
+    <!-- Modals -->
+    <section id="modals">
+        <div id="window">
+            <button id="close"></button>
+        </div>
+        {% include 'youtube_tracker/modal_content.html' %}
+    </section>
+
+    <!-- Track Menu -->
+    <div id="trackMenu" class='dummy hidden'>
+        <div id="menu">
+            <input id="searchBox" type="text" placeholder="Search Trackers">
+            <ul id="trackers">
+                {% for i in trackerList %}
+                    <li trackerId="{{ i.tracker_id }}"><span>{{ i.tracker_name|truncatechars:15 }}</span><button id="checkMark"></button></li>
+                {% endfor %}
+            </ul>
+            <!-- <p id="status">Click the + button below to create a new tracker.</p> -->
+            <form id="createTrackerForm"> <!--Featured I spent hours just to figureout what is the issue with buttons inside this form, then I have realized that a from does a submit after clicking any button inside of it :( -->
+                <div id="createTrackerFormWrapper">
+                    <input id="trackerName" type="text" placeholder="Name" autocomplete="off" class="input" maxlength="64">
+                    <textarea id="trackerDescription" placeholder="Description" autocomplete="off" class="input" maxlength="255"></textarea>
+                </div>
+                
+                <button id="addTracker" title="Create a new tracker"></button>
+                <button id="createTracker" title="Create tracker">CREATE</button>
+            </form>
+        </div>
+        <div id="arrow"></div>
+    </div>
+
+    <!-- More Menu -->
+    <div id="moreMenu" class="dummy hidden">
+        <ul id="list"></ul>
+    </div>
+
+{% endblock %}

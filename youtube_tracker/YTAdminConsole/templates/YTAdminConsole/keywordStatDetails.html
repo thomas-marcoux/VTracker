@@ -1,0 +1,386 @@
+{% extends "YTAdminConsole/index.html" %}
+{% block content %}
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<style>
+    .modal-open{
+        overflow:hidden
+    }
+    .modal{
+        position:fixed;top:0;
+        right:0;
+        bottom:0;
+        left:0;z-index:1050;
+        display:none;
+        overflow:hidden;
+        outline:0
+    }
+    .modal-open .modal{
+        overflow-x:hidden;overflow-y:auto
+    }
+    .modal-dialog{
+        position:relative;width:auto;margin:.5rem;pointer-events:none
+    }
+    .modal.fade .modal-dialog{
+        transition:-webkit-transform .3s ease-out;transition:transform .3s ease-out;
+        transition:transform .3s ease-out,-webkit-transform .3s ease-out;
+        -webkit-transform:translate(0,-25%);
+        transform:translate(0,-25%)}
+    @media screen and (prefers-reduced-motion:reduce){
+        .modal.fade .modal-dialog{transition:none}
+    }
+    .modal.show 
+    .modal-dialog{
+        -webkit-transform:translate(0,0);transform:translate(0,0)
+    }
+    .modal-dialog-centered{
+        display:-ms-flexbox;
+        display:flex;
+        -ms-flex-align:center;
+        align-items:center;
+        min-height:calc(100% - (.5rem * 2))
+    }
+    .modal-content{
+        position:relative;
+        display:-ms-flexbox;
+        display:flex;-ms-flex-direction:
+        column;flex-direction:column;
+        width:100%;pointer-events:auto;
+        background-color:#fff;
+        background-clip:padding-box;
+        border:1px solid rgba(0,0,0,.2);
+        border-radius:.3rem;outline:0
+    }
+    .modal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1040;background-color:#000}
+    .modal-backdrop.fade{opacity:0}
+    .modal-backdrop.show{opacity:.5}
+    .modal-header{display:-ms-flexbox;display:flex;-ms-flex-align:start;align-items:flex-start;-ms-flex-pack:justify;justify-content:space-between;padding:1rem;border-bottom:1px solid #e9ecef;border-top-left-radius:.3rem;border-top-right-radius:.3rem}
+    .modal-header .close{padding:1rem;margin:-1rem -1rem -1rem auto}
+    .modal-title{margin-bottom:0;line-height:1.5}
+    .modal-body{
+        position:relative;
+        -ms-flex:1 1 auto;
+        flex:1 1 auto;
+        padding:1rem
+    }
+    .modal-footer{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:end;justify-content:flex-end;padding:1rem;border-top:1px solid #e9ecef}
+    .modal-footer>:not(:first-child){margin-left:.25rem}
+    .modal-footer>:not(:last-child){margin-right:.25rem}
+    .modal-scrollbar-measure{
+        position:absolute;
+        top:-9999px;width:50px;
+        height:50px;
+        overflow:scroll
+    }
+    @media (min-width:576px){
+        .modal-dialog{max-width:500px;margin:1.75rem auto}
+        .modal-dialog-centered{min-height:calc(100% - (1.75rem * 2))}
+        .modal-sm{max-width:300px}
+    }
+    @media (min-width:992px){
+        .modal-lg{max-width:800px}
+    }
+</style>
+<div>
+    <div class="row">
+            <h3 class="page-header">{{title}} </h3>
+    </div>
+    <div class="row">
+        <table id ="stat-dets" class="display datatable" class="dataTables_wrapper" style="width:100%">
+            <thead>
+                <tr>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+       
+ <!-- Modal -->
+ <div  id="DescModal" class="modal fade in hide"  tabindex="-1"role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="text-align:left">
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button> -->
+                     <h3 class="modal-title" >Edit</h3>
+                </div>
+                <div class="modal-body">
+                     <!-- <h5 class="text-center">Hello. Below is the descripton and/or requirements for hiring consideration.</h5> -->
+                     <div class="form-group">
+                        <label>Keyword: </label>
+                        <textarea class="form-control" type="text" id="keyword_id"></textarea>
+                    </div>
+                    <div class="form-group" >
+                        <label>Source ID:  </label>
+                        <input type="number" id="source_id" disabled=true> 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success " id= "updateKeyword" data-dismiss="modal">Save Changes</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" >Cancel</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+     <!-- Modal -->
+ <div  id="DeleteModal" class="modal fade in hide"  tabindex="-1"role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="text-align:left">
+                 <h3 class="modal-title" >Delete</h3>
+            </div>
+            <div class="modal-body" style=" word-break:break-all" >
+                <p>Are you sure you want to delete keyword '<b  id="key_id"> </b>' and all its videos ? </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success " data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger"  id= "deleteKeyword" data-dismiss="modal" >Delete</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<script type="text/javascript">
+    let sourceID = 0
+    let stat_table 
+    let choices = [
+		'Low',
+		'Medium',
+		'High',
+		'Critical'
+    ]
+    $(document).ready(function(){
+        let title = '{{title}}'
+        let status = '{{status}}'
+        let total = '{{total}}'
+        if (title == "Crawled") {
+            
+            stat_table=  $("#stat-dets").DataTable({
+                    "processing": true,
+                    "language": { "processing": '<i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i>' },
+                    "serverSide": true,
+                    "ajax": {
+                        "url": "{% url 'YTAdminConsole:statsByStatus' %}?status={{status}}&type={{id}}&total={{total}}",
+                        "dataSrc":"data"
+                    },
+                    "columns": 
+                    [
+                            { "data": "source_id__tracker_id", "title" : "Tracker" , "name":"source_id__tracker_id" , "searchable": false },
+                            { "data": "source_id__content_id" , "title" : "Keyword" , "name":"source_id__content_id" , "searchable": true  },
+                            { "data": "video_title", "title" : "Video Title" , "name":"video_title" , "searchable": true },
+                            { "data": "video_id" , "title" : "Video Id" , "name":"video_id" , "searchable": true  },
+                            { "data": "published_date", "title" : "Published Date" , "name":"published_date" , "searchable": false,
+                                "type": "date",
+                                "render":function (data) {
+                                        return moment.utc(data).format('lll')
+                                    }},
+                            { "data": "added_to_db_time", "title" : "Video Added to DB Date" , "name":"added_to_db_time" , "searchable": false,
+                                "type": "date",
+                                "render":function (data) {
+                                        return moment.utc(data).format('lll')
+                                    }},
+                            { "data": "category", "title" : "Category", "name":"category" },
+                            { "data": "videos__videosdaily__total_views", "title" : "Total Views", "name":"total_views" , "searchable": false, "className": "dt-body-right","orderable" : false,
+                                "render":function (data) {
+                                    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }},
+                            { "data": "videos__videosdaily__total_likes", "title" : "Total Likes", "name":"total_likes" , "searchable": false, "className": "dt-body-right","orderable" : false,
+                                "render":function (data) {
+                                    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }},
+                            { "data": "videos__videosdaily__total_dislikes", "title" : "Total Dislikes", "name":"total_dislikes" , "searchable": false, "className": "dt-body-right","orderable" : false,
+                                "render":function (data) {
+                                    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }},
+                            { "data": "videos__videosdaily__total_comments", "title" : "Total Comments", "name":"total_comments" , "searchable": false, "className": "dt-body-right","orderable" : false,
+                                "render":function (data) {
+                                    return data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }},
+                            { "data": "videos__videosdaily__extracted_date", "title" : "Last Extracted", "name":"extracted_date" , "searchable": false, "orderable" : false,
+                                "type": "date",
+                                "render":function (data) {
+                                        return moment.utc(data).format('lll')
+                                }},
+                        ]
+                    ,
+                    "columnDefs": 
+                    [
+                        {
+                            targets:[4,5,6,7],
+                            className: 'dt-head-center'
+                        },
+                    ],
+                        "order": [[ 5, "desc" ]],
+                        "deferRender": true,
+                        "paging":true,
+                        "searching": true,
+                        "lengthMenu": [10, 25, 50, 75, 100],
+                        "pagingType": "full_numbers",
+                });
+            
+            }
+            else if (status== "crawling" || "not_crawled" ) {
+                // Roy's auto-crawler sets CrawlerPipeline items to only 'crawled'
+                // its easier to make this change than the autocrawler.
+                draw_newtable(status)
+            }
+    })
+
+    function draw_newtable(status){
+        stat_table = $("#stat-dets").DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{% url 'YTAdminConsole:statsByStatus' %}?status="+ status +"&type=keyword",
+                    "dataSrc":"data",
+                },
+                "columns": 
+                    [
+                        { "data": "tracker_id" , "title" : "Tracker","name":"tracker_id"  },
+                        { "data": "content_id" , "title" : "Keyword Id","name":"content_id"  },
+                        {
+                            data: null,
+                            defaultContent: '<button id="editkey" type="button" class="btn btn-primary" data-toggle="modal" data-target="#DescModal">Edit</button>',
+                            orderable: false
+                        },
+                        {
+                            data: null,
+                            defaultContent: '<button id="delkey" type="button" class="btn btn-danger" data-toggle="modal" data-target="#DeleteModal">Delete</button>',
+                            orderable: false
+                        },
+                        { "data": "priority", "title" : "Priority","name":"priority"  , "orderable" : false,
+                            "render": function(d,t,r){
+                                    var $select = $("<select></select>", {
+                                        "id": r.source_id +"-priority",
+                                        "value": d,
+                                        "class": 'form-control ; priority',                                      
+                                    });
+                                    $.each(choices, function(k,v){
+                                        var $option = $("<option></option>", {
+                                            "text": v,
+                                            "value": v
+                                        });
+                                        if(d === v){
+                                            $option.attr("selected", "selected")
+                                        }
+                                        $select.append($option);
+                                    })
+                                    
+                                    return $select.prop("outerHTML");
+                                }
+                        },
+                        { "data": "user_id", "title" : "Added By" ,"name":"user_id"  },
+                        { "data": "added_to_db_time", "title" : "Added On" ,"name":"added_to_db_time",
+                            "type": "date",
+                            "render":function (data) {
+                                    return moment.utc(data).format('lll')
+                            }},
+                        { "data": "source_id", "title" : "source" ,"name":"source_id", "visible": false  },
+
+                    ]
+                ,
+                    "language": { "processing": '<i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i>' },
+                    "deferRender": true,
+                    "paging":true,
+                    "order": [[ 5, "desc" ]],
+                    "searching": true,
+                    "lengthMenu": [10, 25, 50, 75, 100],
+                    "pagingType": "full_numbers",
+                });
+                
+                $("#stat-dets tbody").on( 'click', 'button', function () {
+                    let keytyp = $(this)[0].id
+                    let data =stat_table.row( $(this).parents('tr') ).data();
+                    sourceID = data.source_id
+                    $('#keyword_id').val(data.content_id)
+                    $('#key_id').text(data.content_id)
+                    $('#source_id').val(sourceID)
+                    if (keytyp==='editkey'){
+                        $('#DescModal').modal("show");
+                    }
+                    else{
+                        $('#DelModal').modal("show");
+                    }
+                        
+                } );
+    }
+
+    $("#updateKeyword").on("click", function(e){
+        let key = $("#keyword_id").val()
+        sourceID = $('#source_id').val()
+        $.ajax({
+            data:{
+                keyword:key, 
+                sourceid:sourceID
+            },
+            url : "{% url 'YTAdminConsole:updateKeyword' %}"
+        }).done(function(data){
+            stat_table.destroy()
+            draw_newtable()
+            console.log("Updated Keyword Successfully")
+
+        }).fail(function(e){
+            console.log("failed")
+        })
+
+    })
+
+    $("#deleteKeyword").on("click", function(e){
+        // alert("Changes saved")
+        // $('#DescModal').modal("hide");
+        let key = $("#keyword_id").val()
+        sourceID = $('#source_id').val()
+        $.ajax({
+            data:{
+                sourceid:sourceID
+            },
+            url : "{% url 'YTAdminConsole:deleteKeyword' %}"
+        }).done(function(data){
+            stat_table.destroy()
+            draw_newtable()
+            console.log("Deleted Keyword Successfully")
+
+        }).fail(function(e){
+            console.log("failed to delete")
+        })
+
+    });
+
+    $(function (){
+        $(document).on('change', '.priority', function () {
+            let new_pr = this.value
+            let s_id = this.id.split("-")[0]
+            updatePriority(new_pr, s_id)    
+        });
+    });
+
+    function updatePriority(pr, sourceID){
+        // alert ('priority changed for ' + sourceID + ' to ' + pr )
+        $.ajax({
+            data:{
+                priority:pr, 
+                sourceid:sourceID,
+            },
+            url : "{% url 'YTAdminConsole:updatePriority' %}"
+        }).done(function(data){
+            // stat_table.destroy()
+            // draw_newtable()
+            console.log("Updated priority Successfully")
+
+        }).fail(function(e){
+            console.log("failed")
+        })
+    }
+
+
+</script>
+
+{% endblock %}

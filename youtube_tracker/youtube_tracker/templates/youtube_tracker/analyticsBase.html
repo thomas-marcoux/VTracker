@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+
+<!--
+
+
+
+	" Reimplement the wheel to either learn, or make it better. "
+
+    http://www.haydex.io/
+    https://www.youtube.com/watch?v=QOlTGA3RE8I
+    
+    Product Name: Vtracker,
+	Description: Tracking data from videos.
+	Beneficiary: COSMOS
+	
+	Copyright © 1992 - 2021 HAYDEX, All Rights Reserved.
+	
+	
+	
+-->
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="author" content="HAYDEX">
+        <meta name="description" content="Tracking data from videos.">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+        
+        <!-- Favicons -->
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'youtube_tracker/images/favicon/vt-favicon-apple-touch.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'youtube_tracker/images/favicon/vt-favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'youtube_tracker/images/favicon/vt-favicon-16x16.png' %}">
+        <!-- https://mobiforge.com/design-development/adding-favicons-in-a-multi-browser-multi-platform-world -->
+
+        <script type="text/javascript" src="{% static 'youtube_tracker/behavior/contentEngagement/contentAnalysis.js' %}"></script>
+
+
+        <!-- Tables -->
+        <script type="text/javascript" src="{% static 'youtube_tracker/libs/scripts/tabulator.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'youtube_tracker/behavior/dataTable.js' %}"></script>
+
+        <script type="text/javascript" src="{% static 'youtube_tracker/behavior/genericUtilities.js' %}"></script>
+        <script type="text/javascript" src="{% static 'youtube_tracker/behavior/charts/baseChart.js' %}"></script>
+        <script  type="text/javascript" src="{% static 'youtube_tracker/behavior/analytics.js' %}"></script>
+
+
+        <!-- Stylesheets -->
+        <link rel="stylesheet" href="{% static 'youtube_tracker/libs/styles/tabulator_midnight.css' %}" />
+
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript" src="{% static 'youtube_tracker/libs/scripts/lodash-4.17.11.js' %}"></script>
+        <script type="text/javascript" src="{% static 'youtube_tracker/libs/scripts/jquery-3.2.1.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'youtube_tracker/libs/scripts/jquery-ui.min.js' %}"></script>
+
+
+
+    </head>
+    <body>
+
+
+
+        <!-- Header -->
+        <header>
+            <a href="{% url 'getLandingPage' %}" id="logo"></a>
+            <nav>
+                <ul>
+                    <a href="{% url 'homePage' %}">
+                        <li id="homeLink" class="navigationButton selected" title="Home">
+                            <div id="homeIcon" class="navIcon"></div>
+                            <p id="home">Home</p>
+                        </li>
+                    </a>
+                    <a href="{% url 'trackerList' %}">
+                        <li id="trackersLink" class="navigationButton" title="Trackers">
+                            <div id="trackersIcon" class="navIcon"></div>
+                            <p id="trackers">Trackers</p>
+                        </li>
+                    </a>
+                    <!-- <a href="events.html">
+                        <li id="eventsLink" class="navigationButton" title="Events">
+                            <div id="eventsIcon" class="navIcon"></div>
+                            <p id="events">Events</p>
+                        </li>
+                    </a> -->
+                    <!-- <a href="favorites.html">
+                        <li id="favoritesLink" class="navigationButton" title="Favorites">
+                            <div id="favoritesIcon" class="navIcon"></div>
+                            <p id="favorites">Favorites</p>
+                        </li>
+                    </a> -->
+                </ul>
+            </nav>
+            <div id="username">
+                <div id="photo" title="Steven M">
+                    <div id="indicator" class="active"></div>
+                </div>
+                <div id="name">Steven</div>
+                <div id="menu" title="Menu"></div>
+                <div id="arrow"></div>
+            </div>
+        </header>
+
+
+    
+        <!-- Content -->
+        <main id="content">
+            <div id="dashboard">
+                <section id="navigation">
+                    <p id="title">
+                        <span>{{ trackerData.tracker_name }}</span>
+                        {{ pageTitle }}
+                    </p>
+                    <div id="navigationWrapper">
+                        <ul id="breadcrumbs">
+                            <li class="link"><a href="{% url 'trackerList' %}">Trackers</a></li>
+                            <li> / </li>
+                            <li class="link"><a href="{% url 'trackerDetails' trackerData.tracker_id %}">{{ trackerData.tracker_name | truncatechars:50 }}</a></li>
+                            {% if breadCrumbTrail %}
+                                {% for pageTitle, pageURL in breadCrumbTrail.items %}
+                                    <li> / </li>
+                                    <li class="link"><a href="{% url pageURL trackerData.tracker_id %}?public={{ trackerData.is_public }}">{{ pageTitle }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                            <li> / </li>
+                            <li class="link selected">{{ pageTitle }}</li>
+                        </ul>
+                        <!-- Date Picker -->
+                        {% include "youtube_tracker/analytics_datePicker.html" %}
+                    </div>
+                </section>
+
+                {% block body %}
+                {% endblock %}
+
+            </div>
+        </main>
+        
+        <!-- Copyright -->
+        <footer>
+            <div id="copyright">
+                <a id="cosmos" href="http://cosmos.ualr.edu"></a>
+                <p id="description">
+                    COLLABORATORIUM FOR SOCIAL MEDIA AND ONLINE BEHAVIORAL STUDIES
+                </p>
+            </div>
+        </footer>
+
+
+
+        <!-- Overlay -->
+        <div id="overlay"></div>
+
+
+
+        <!-- Side Menu -->
+        <div id="sideMenu" class="submenu">
+            <!-- <button id="closeSideMenuButton"></button> -->
+            <div id="user">
+                <div id="photo"></div>
+                <p id="name">Hayder Al Rubaye</p>
+                <p id="email">hayddex@gmail.com</p>
+            </div>
+            <ul id="sideMenuList">
+                <li id="apikey" class="item">API Key</li>
+                <li id="logout" class="item logout">Logout</li>
+            </ul>
+        </div>
+
+
+
+    </body>
+</html>

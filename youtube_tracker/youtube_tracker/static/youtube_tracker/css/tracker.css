@@ -1,0 +1,396 @@
+/** Content **/
+
+main#content {
+
+  margin: 0px auto;
+  margin-top: 120px;
+  max-width: 900px;
+  width: 100%;
+
+}
+
+main#content div#head {
+
+  display: flex;
+  position: relative;
+
+}
+
+main#content div#head div#title {
+
+
+  font-size: var(--size58);
+
+}
+
+main#content div#head div#tools {
+
+    position: absolute;
+    right: 0px;
+
+}
+
+main#content div#head div#tools button {
+
+    display: inline-flex;
+    position: relative;
+    justify-content: center;
+    margin: 5px;
+    outline:0;
+    padding: 30px;
+    border: 1px solid var(--littleGrey2);
+    border-radius: var(--radius1000);
+    background-color: transparent;
+
+    cursor: hand;
+    cursor: pointer;
+
+}
+
+main#content div#head div#tools button:hover {
+
+    opacity: 0.5;
+
+}
+
+main#content div#head div#tools button div#icon {
+
+    display: inline-flex;
+    position: absolute;
+    align-self: center;
+    justify-self: center;
+    height: 32px;
+    background-image: var(--homeInterface);
+    background-repeat: no-repeat;
+    background-position-y: -234px;
+
+}
+
+main#content div#head div#tools button#analytics div#icon {
+
+    width: 26px;
+    background-position-x: -349px;
+
+}
+
+main#content div#head div#tools button#edit div#icon {
+
+    width: 22px;
+    background-position-x: -376px;
+
+}
+
+main#content div#head div#tools button#refresh div#icon {
+
+    width: 26px;
+    background-position-x: -399px;
+
+}
+
+main#content div#head div#tools button#delete div#icon {
+
+    width: 26px;
+    background-position-x: -322px;
+
+}
+
+main#content div#dates div {
+
+  display: inline-flex;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+  border: 2px solid var(--littleGrey2);
+  border-radius: var(--radius5);
+  margin-right: 10px;
+
+}
+
+main#content div#description {
+
+  margin-top: 20px;
+
+}
+
+main#content div#statistics {
+
+  display: flex;
+  margin-top: 60px;
+
+}
+
+main#content div#statistics div.metric {
+
+  margin-right: 100px;
+
+}
+
+main#content div#statistics div.metric div#count {
+
+  font-size: var(--size48);
+  color: var(--reddish);
+
+}
+
+/** Search **/
+
+form#search {
+
+  margin: 0px auto;
+  margin-top: 50px;
+  max-width: 500px;
+  padding: 0px 10px;
+
+}
+
+form#search label {
+
+  display: none;
+
+}
+
+form#search input#searchBox {
+
+   border-radius: var(--radius25);
+   border: 2px solid var(--whitishTransparent1);
+   background-color: var(--blackish);
+   width: 100%;
+   font-size: 22px;
+   color: var(--whitish);
+   padding: 10px 20px;
+   outline: none;
+   text-align: center;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+}
+
+main#content div#videosChannels {
+
+  margin-top: 60px;
+
+}
+
+main#content div#videosChannels div#label {
+
+  font-size: var(--size34);
+
+}
+
+main#content div#videosChannels ul#list {
+
+  margin-top: 30px;
+  list-style: none;
+  position: relative;
+  width: 100%;
+  height: 580px;
+
+}
+
+main#content div#videosChannels ul#list li {
+
+  margin-bottom: 10px;
+  background-color: var(--littleGrey);
+  border-radius: var(--radius15);
+  overflow: hidden;
+  position: relative;
+
+}
+
+main#content div#videosChannels ul#list li:hover {
+
+  background-color: var(--greyishDark);
+
+}
+
+main#content div#videosChannels ul#list li img {
+
+  display: inline-block;
+  width: 200px;
+  height: 130px;
+  object-fit: cover;
+
+}
+
+main#content div#videosChannels ul#list li div#wrapper {
+
+  display: inline-block;
+  padding: 20px;
+  vertical-align: top;
+  white-space: nowrap;
+
+}
+
+main#content div#videosChannels ul#list li div#wrapper h2#title {
+
+  font-size: var(--size18);
+  font-weight: 400;
+  cursor: pointer;
+
+}
+
+main#content div#videosChannels ul#list li div#wrapper h2#title:hover {
+
+  color: var(--blueish);
+
+}
+
+main#content div#videosChannels ul#list li div#wrapper p#channel {
+
+  display: inline-block;
+  font-size: var(--size14);
+  opacity: 0.5;
+
+}
+
+main#content div#videosChannels ul#list li div#wrapper p#date {
+
+  display: inline-block;
+  font-size: var(--size14);
+  opacity: 0.5;
+
+}
+
+main#content div#videosChannels ul#list li div#wrapper button#trackStatusButton {
+
+  display: block;
+  background-color: var(--blackish);
+  color: var(--whitish);
+  border-radius: var(--radius1000);
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: var(--size14);
+  font-weight: 600;
+  border: 2px solid var(--whitish);
+  outline: 0px;
+  cursor: hand;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0.2;
+  margin-top: 10px;
+
+}
+
+main#content div#videosChannels ul#list li div#wrapper button#trackStatusButton:hover {
+
+  background-color: var(--whitish);
+  color: var(--blackish);
+  opacity: 1;
+
+}
+
+main#content div#videosChannels ul#list li div#wrapper button#delete {
+
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 26px;
+  height: 32px;
+  background-color: transparent;
+  background-image: var(--homeInterface);
+  background-position-x: -322px;
+  background-position-y: -234px;
+  background-repeat: no-repeat;
+  border: 0px;
+  outline: 0px;
+  cursor: hand;
+  cursor: pointer;
+
+}
+
+main#content div#videosChannels ul#list li div#wrapper button#delete:hover {
+
+  opacity: 0.5;
+
+}
+
+main#content div#videosChannels ul#list li:hover div#wrapper button#delete {
+
+
+
+}
+
+main#content div#videosChannels ul#list li.video img#barcode {
+
+  display: block;
+  width: 100%;
+  height: 12px;
+  object-fit: cover;
+  margin-top: -4px;
+
+}
+
+main#content div#videosChannels ul#list div#arrows {
+
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 32px;
+  z-index: 1000;
+  top: 50%;
+  transform: translateY(-50%);
+
+}
+
+main#content div#videosChannels ul#list div#arrows div.arrow {
+
+  position: absolute;
+  height: 100%;
+  width: 18px;
+  background-image: var(--homeInterface);
+  cursor: pointer;
+
+}
+
+main#content div#videosChannels ul#list div#arrows div.arrow:hover {
+
+  opacity: 0.5;
+
+}
+
+main#content div#videosChannels ul#list div#arrows div#backArrow.arrow {
+
+  left: -60px;
+  background-position: -19px -679px;
+
+}
+
+main#content div#videosChannels ul#list div#arrows div#forwardArrow.arrow {
+
+  right: -60px;
+  background-position: -89px -679px;
+
+}
+
+main#content div#videosChannels div#pagination {
+
+  text-align: center;
+  margin: 50px 0px;
+
+}
+
+main#content div#videosChannels div#pagination div.page {
+
+  display: inline-block;
+  margin: 0px 10px;
+  padding: 8px 14px;
+  border-radius: var(--radius25);
+  cursor: pointer;
+
+}
+
+main#content div#videosChannels div#pagination div.page.selected {
+
+  background-color: var(--reddish);
+
+}
+
+main#content div#videosChannels div#pagination div.page:hover {
+
+  background-color: var(--greyish);
+
+}

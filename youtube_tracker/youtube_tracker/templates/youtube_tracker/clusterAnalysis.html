@@ -1,0 +1,111 @@
+{% extends "youtube_tracker/analyticsBase.html" %}
+{% load humanize %}
+{% load static %}
+{% block body %}
+
+<title>Cluster Distribution - VTracker</title>
+
+<!-- Stylesheets -->
+<link rel="stylesheet" href="{% static 'youtube_tracker/css/clusterAnalysis.css' %}"/>
+
+<script type="text/javascript" src="{% static 'youtube_tracker/behavior/clusterAnalysis.js' %}"></script>
+
+<section id="visualizations">
+
+    <figure id="clusterDistributionDiagram" class="figure">
+
+        <!-- Figure -->
+        <div id="figureWrapper" class="component">
+            <div id="spinner"></div>
+            <img src="{% static 'youtube_tracker/images/tempImages/cluster1.png' %}"  >
+            
+        </div>
+
+        <!-- Statistics -->
+        <div id="statistics" class="component">
+            <ul id="statisticsWrapper">
+                <li>
+                    <h3>Videos</h3>
+                    <p>34</p>
+                </li>
+                <li>
+                    <h3>Chanels</h3>
+                    <p>80%</p>
+                </li>
+                <li>
+                    <h3>Comments</h3>
+                    <p>34</p>
+                </li>
+                <li>
+                    <h3>Most active</h3>
+                    <p>Mayorinna</p>
+                </li>
+               
+                
+            </ul>
+        </div>
+    </figure>
+     <!--Top KeyWord Diagram End-->
+     <figure id="keywordCluster" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Keywords of <span class="deeperAnalysis">  <a href="#">Cluster 1</a></span></h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+        <img src="{% static 'youtube_tracker/images/tempImages/words.png' %}"  >
+    </div>
+    </figure>
+
+    <figure id="dailyVideoViewsDiagram" class="figure">
+        <!-- Title -->
+        <div id="titleWrapper">
+            <h3 id="diagramTitle">Cluster 1 Common Terms </h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Figure -->
+        <div id="figureWrapper">
+            <div id="spinner"></div>
+            <img src="{% static 'youtube_tracker/images/tempImages/commonwords.png' %}"  >
+           
+        </div>
+    </figure>
+    <figure id="videoDescriptionLanguageDiagram" class="figure">
+        <!-- Title -->
+        <div id = "titleWrapper">
+            <h3 id="diagramTitle">Video Description Language Description</h3>
+            <button id="information"
+                title="More information about the current diagram will be provided here in this section."></button>
+        </div>
+        <!-- Videos -->
+        <div id="videosWrapper" class="component">
+            <input id="searchVideos" placeholder="Search Videos" class="searchBox">
+            
+        </div>
+        <!-- Video -->
+        <div id="videoPlayerWrapper" class="component">
+            <!-- <div id="player" class="embed-responsive embed-responsive-16by9">
+               
+            </div> -->
+            <iframe id="commentVideo" width="100%" height="100%" src="" 
+            title="YouTube video player" frameborder="0" allow="autoplay; encrypted-media" 
+            allowfullscreen></iframe>
+        </div>
+    </figure>
+    <figure id="videoDetailsDiagram" class="figure">
+        <!-- Title -->
+        <div id = "titleWrapper">
+            <h3 id="diagramTitle">Topics</h3>
+        </div>
+        <!-- Videos -->
+        <div id="videosWrapper" class="component">
+          
+         </div>
+    </figure>
+
+    
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{%for item in items %}
+
+<li id="card" class="channel">
+    <ul id="statistics">
+        <li id="views" title="Views">
+            <div id="icon"></div>
+            <p id="counter">{{ item.viewCount }}</p>
+        </li>
+
+        <li id="subscribers" title="Subscribers">
+            <div id="icon"></div>
+            <p id="counter">{{ item.subscriberCount }}</p>
+        </li>
+
+        <li id="videos" title="Videos">
+            <div id="icon"></div>
+            <p id="counter">{{ item.videoCount }}</p>
+        </li>
+
+    </ul>
+
+    <div id="thumbnail">
+        <img id="photo" src="{{ item.thumbnailsMediumUrl }}">
+        <div id="shadow"></div>
+        <button id="favor"></button>
+    </div>
+
+    <div id="detailsWrapper">
+        <div id="details">
+            <h4 id="created">Created : <span id="date">{{ item.publishedAt }}</span></h4>
+            <p id="title" title="{{ item.channelTitle }}"><span>{{ item.channelTitle }}</span></p>
+        </div>
+        <div id="wrapper">
+            <button id="trackStatusButton" title="Click to see list of trackers.">0 TRACKS</button>
+        </div>
+    </div>
+</li>
+
+{% endfor %}

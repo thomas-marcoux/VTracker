@@ -1,0 +1,20 @@
+{% load humanize %}
+
+<ul id="statisticsWrapper">
+    <li>
+        <h3>Videos</h3>
+        <p>{{ contextData.total_videos | intcomma }}</p>
+    </li>
+    <li>
+        <h3>Views</h3>
+        <p>{{ contextData.total_views | intcomma }}</p>
+    </li>
+    <li>
+        <h3>Subscribers</h3>
+        <p>{{ contextData.total_subscribers | intcomma }}</p>
+    </li>
+    <li>
+        <h3>Top Location</h3>
+        <p>{{ contextData.top_location | intcomma }}</p>
+    </li>
+</ul>

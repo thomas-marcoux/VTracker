@@ -1,0 +1,76 @@
+
+header {
+    background-color: #2F2D2C;
+    width: 100%;
+    display: flex;
+    position: fixed;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    height: 60px;
+    z-index: 1000;
+}
+
+header a#logo {
+
+    align-self: center;
+    left: 0px;
+    margin-left: 20px;
+    width: 235px;
+    height: 30px;
+    background-image: var(--homeInterface);
+    background-repeat: no-repeat;
+    background-position: -11px -11px;
+
+}
+
+header.scroll a#logo {
+
+    background-position: -11px -51px;
+
+}
+
+header a#logo:hover {
+
+    opacity: 0.8;
+
+}
+
+header nav {
+    height: 40px;
+    line-height: 40px;
+    font-size: 19px;
+    white-space: nowrap;
+    align-self: center;
+    margin-right: 20px;
+}
+
+header nav ul {
+    display: inline-block;
+}
+
+header nav ul li {
+    display: inline-block;
+    margin-left: 30px;
+    text-align: left;
+}
+
+header nav button#loginButton {
+    height: 40px;
+    padding: 0px 30px;
+    margin-left: 30px;
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    font-size: 19px;
+    font-weight: 600;
+    border-radius: 25px;
+    outline:0;
+    cursor: hand;
+	cursor: pointer;
+}
+
+header nav button#loginButton:hover {
+    background-color: white;
+    color: #2F2D2C;
+}

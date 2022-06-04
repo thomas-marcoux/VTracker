@@ -1,0 +1,242 @@
+/*
+
+
+
+	" Reimplement the wheel to either learn, or make it better. "
+
+    http://www.haydex.com/
+    https://www.youtube.com/watch?v=QOlTGA3RE8I
+    
+    Product Name: VTracker
+	Description: Tracking Video data.
+	Beneficiary: COSMOS
+	
+	Copyright © 1988 - 2021 HAYDEX, All Rights Reserved.
+	
+	
+	
+*/
+
+/** Global settings **/
+
+:root {
+    
+    /* theme */
+
+    --reddish: #fd4444;
+    --yellowish: #fffa56;
+    --highlighter: #d8ff3e;
+    --whitish: white;
+    --blueishDark: rgb(23, 57, 76);
+    --blueishLighter: rgba(23, 57, 76, 0.3);
+    --blueishLightest: rgba(23, 57, 76, 0.2);
+    --greyishLight: #F8F8F8;
+    --greyishLight2: rgb(234 234 234);
+    --greenish: #41c16c;
+    --greenishLight: #b4ffb45c;
+    --greenishLight2: #eff9f2;
+    --greenishDark: rgb(184 255 184);
+    --blueishLight: rgb(151 244 255);
+    --yellow: yellow;
+    --yellowLight: rgb(255, 255, 223);
+    --blue: rgb(0, 162, 255);
+    --blackishTransparent2: rgba(0, 0, 0, 0.2);
+    --blueishDarkScroll: rgba(23, 57, 76, 0.8);
+    --blueishDarkScrollHover: rgba(23, 57, 76, 1);
+
+    /* radius */
+
+    --radius5: 5px;
+    --radius13: 13px;
+    --radius15: 15px;
+    --radius25: 25px;
+    --radius1000: 1000px;
+
+    --interface: url(/narrative-analysis/assets/interface/interface.svg);
+    --cursor: url(/narrative-analysis/assets/interface/cursor.svg);
+    
+}
+
+html {
+
+    color: var(--blueishDark);
+    font-family: "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x:hidden;
+    box-sizing: border-box; /* https://www.w3schools.com/css/css3_box-sizing.asp   https://www.youtube.com/watch?v=ADDvQlerEx4&list=PLu8EoSxDXHP5CIFvt9-ze3IngcdAc2xKG&index=2 */
+
+}
+
+body {
+
+	background-color:var(--whitish);
+    margin: 0px;
+    box-sizing: inherit;
+
+}
+
+body.editing {
+
+	background-color:var(--greenishLight);
+
+}
+
+a {
+
+    text-decoration: none;
+    color: inherit;
+
+}
+
+a:hover {
+
+    color: inherit;
+
+}
+
+section#moreInfoModal div#messageBox::-webkit-scrollbar, section#moreInfoModal div#messageBox div#messageContent::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
+    display: none;
+}
+
+* {
+
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+    -ms-overflow-style: none;
+    scrollbar-width: none !important;
+
+}
+
+ul {
+
+    list-style: none;
+
+}
+
+body.freeze {
+
+    overflow: hidden;
+    
+}
+
+button {
+
+    background-color: transparent;
+    border: 0px;
+    outline: 0px;
+    cursor: hand;
+    cursor: pointer;
+
+}
+
+span.highlighter {
+
+    background-color: var(--highlighter);
+    font-size: 24px;
+    line-height: 26px;
+
+}
+
+textarea {
+
+    color: var(--blueishDark);
+    font-family: "Roboto", sans-serif;
+
+}
+
+/** Side Bar **/
+
+div#sideBar {
+
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    overflow-y: scroll;
+    padding: 50px;
+    font-size: 20px;
+    border-right: 2px solid var(--greyishLight2);
+    background-color:var(--whitish);
+    z-index: 20000;
+
+}
+
+div#sideBar div.sideBarOptions select#dataSelect {
+
+    width: 100%;
+    border-radius: 10px;
+    border: 2px solid var(--blueishDark);
+    cursor: pointer;
+    outline: 0px;
+    color: var(--blueishDark);
+    font-size: 20px;
+    padding: 5px 5px;
+
+}
+
+div#sideBar div.sideBarOptions {
+
+    margin-bottom: 80px;
+
+}
+
+div#sideBar div.sideBarOptions p {
+
+    font-size: 29px;
+    font-weight: 800;
+    margin-bottom: 15px;
+
+}
+
+div#sideBar div.sideBarOptions ul.sideBarOptionsList li {
+
+    padding: 5px 0px;
+    border-radius: 10px;
+    margin-bottom: 2px;
+
+}
+
+div#sideBar div.sideBarOptions ul.sideBarOptionsList li span {
+
+    padding: 5px 10px;
+    border-radius: 10px;
+
+}
+
+div#sideBar div.sideBarOptions ul.sideBarOptionsList li span:hover {
+
+    background-color: var(--greyishLight2);
+    cursor: pointer;
+
+}
+
+div#sideBar div.sideBarOptions ul.sideBarOptionsList li.selected span {
+
+    color: var(--whitish);
+    background-color: var(--blueishDark);
+
+}
+
+div#sideBar div.sideBarOptions ul.sideBarOptionsList li.disabled {
+
+    color: var(--blackishTransparent2);
+
+}
+
+div#sideBar div.sideBarOptions ul.sideBarOptionsList li.disabled span:hover {
+
+    cursor: default;
+
+}
+
+/** Treemap **/
+
+div#treemap {
+
+    margin-left: 350px;
+
+}

@@ -1,0 +1,16 @@
+{% if contextData|length > 0 %}
+
+    {% for comment in contextData %}
+        <li>
+            <h4>{{ comment.commenter_name }} - {{ comment.published_date|date:"M d Y h:i A" }}</h4>
+            <p>{{ comment.comment_displayed }}</p>
+        </li>
+    {% endfor %}
+
+{% else %}
+
+        <p>
+            No comments to be shown.
+        </p>
+
+{% endif %}

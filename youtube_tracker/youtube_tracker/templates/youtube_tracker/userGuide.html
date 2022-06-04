@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+
+<!--
+
+
+
+	" Reimplement the wheel to either learn, or make it better. "
+
+    http://www.haydex.com/
+    https://www.youtube.com/watch?v=QOlTGA3RE8I
+    
+    Product Name: VTracker,
+	Description: Tracking video data.
+	Beneficiary: COSMOS
+	
+	Copyright © 1992 - 2018 HAYDEX, All Rights Reserved.
+	
+	
+	
+-->
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="author" content="HAYDEX">
+        <meta name="description" content="Tracking video data.">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+        <title>VTracker</title>
+        
+        <!-- Favicons START -->
+        <link rel="apple-touch-icon" sizes="180x180"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-apple-touch-favicon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16"
+            href="{% static 'youtube_tracker/images/favicon/youtubetracker-favicon-16x16.png' %}">
+        <!-- https://mobiforge.com/design-development/adding-favicons-in-a-multi-browser-multi-platform-world -->
+        <!-- Favicons END -->
+
+        <!-- Stylesheets START -->
+        <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/base.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/landing.css' %}">
+        <!-- Stylesheets END -->
+
+        <style>
+       
+            main#content{
+                width: 100%;
+                text-align: center;
+                margin: 0px auto;
+                margin-top: 100px;
+                grid-area: Content;
+            }
+
+            main#content div#wrapper {
+                background-color: var(--littleGrey);
+                display: inline-block;
+                position: relative;
+                margin: 10px;
+                vertical-align: top;
+                border-radius: 15px;
+                border: 2px solid var(--blackish);
+                padding: 50px 125px;
+            }
+
+            main#content ul#cards{
+                margin-top: 100px;
+            }
+
+            main#content ul#cards li#content-card{
+                display: inline-block;
+                position: relative;
+                width: 600px;
+                height: 350px;
+                margin-bottom: 80px;
+                vertical-align: top;
+                border-radius: var(--radius15);
+                list-style: none;
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+
+            a h3 {
+                margin-top: 10px;
+                background-color: #f44336;
+                color: white;
+                padding: 14px 25px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius: var(--radius15);
+            }
+         
+         </style>
+
+    </head>
+    <body>
+        
+        <!-- Header START -->
+        {% if user.is_authenticated %}
+            {% include "youtube_tracker/baseHeader.html" %}
+            <style>
+                header {
+                    background-color: var(--greyishDark2);
+                }
+            </style>
+        {% else %}
+            <link rel="stylesheet" type="text/css" href="{% static 'youtube_tracker/css/landingHeader.css' %}">
+            <header>
+                <a href="{% url 'getLandingPage' %}" id="logo"></a>
+                <nav>
+                    <ul>
+                        <li>
+                            <div id="name">
+                                {% if user.is_authenticated %}
+                                    {{ user.email }}
+                                {% else %}
+                                <a href="{% url 'login' %}">
+                                    <button id="loginButton">Login</button>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
+        {% endif %}
+        <!-- Header END -->
+         
+         <!-- Content -->
+         <main id="content">
+          <div id="wrapper">
+            <h2>User Guide</h2>
+            <a href="{% url 'userGuide' %}" target="_blank">
+                <h3>View Document</h3>
+            </a>
+          </div>
+          <ul id="cards">
+              <li id ="content-card">
+                  <h2>YouTubeTracker COVID-19 Case Study</h2>
+                  <div class="container">
+                      <iframe class="responsive-iframe" allow="autoplay; encrypted-media" allowfullscreen
+                                     width="560" height="340" src="https://www.youtube.com/embed/PeRuSANpJBU">
+                      </iframe>
+                  </div>
+              </li>
+              <li id ="content-card">
+                  <h2> YouTubeTracker Demo </h2>
+                  <div class="container">
+                      <iframe class="responsive-iframe" allow="autoplay; encrypted-media" allowfullscreen
+                                     width="560" height="340" src="https://www.youtube.com/embed/Nw0FnIwblwQ">
+                      </iframe>
+                  </div>
+              </li>
+          </ul>
+         </main>
+         
+    </body>
+</html>
