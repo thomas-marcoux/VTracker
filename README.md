@@ -1,5 +1,7 @@
 # VTracker - CODE DEMO
 
+[![Project Quickview](/readme_assets/VTquick.gif)](https://vtracker.host.ualr.edu)
+
 The project will not run - settings have been excluded to protect sensitive IPs and secret keys.
 
 See the changelog [here](CHANGELOG.md).
